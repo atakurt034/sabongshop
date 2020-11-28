@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Container, Grid, makeStyles } from '@material-ui/core'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { Product } from './ProductScreen/Products/Product'
-import products from '../Chicks'
+import { listProducts } from '../actions/productActions'
+import Loader from '../components/Loader'
+import Message from '../components/Message'
 
 const useStyle = makeStyles((theme) => ({
   item: {
@@ -12,6 +15,15 @@ const useStyle = makeStyles((theme) => ({
 }))
 
 export const HomeScreen = () => {
+  const dispatch = useDispatch()
+
+  const productList = useSelector((state) => state.productList)
+  const { loading, error, products } = productList
+
+  useEffect(() => {
+    dispatch(listProducts())
+  }, [dispatch])
+
   const classes = useStyle()
   return (
     <Container style={{ padding: 15 }}>
@@ -28,7 +40,13 @@ export const HomeScreen = () => {
               lg={3}
               xl={2}
             >
-              <Product product={product} />
+              {loading ? (
+                <Loader />
+              ) : error ? (
+                <Message variant='error'>{error}</Message>
+              ) : (
+                <Product product={product} />
+              )}
             </Grid>
           )
         })}

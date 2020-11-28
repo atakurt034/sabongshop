@@ -1,11 +1,14 @@
 import React from 'react'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-import { IconButton } from '@material-ui/core'
+import { IconButton, Typography } from '@material-ui/core'
+import PersonIcon from '@material-ui/icons/Person'
 
 export const Account = () => {
   return (
-    <IconButton color='inherit' size='small'>
-      <AccountCircleIcon />
+    <IconButton style={{ height: '55px' }} color='inherit' size='small'>
+      <PersonIcon />
+      <Typography style={{ fontSize: '11px' }} variant='body1' component='p'>
+        Sign In
+      </Typography>
     </IconButton>
   )
 }

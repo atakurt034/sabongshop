@@ -3,6 +3,8 @@ import Badge from '@material-ui/core/Badge'
 import { withStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
@@ -12,7 +14,11 @@ const StyledBadge = withStyles((theme) => ({
   },
 }))(Badge)
 
-export default function CustomizedBadges({ cart }) {
+export default function CustomizedBadges() {
+  const cart = useSelector((state) => state.cart)
+  const { cartItems } = cart
+  const count = cartItems.reduce((acc, item) => acc + item.qty, 0)
+
   return (
     <IconButton
       style={{ margin: '0 5px' }}
@@ -20,8 +26,13 @@ export default function CustomizedBadges({ cart }) {
       color='inherit'
       aria-label='cart'
     >
-      <StyledBadge badgeContent={cart} color='error'>
-        <ShoppingCartIcon />
+      <StyledBadge badgeContent={count} color='error'>
+        <Link
+          style={{ textDecoration: 'none', color: 'inherit' }}
+          to='/cart/:id?'
+        >
+          <ShoppingCartIcon />
+        </Link>
       </StyledBadge>
     </IconButton>
   )

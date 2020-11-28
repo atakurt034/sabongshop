@@ -13,19 +13,20 @@ import {
   FormControl,
   Button,
   TableBody,
-  List,
-  ListItem,
+  MenuItem,
+  Select,
 } from '@material-ui/core'
 
 import { listProductDetails } from '../../actions/productActions'
 import { BackButton } from '../../components/NavItems/BackButton'
 import Loader from '../../components/Loader'
-import Message from '../../components/ErrorMessage'
+import Message from '../../components/Message'
 import { useStyle } from './ProductStyles'
 import Ratings from '../../components/Rating'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import SelectInput from '@material-ui/core/Select/SelectInput'
 
-export const ProductScreen = ({ match }) => {
+export const ProductScreen = ({ match, history }) => {
   const [qty, setQty] = useState(1)
 
   const dispatch = useDispatch()
@@ -38,6 +39,10 @@ export const ProductScreen = ({ match }) => {
       dispatch(listProductDetails(match.params.id))
     }
   }, [dispatch, match, product])
+
+  const addToCartHandler = () => {
+    history.push(`/cart/${match.params.id}?qty=${qty}`)
+  }
 
   const classes = useStyle()
   return (
@@ -113,8 +118,8 @@ export const ProductScreen = ({ match }) => {
                   </TableCell>
                   <TableCell className={classes.cell}>
                     <FormControl
-                      className={classes.option}
                       component='select'
+                      className={classes.option}
                       value={qty}
                       onChange={(e) => setQty(e.target.value)}
                     >
@@ -135,10 +140,12 @@ export const ProductScreen = ({ match }) => {
                     align='center'
                   >
                     <Button
+                      disabled={product.countInStock === 0}
                       variant='contained'
                       className={classes.cartButton}
                       color='primary'
                       startIcon={<ShoppingCartIcon />}
+                      onClick={addToCartHandler}
                     >
                       <Typography>Add to Cart</Typography>
                     </Button>
@@ -150,7 +157,7 @@ export const ProductScreen = ({ match }) => {
         </Grid>
       </Grid>
       <Grid container>
-        <Grid Item md={6}>
+        <Grid item md={6}>
           <h2>Reviews</h2>
           {/* {product.reviews.length === 0 && <Message>No Reviews</Message>}
           <List>
@@ -171,7 +178,7 @@ export const ProductScreen = ({ match }) => {
                   )}
                   {loadingProductReview && <Loader />}
                   {errorProductReview && (
-                    <Message variant='danger'>{errorProductReview}</Message>
+                    <Message variant='error'>{errorProductReview}</Message>
                   )}
                   {userInfo ? (
                     <Form onSubmit={submitHandler}>
