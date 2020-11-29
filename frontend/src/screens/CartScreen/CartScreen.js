@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import DeleteIcon from '@material-ui/icons/Delete'
 import PaymentIcon from '@material-ui/icons/Payment'
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import {
   Grid,
   ListItem,
@@ -55,13 +56,15 @@ export const CartScreen = ({ match, location, history }) => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={8}>
-        <Typography variant='h4' component='h1'>
-          Shopping Cart
+        <Typography variant='h4' component='h1' style={{ fontWeight: 900 }}>
+          <ShoppingCartIcon /> Shopping Cart
         </Typography>
         {cartItems.length === 0 ? (
-          <Message variant='error'>
-            Your cart is empty <Link to='/'>Go Back</Link>
-          </Message>
+          <Box m={2}>
+            <Message variant='error'>
+              Your cart is empty <Link to='/'>Go Back</Link>
+            </Message>
+          </Box>
         ) : (
           <List dense>
             {cartItems.map((item) => (
