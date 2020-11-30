@@ -23,7 +23,7 @@ export default function CustomizedBadges() {
     <IconButton
       style={{ margin: '0 5px' }}
       size='small'
-      color='inherit'
+      color={count ? 'inherit' : 'default'}
       aria-label='cart'
     >
       <StyledBadge badgeContent={count} color='error'>

@@ -1,6 +1,13 @@
 import React from 'react'
 
-import { AppBar, Toolbar, makeStyles, Grid } from '@material-ui/core'
+import {
+  AppBar,
+  Toolbar,
+  makeStyles,
+  Grid,
+  useMediaQuery,
+  useTheme,
+} from '@material-ui/core'
 
 import { Search } from './NavItems/Search'
 import { Brand } from './NavItems/Brand'
@@ -16,16 +23,23 @@ const useStyle = makeStyles((theme) => ({
 }))
 
 const Header = () => {
+  const theme = useTheme()
+  const sm = useMediaQuery(theme.breakpoints.up('sm'))
   const classes = useStyle()
 
+  let pos = 'static'
+  if (!sm) {
+    pos = 'fixed'
+  }
+
   return (
-    <AppBar position='static'>
+    <AppBar position={pos}>
       <Toolbar>
         <Grid className={classes.brand}>
           <Brand />
         </Grid>
-        <Search />
-        <CustomBadge cart={2} />
+        {sm && <Search />}
+        {sm && <CustomBadge />}
         <Account />
       </Toolbar>
     </AppBar>

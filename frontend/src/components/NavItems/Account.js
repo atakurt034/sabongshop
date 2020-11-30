@@ -59,37 +59,48 @@ export const Account = () => {
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
-    event.preventDefault()
   }
-
   const handleClose = () => {
     setAnchorEl(null)
   }
 
   const dispatch = useDispatch()
 
-  const logoutHandler = (props) => {
+  const logoutHandler = () => {
     dispatch(logout())
+    handleClose()
   }
-
+  let size = 'small'
+  if (sm) {
+    size = 'large'
+  }
   const logged = (
     <>
       <Button
-        aria-controls='customized-menu'
-        aria-haspopup='true'
         variant='contained'
         disableElevation
-        disableFocusRipple
         color='primary'
-        onClick={handleClick}
+        onClick={userInfo && handleClick}
         size='small'
-        startIcon={sm && <PersonIcon />}
-        endIcon={<ArrowDropDownIcon />}
+        startIcon={<PersonIcon fontSize={size} />}
+        endIcon={userInfo && <ArrowDropDownIcon />}
       >
         <Typography variant='caption'>
-          {userInfo ? userInfo.name : null}
+          {userInfo ? (
+            userInfo.name.split(' ')[0]
+          ) : (
+            <Link
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              to='/login'
+            >
+              <Typography style={{ fontWeight: 600 }} variant='caption'>
+                LOGIN
+              </Typography>
+            </Link>
+          )}
         </Typography>
       </Button>
+
       <StyledMenu
         id='customized-menu'
         anchorEl={anchorEl}
@@ -97,7 +108,7 @@ export const Account = () => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <StyledMenuItem>
+        <StyledMenuItem onClick={handleClose}>
           <ListItemIcon>
             <PersonIcon fontSize='small' />
           </ListItemIcon>
@@ -109,7 +120,7 @@ export const Account = () => {
           </ListItemIcon>
           <ListItemText primary='Logout' />
         </StyledMenuItem>
-        <StyledMenuItem>
+        <StyledMenuItem onClick={handleClose}>
           <ListItemIcon>
             <InboxIcon fontSize='small' />
           </ListItemIcon>
@@ -119,13 +130,5 @@ export const Account = () => {
     </>
   )
 
-  return userInfo ? (
-    logged
-  ) : (
-    <Link style={{ textDecoration: 'none', color: '#fff' }} to='/login'>
-      <Button color='inherit' startIcon={<PersonIcon fontSize='small' />}>
-        <Typography variant='caption'>login</Typography>
-      </Button>
-    </Link>
-  )
+  return logged
 }
