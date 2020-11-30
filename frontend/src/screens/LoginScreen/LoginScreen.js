@@ -117,17 +117,19 @@ export const LoginScreen = ({ location, history }) => {
             Sign In
           </Button>
           <Grid container>
-            <Grid item xs>
+            <Grid item xs={6}>
               <Link to='/forgot' variant='body2'>
-                Forgot password?
+                <Typography variant='caption'>Forgot password?</Typography>
               </Link>
             </Grid>
-            <Grid item>
+            <Grid item xs={6}>
               <Link
                 to={redirect ? `/register?redirect=${redirect}` : '/register'}
                 variant='body2'
               >
-                {"Don't have an account? Sign Up"}
+                <Typography variant='caption'>
+                  {"Don't have an account? Sign Up"}
+                </Typography>
               </Link>
             </Grid>
           </Grid>

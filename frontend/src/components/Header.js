@@ -38,9 +38,9 @@ const Header = () => {
         <Grid className={classes.brand}>
           <Brand />
         </Grid>
-        {sm && <Search />}
+        {<Search />}
         {sm && <CustomBadge />}
-        <Account />
+        {sm && <Account />}
       </Toolbar>
     </AppBar>
   )

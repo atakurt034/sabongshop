@@ -14,6 +14,9 @@ import { HomeScreen } from './screens/HomeScreen'
 import { ProductScreen } from './screens/ProductScreen/ProductScreen'
 import { CartScreen } from './screens/CartScreen/CartScreen'
 import { LoginScreen } from './screens/LoginScreen/LoginScreen'
+import { RegisterScreen } from './screens/RegisterScreen/RegisterScreen'
+import { ShippingScreen } from './screens/ShippingScreen/ShippingScreen'
+import { PaymentScreen } from './screens/PaymentScreen/PaymentScreen'
 
 function App() {
   const useStyle = makeStyles((theme) => ({
@@ -34,6 +37,9 @@ function App() {
       <Header />
       <main>
         <Container className={classes.root}>
+          <Route path='/payment' component={PaymentScreen} />
+          <Route path='/shipping' component={ShippingScreen} />
+          <Route path='/register' component={RegisterScreen} />
           <Route path='/login' component={LoginScreen} />
           <Route path='/cart/:id?' component={CartScreen} />
           <Route path='/product/:id' component={ProductScreen} />

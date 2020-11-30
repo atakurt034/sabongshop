@@ -17,6 +17,7 @@ import {
   InputLabel,
   makeStyles,
   Box,
+  Divider,
 } from '@material-ui/core'
 import Message from '../../components/Message'
 import { addToCart, removeFromCart } from '../../actions/cartActions'
@@ -68,68 +69,73 @@ export const CartScreen = ({ match, location, history }) => {
         ) : (
           <List dense>
             {cartItems.map((item) => (
-              <ListItem key={item.product}>
-                <Grid alignItems='center' container spacing={2}>
-                  <Grid item md={2}>
-                    <CardMedia
-                      style={{ borderRadius: 10 }}
-                      component='img'
-                      image={item.image}
-                      alt={item.name}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={3}>
-                    <Typography variant='body1' color='textPrimary'>
-                      <Link
-                        style={{
-                          textDecoration: 'none',
-                          color: 'inherit',
-                        }}
-                        to={`/product/${item.product}`}
+              <React.Fragment key={item.name}>
+                <ListItem key={item.product}>
+                  <Grid alignItems='center' container spacing={2}>
+                    <Grid item xs={4} md={2}>
+                      <CardMedia
+                        style={{ borderRadius: 10 }}
+                        component='img'
+                        image={item.image}
+                        alt={item.name}
+                      />
+                    </Grid>
+                    <Grid item xs={4} sm={2} md={3}>
+                      <Typography variant='body1' color='textPrimary'>
+                        <Link
+                          style={{
+                            textDecoration: 'none',
+                            color: 'inherit',
+                          }}
+                          to={`/product/${item.product}`}
+                        >
+                          {item.name}
+                        </Link>
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={4} sm={2}>
+                      <Typography>
+                        ₱ {(item.price * item.qty).toFixed(2)}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={4} sm={2}>
+                      <FormControl
+                        variant='outlined'
+                        className={classes.formControl}
                       >
-                        {item.name}
-                      </Link>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4} md={2}>
-                    <Typography>
-                      ₱ {(item.price * item.qty).toFixed(2)}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4} md={2}>
-                    <FormControl
-                      variant='outlined'
-                      className={classes.formControl}
-                    >
-                      <InputLabel id='selectCart'>Quantity</InputLabel>
-                      <Select
-                        style={{ fontSize: 15, fontWeight: 600 }}
-                        native
-                        autoWidth
-                        label='Quantity'
-                        labelId='selectCart'
-                        value={item.qty}
-                        onChange={(e) =>
-                          dispatch(
-                            addToCart(item.product, Number(e.target.value))
-                          )
-                        }
+                        <InputLabel id='selectCart'>Quantity</InputLabel>
+                        <Select
+                          style={{ fontSize: 15, fontWeight: 600 }}
+                          native
+                          autoWidth
+                          label='Quantity'
+                          labelId='selectCart'
+                          value={item.qty}
+                          onChange={(e) =>
+                            dispatch(
+                              addToCart(item.product, Number(e.target.value))
+                            )
+                          }
+                        >
+                          {[...Array(item.countInStock).keys()].map((x) => (
+                            <option key={x + 1} value={x + 1}>
+                              {x + 1}
+                            </option>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={4} sm={2}>
+                      <Button
+                        onClick={() => removeFromCartHandler(item.product)}
                       >
-                        {[...Array(item.countInStock).keys()].map((x) => (
-                          <option key={x + 1} value={x + 1}>
-                            {x + 1}
-                          </option>
-                        ))}
-                      </Select>
-                    </FormControl>
+                        <DeleteIcon />
+                      </Button>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={4} md={2}>
-                    <Button onClick={() => removeFromCartHandler(item.product)}>
-                      <DeleteIcon />
-                    </Button>
-                  </Grid>
-                </Grid>
-              </ListItem>
+                </ListItem>
+                <Divider />
+              </React.Fragment>
             ))}
           </List>
         )}

@@ -13,8 +13,6 @@ import {
   FormControl,
   Button,
   TableBody,
-  MenuItem,
-  Select,
 } from '@material-ui/core'
 
 import { listProductDetails } from '../../actions/productActions'
@@ -24,7 +22,6 @@ import Message from '../../components/Message'
 import { useStyle } from './ProductStyles'
 import Ratings from '../../components/Rating'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
-import SelectInput from '@material-ui/core/Select/SelectInput'
 
 export const ProductScreen = ({ match, history }) => {
   const [qty, setQty] = useState(1)
@@ -53,10 +50,10 @@ export const ProductScreen = ({ match, history }) => {
         <Grid item xs={12} className={classes.button}>
           <BackButton />
         </Grid>
-        <Grid item xs={12} sm={12} md={6}>
+        <Grid item xs={12} sm={6} md={6}>
           <CardMedia component='img' image={product.image} />
         </Grid>
-        <Grid item xs={12} sm={12} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <Box p={2}>
             <Typography variant='h5' component='h3'>
               {product.name}
@@ -82,7 +79,7 @@ export const ProductScreen = ({ match, history }) => {
             </Typography>{' '}
           </Box>
         </Grid>
-        <Grid item xs={12} sm={12} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <TableContainer className={classes.table}>
             <Table>
               <TableBody>
