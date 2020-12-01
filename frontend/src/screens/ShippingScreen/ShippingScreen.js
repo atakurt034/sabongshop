@@ -91,7 +91,7 @@ export const ShippingScreen = ({ history }) => {
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LocalShippingIcon />
+            <LocalShippingIcon color='action' />
           </Avatar>
           <Typography component='h1' variant='h4'>
             SHIPPING
@@ -121,7 +121,7 @@ export const ShippingScreen = ({ history }) => {
 
               <Grid item xs={12}>
                 <TextField
-                  error={errorField.city}
+                  error={!city}
                   type='text'
                   variant='outlined'
                   required

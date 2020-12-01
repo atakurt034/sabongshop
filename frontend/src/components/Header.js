@@ -9,7 +9,7 @@ import {
   useTheme,
 } from '@material-ui/core'
 
-import { Search } from './NavItems/Search'
+import { Search } from './NavItems/Search/Search'
 import { Brand } from './NavItems/Brand'
 
 import CustomBadge from './NavItems/CustomBadge'

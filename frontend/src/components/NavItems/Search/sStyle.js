@@ -1,9 +1,6 @@
-import React from 'react'
-import InputBase from '@material-ui/core/InputBase'
-import { fade, makeStyles } from '@material-ui/core/styles'
-import SearchIcon from '@material-ui/icons/Search'
+import { makeStyles, fade } from '@material-ui/core'
 
-const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles((theme) => ({
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -60,25 +57,3 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }))
-
-export const Search = () => {
-  const classes = useStyles()
-
-  let search = (
-    <div className={classes.search}>
-      <div className={classes.searchIcon}>
-        <SearchIcon />
-      </div>
-      <InputBase
-        placeholder='Search…'
-        classes={{
-          root: classes.inputRoot,
-          input: classes.inputInput,
-        }}
-        inputProps={{ 'aria-label': 'search' }}
-      />
-    </div>
-  )
-
-  return search
-}

@@ -14,15 +14,17 @@ const useStyle = makeStyles((theme) => ({
   },
 }))
 
-export const HomeScreen = () => {
+export const HomeScreen = ({ match }) => {
   const dispatch = useDispatch()
+  const keyword = match.params.keyword
+  const pageNumber = match.params.pageNumber || 1
 
   const productList = useSelector((state) => state.productList)
-  const { loading, error, products } = productList
+  const { loading, error, products, page, pages } = productList
 
   useEffect(() => {
-    dispatch(listProducts())
-  }, [dispatch])
+    dispatch(listProducts(keyword, pageNumber))
+  }, [dispatch, keyword, pageNumber])
 
   const classes = useStyle()
   return (

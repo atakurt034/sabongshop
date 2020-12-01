@@ -7,6 +7,12 @@ import {
   productListReducer,
   productDetailsReducer,
 } from './reducers/productReducers'
+import {
+  orderCreateReducers,
+  orderDetailsReducer,
+  orderPayReducer,
+  orderDeliverReducer,
+} from './reducers/orderReducers'
 
 const midlleware = [thunk]
 
@@ -16,6 +22,10 @@ const reducer = combineReducers({
   cart: cartReducers,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
+  orderCreate: orderCreateReducers,
+  orderDetails: orderDetailsReducer,
+  orderPay: orderPayReducer,
+  orderDeliver: orderDeliverReducer,
 })
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')

@@ -17,6 +17,8 @@ import { LoginScreen } from './screens/LoginScreen/LoginScreen'
 import { RegisterScreen } from './screens/RegisterScreen/RegisterScreen'
 import { ShippingScreen } from './screens/ShippingScreen/ShippingScreen'
 import { PaymentScreen } from './screens/PaymentScreen/PaymentScreen'
+import { PlaceOrderScreen } from './screens/PlaceOrderScreen/PlaceOrderScreen'
+import { OrderScreen } from './screens/OrderScreen/OrderScreen'
 
 function App() {
   const useStyle = makeStyles((theme) => ({
@@ -37,12 +39,21 @@ function App() {
       <Header />
       <main>
         <Container className={classes.root}>
+          <Route path='/order/:id' component={OrderScreen} />
+          <Route path='/placeorder' component={PlaceOrderScreen} />
           <Route path='/payment' component={PaymentScreen} />
           <Route path='/shipping' component={ShippingScreen} />
           <Route path='/register' component={RegisterScreen} />
           <Route path='/login' component={LoginScreen} />
           <Route path='/cart/:id?' component={CartScreen} />
           <Route path='/product/:id' component={ProductScreen} />
+          <Route path='/search/:keyword' component={HomeScreen} exact />
+          <Route path='/page/:pageNumber' component={HomeScreen} exact />
+          <Route
+            path='/search/:keyword/page/:pageNumber'
+            component={HomeScreen}
+            exact
+          />
           <Route path='/' component={HomeScreen} exact />
         </Container>
       </main>
