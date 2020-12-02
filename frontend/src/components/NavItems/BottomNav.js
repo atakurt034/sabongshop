@@ -18,6 +18,7 @@ export default function SimpleBottomNavigation() {
 
   return (
     <BottomNavigation
+      style={{ zIndex: 100 }}
       value={value}
       onChange={(event, newValue) => {
         setValue(newValue)

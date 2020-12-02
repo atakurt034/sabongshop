@@ -17,20 +17,21 @@ export const Search = ({ history }) => {
   }
   let search = (
     <div className={classes.search}>
-      <div className={classes.searchIcon}>
-        <SearchIcon />
-      </div>
+      <form onSubmit={submitHandler}>
+        <div className={classes.searchIcon}>
+          <SearchIcon />
+        </div>
 
-      <InputBase
-        onSubmit={submitHandler}
-        onChange={(e) => setKeyword(e.target.value)}
-        placeholder='Search…'
-        classes={{
-          root: classes.inputRoot,
-          input: classes.inputInput,
-        }}
-        inputProps={{ 'aria-label': 'search' }}
-      />
+        <InputBase
+          onChange={(e) => setKeyword(e.target.value)}
+          placeholder='Search…'
+          classes={{
+            root: classes.inputRoot,
+            input: classes.inputInput,
+          }}
+          inputProps={{ 'aria-label': 'search' }}
+        />
+      </form>
     </div>
   )
 

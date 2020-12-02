@@ -1,18 +1,13 @@
 import React, { useEffect } from 'react'
-import { Container, Grid, makeStyles } from '@material-ui/core'
+import { Container, Grid } from '@material-ui/core'
+import { useStyles } from './hsStyle'
 import { useDispatch, useSelector } from 'react-redux'
+import { Paginate } from '../components/Paginate'
 
 import { Product } from './ProductScreen/Products/Product'
 import { listProducts } from '../actions/productActions'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-
-const useStyle = makeStyles((theme) => ({
-  item: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
-}))
 
 export const HomeScreen = ({ match }) => {
   const dispatch = useDispatch()
@@ -26,7 +21,7 @@ export const HomeScreen = ({ match }) => {
     dispatch(listProducts(keyword, pageNumber))
   }, [dispatch, keyword, pageNumber])
 
-  const classes = useStyle()
+  const classes = useStyles()
   return (
     <Container style={{ padding: 15 }}>
       <Grid container spacing={4}>
@@ -52,6 +47,9 @@ export const HomeScreen = ({ match }) => {
             </Grid>
           )
         })}
+      </Grid>
+      <Grid container justify='center' className={classes.rootPaginate}>
+        <Paginate pages={pages} page={page} keyword={keyword ? keyword : ''} />
       </Grid>
     </Container>
   )

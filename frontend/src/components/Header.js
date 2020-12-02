@@ -1,4 +1,5 @@
 import React from 'react'
+import { Route } from 'react-router-dom'
 
 import {
   AppBar,
@@ -38,7 +39,7 @@ const Header = () => {
         <Grid className={classes.brand}>
           <Brand />
         </Grid>
-        {<Search />}
+        <Route render={({ history }) => <Search history={history} />} />
         {sm && <CustomBadge />}
         {sm && <Account />}
       </Toolbar>
