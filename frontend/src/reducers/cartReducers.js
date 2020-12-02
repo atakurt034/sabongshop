@@ -10,7 +10,7 @@ const initialState = {
   shippingAddress: {},
 }
 
-export const cartReducers = (state = initialState, action) => {
+export const cartReducer = (state = initialState, action) => {
   switch (action.type) {
     case CART_ADD_ITEM:
       const item = action.payload

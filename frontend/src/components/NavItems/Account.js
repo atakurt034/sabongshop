@@ -109,10 +109,19 @@ export const Account = () => {
         onClose={handleClose}
       >
         <StyledMenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <PersonIcon fontSize='small' />
-          </ListItemIcon>
-          <ListItemText primary='Profile' />
+          <Link
+            style={{
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+            to='/profile'
+          >
+            <ListItemIcon>
+              <PersonIcon fontSize='small' />
+            </ListItemIcon>
+            <ListItemText primary='Profile' />
+          </Link>
         </StyledMenuItem>
         <StyledMenuItem onClick={logoutHandler}>
           <ListItemIcon>

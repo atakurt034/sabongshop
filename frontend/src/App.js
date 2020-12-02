@@ -19,6 +19,7 @@ import { ShippingScreen } from './screens/ShippingScreen/ShippingScreen'
 import { PaymentScreen } from './screens/PaymentScreen/PaymentScreen'
 import { PlaceOrderScreen } from './screens/PlaceOrderScreen/PlaceOrderScreen'
 import { OrderScreen } from './screens/OrderScreen/OrderScreen'
+import { ProfileScreen } from './screens/ProfileScreen/ProfileScreen'
 
 function App() {
   const useStyle = makeStyles((theme) => ({
@@ -43,6 +44,7 @@ function App() {
           <Route path='/placeorder' component={PlaceOrderScreen} />
           <Route path='/payment' component={PaymentScreen} />
           <Route path='/shipping' component={ShippingScreen} />
+          <Route path='/profile' component={ProfileScreen} />
           <Route path='/register' component={RegisterScreen} />
           <Route path='/login' component={LoginScreen} />
           <Route path='/cart/:id?' component={CartScreen} />
