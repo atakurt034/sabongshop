@@ -79,7 +79,16 @@ export const ProfileScreen = ({ location, history }) => {
           setErrorBtn(false)
       }
     }
-  }, [dispatch, history, userInfo, user, success])
+  }, [
+    dispatch,
+    history,
+    userInfo,
+    user,
+    success,
+    error,
+    confirmPassword,
+    password,
+  ])
 
   const submitHandler = (e) => {
     e.preventDefault()

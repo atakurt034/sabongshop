@@ -48,7 +48,7 @@ export const ProductScreen = ({ match, history }) => {
         {loading && <Loader />}
         {error && <Message error={error} />}
         <Grid item xs={12} className={classes.button}>
-          <BackButton />
+          <BackButton to={'/'} />
         </Grid>
         <Grid item xs={12} sm={6} md={6}>
           <CardMedia component='img' image={product.image} />

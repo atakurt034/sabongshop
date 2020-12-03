@@ -10,18 +10,17 @@ import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Button, IconButton, Typography } from '@material-ui/core'
+import { Button, Typography } from '@material-ui/core'
 import NotInterestedIcon from '@material-ui/icons/NotInterested'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 
-import { columns, createData, options } from './ulsData'
+import { columns, createData } from './ulsData'
 import { useStyles } from './ulsStyle'
 
 import { listUsers, deleteUser } from '../../actions/userActions'
 
-import Message from '../../components/Message'
 import { ModalLoader } from '../../components/ModalLoader'
 import { ModalMessage } from '../../components/ModalMessage'
 

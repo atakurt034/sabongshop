@@ -123,13 +123,13 @@ export const Account = (e) => {
             <ListItemText primary='Profile' />
           </Link>
         </StyledMenuItem>
+        {userInfo && userInfo.isAdmin && <Admin />}
         <StyledMenuItem onClick={logoutHandler}>
           <ListItemIcon>
             <ExitToAppIcon fontSize='small' />
           </ListItemIcon>
           <ListItemText primary='Logout' />
         </StyledMenuItem>
-        {userInfo && userInfo.isAdmin && <Admin />}
       </StyledMenu>
     </>
   )

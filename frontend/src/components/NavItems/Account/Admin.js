@@ -1,6 +1,7 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import {
   Button,
   Menu,
@@ -50,6 +51,9 @@ const StyledMenuItem = withStyles((theme) => ({
 export const Admin = () => {
   const [anchorEl, setAnchorEl] = React.useState(null)
 
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
@@ -60,6 +64,7 @@ export const Admin = () => {
   const logged = (
     <>
       <Button
+        disabled={!userInfo.isAdmin}
         fullWidth
         style={{
           textTransform: 'capitalize',
