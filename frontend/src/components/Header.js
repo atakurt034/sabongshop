@@ -14,7 +14,7 @@ import { Search } from './NavItems/Search/Search'
 import { Brand } from './NavItems/Brand'
 
 import CustomBadge from './NavItems/CustomBadge'
-import { Account } from './NavItems/Account'
+import { Account } from './NavItems/Account/Account'
 
 const useStyle = makeStyles((theme) => ({
   brand: {

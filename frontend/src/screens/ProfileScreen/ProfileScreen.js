@@ -75,6 +75,8 @@ export const ProfileScreen = ({ location, history }) => {
       } else {
         setName(user.name)
         setEmail(user.email)
+        if (!error && password === confirmPassword && success)
+          setErrorBtn(false)
       }
     }
   }, [dispatch, history, userInfo, user, success])
@@ -85,27 +87,28 @@ export const ProfileScreen = ({ location, history }) => {
       setMessage('Passwords do not match')
       setErrorBtn(true)
     } else {
+      if (!loadingBtn) {
+        setSuccess(false)
+        setLoading(true)
+        timer.current = window.setTimeout(() => {
+          setSuccess(true)
+          setLoading(false)
+        }, 2000)
+      }
+      if (!error && password === confirmPassword) {
+        timer.current = window.setTimeout(() => {
+          setErrorBtn(false)
+          setPassword('')
+          setConfirmPassword('')
+        }, 2000)
+      } else {
+        if (!name || !email) {
+          timer.current = window.setTimeout(() => {
+            setErrorBtn(true)
+          }, 2000)
+        }
+      }
       dispatch(updateUserProfile({ id: user._id, name, email, password }))
-    }
-  }
-
-  const handleButtonClick = () => {
-    if (!loadingBtn) {
-      setSuccess(false)
-      setLoading(true)
-      timer.current = window.setTimeout(() => {
-        setSuccess(true)
-        setLoading(false)
-      }, 2000)
-    }
-    if (!error && password === confirmPassword) {
-      timer.current = window.setTimeout(() => {
-        setErrorBtn(false)
-      }, 2000)
-    } else {
-      timer.current = window.setTimeout(() => {
-        setErrorBtn(true)
-      }, 2000)
     }
   }
 
@@ -201,9 +204,12 @@ export const ProfileScreen = ({ location, history }) => {
                     variant='contained'
                     color='primary'
                     disabled={loading}
-                    onClick={handleButtonClick}
                   >
-                    {success ? 'UPDATED' : 'UPDATE'}
+                    {errorBtn === null
+                      ? 'UPDATE'
+                      : errorBtn === true
+                      ? 'ERROR'
+                      : 'UPDATED'}
                   </Button>
                   {loading && (
                     <CircularProgress

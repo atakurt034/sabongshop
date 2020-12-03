@@ -20,6 +20,8 @@ import { PaymentScreen } from './screens/PaymentScreen/PaymentScreen'
 import { PlaceOrderScreen } from './screens/PlaceOrderScreen/PlaceOrderScreen'
 import { OrderScreen } from './screens/OrderScreen/OrderScreen'
 import { ProfileScreen } from './screens/ProfileScreen/ProfileScreen'
+import { UserListScreen } from './screens/UserListScreen/UserListScreen'
+import { UserEditScreen } from './screens/UserEditScreen/UserEditScreen'
 
 function App() {
   const useStyle = makeStyles((theme) => ({
@@ -56,6 +58,8 @@ function App() {
             component={HomeScreen}
             exact
           />
+          <Route path='/admin/user/:id/edit' component={UserEditScreen} />
+          <Route path='/admin/userlist' component={UserListScreen} />
           <Route path='/' component={HomeScreen} exact />
         </Container>
       </main>

@@ -1,5 +1,5 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -10,93 +10,91 @@ import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Button } from '@material-ui/core'
+import { Button, IconButton, Typography } from '@material-ui/core'
 import NotInterestedIcon from '@material-ui/icons/NotInterested'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
+import EditIcon from '@material-ui/icons/Edit'
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 
-const options = {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-}
+import { columns, createData, options } from './ulsData'
+import { useStyles } from './ulsStyle'
 
-const columns = [
-  { id: 'id', label: 'ID', minWidth: 170 },
-  { id: 'date', label: 'DATE', minWidth: 100 },
-  {
-    id: 'total',
-    label: 'Total',
-    minWidth: 100,
-    align: 'left',
-    format: (value) => value.toLocaleString('en', options),
-  },
-  {
-    id: 'paid',
-    label: 'Paid',
-    minWidth: 120,
-    align: 'center',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'delivered',
-    label: 'Delivered',
-    minWidth: 120,
-    align: 'center',
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: 'details',
-    label: '',
-    minWidth: 80,
-    align: 'left',
-  },
-]
+import { listUsers, deleteUser } from '../../actions/userActions'
 
-function createData(id, date, total, paid, delivered, details) {
-  return { id, date, total, paid, delivered, details }
-}
+import Message from '../../components/Message'
+import { ModalLoader } from '../../components/ModalLoader'
+import { ModalMessage } from '../../components/ModalMessage'
 
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-    borderRadius: 10,
-  },
-  container: {
-    maxHeight: 440,
-  },
-  tableHead: { fontWeight: 900, borderRadius: 10 },
-})
+export const UserListScreen = ({ history }) => {
+  const dispatch = useDispatch()
 
-export const TableOrders = () => {
+  const userList = useSelector((state) => state.userList)
+  const { error, loading, users } = userList
+
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+
+  const userDelete = useSelector((state) => state.userDelete)
+  const {
+    // loading: loadingDelete,
+    success: successDelete,
+    // error: errorDelete,
+  } = userDelete
+
+  useEffect(() => {
+    if (userInfo && userInfo.isAdmin) {
+      dispatch(listUsers())
+    } else {
+      history.push('/login')
+    }
+  }, [dispatch, history, userInfo, successDelete])
+
+  const deleteHandler = (id, name) => {
+    if (window.confirm(`Delete: ${name} ?`)) {
+      dispatch(deleteUser(id))
+    }
+  }
+
   const rows = []
-  const orderListMy = useSelector((state) => state.orderListMy)
-  const { orders } = orderListMy
-  orders.map((order) => {
-    return rows.push(
-      createData(
-        order._id,
-        order.createdAt.substring(0, 10),
-        order.totalPrice,
-        order.isPaid ? (
-          order.paidAt.substring(0, 10)
-        ) : (
-          <NotInterestedIcon color='error' />
-        ),
-        order.isDelivered ? (
-          order.deliveredAt.substring(0, 10)
-        ) : (
-          <NotInterestedIcon color='error' />
-        ),
-        <Link
-          key={order._id}
-          to={`/order/${order._id}`}
-          style={{ textDecoration: 'none' }}
-        >
-          <Button variant='contained' color='primary'>
-            Details
+  if (users) {
+    users.map((user) => {
+      return rows.push(
+        createData(
+          user._id,
+          user.name,
+          <a href={`mailto:${user.email}`}>{user.email}</a>,
+          user.isAdmin ? (
+            <CheckCircleIcon style={{ color: 'green' }} />
+          ) : (
+            <NotInterestedIcon color='error' />
+          ),
+          <Link
+            key={user._id}
+            to={`/admin/user/${user._id}/edit`}
+            style={{ textDecoration: 'none' }}
+          >
+            <Button
+              size='small'
+              variant='contained'
+              color='default'
+              startIcon={<EditIcon fontSize='small' />}
+            >
+              <Typography>Edit</Typography>
+            </Button>
+          </Link>,
+          <Button
+            size='small'
+            variant='contained'
+            color='secondary'
+            startIcon={<DeleteForeverIcon />}
+            onClick={() => deleteHandler(user._id, user.name)}
+          >
+            <Typography>Delete</Typography>
           </Button>
-        </Link>
+        )
       )
-    )
-  })
+    })
+  }
 
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
@@ -113,6 +111,11 @@ export const TableOrders = () => {
 
   return (
     <Paper className={classes.root}>
+      {loading ? (
+        <ModalLoader />
+      ) : (
+        error && <ModalMessage variant='error'>{error}</ModalMessage>
+      )}
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label='sticky table'>
           <TableHead>

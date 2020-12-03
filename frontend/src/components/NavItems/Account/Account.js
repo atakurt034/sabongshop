@@ -11,12 +11,12 @@ import {
   useTheme,
   Typography,
 } from '@material-ui/core'
-import InboxIcon from '@material-ui/icons/MoveToInbox'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import PersonIcon from '@material-ui/icons/Person'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import { Admin } from './Admin'
 import { useSelector, useDispatch } from 'react-redux'
-import { logout } from '../../actions/userActions'
+import { logout } from '../../../actions/userActions'
 
 const StyledMenu = withStyles({
   paper: {
@@ -49,7 +49,7 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem)
 
-export const Account = () => {
+export const Account = (e) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const theme = useTheme()
   const sm = useMediaQuery(theme.breakpoints.up('md'))
@@ -129,12 +129,7 @@ export const Account = () => {
           </ListItemIcon>
           <ListItemText primary='Logout' />
         </StyledMenuItem>
-        <StyledMenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <InboxIcon fontSize='small' />
-          </ListItemIcon>
-          <ListItemText primary='Inbox' />
-        </StyledMenuItem>
+        {userInfo && userInfo.isAdmin && <Admin />}
       </StyledMenu>
     </>
   )
