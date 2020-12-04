@@ -1,6 +1,7 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
+import { useStyles } from './acStyle'
 import {
   Button,
   Menu,
@@ -53,6 +54,7 @@ export const Account = (e) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const theme = useTheme()
   const sm = useMediaQuery(theme.breakpoints.up('md'))
+  const classes = useStyles()
 
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
@@ -89,10 +91,7 @@ export const Account = (e) => {
           {userInfo ? (
             userInfo.name.split(' ')[0]
           ) : (
-            <Link
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              to='/login'
-            >
+            <Link className={classes.link} to='/login'>
               <Typography style={{ fontWeight: 600 }} variant='caption'>
                 LOGIN
               </Typography>
@@ -109,14 +108,7 @@ export const Account = (e) => {
         onClose={handleClose}
       >
         <StyledMenuItem onClick={handleClose}>
-          <Link
-            style={{
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-            to='/profile'
-          >
+          <Link className={classes.link} to='/profile'>
             <ListItemIcon>
               <PersonIcon fontSize='small' />
             </ListItemIcon>

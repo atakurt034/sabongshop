@@ -10,9 +10,17 @@ export const useStyles = makeStyles({
   },
   tableHead: { fontWeight: 900, borderRadius: 10 },
   title: {
+    textAlign: 'center',
     padding: 10,
     margin: 10,
+    position: 'absolute',
     fontWeight: 600,
-    float: 'left',
+  },
+  button: {
+    color: '#fff',
+    backgroundColor: 'green',
+    float: 'right',
+    padding: 10,
+    margin: 10,
   },
 })

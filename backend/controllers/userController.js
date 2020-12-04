@@ -1,6 +1,8 @@
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 import generateToken from '../utils/generateTokens.js'
+import mongoose from 'mongoose'
+import { query } from 'express'
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
@@ -112,11 +114,11 @@ const getUsers = asyncHandler(async (req, res) => {
   res.json(users)
 })
 
-// @desc    DELETE a user
+// @desc    DELETE a user or users
 // @route   Delete /api/users/:id
 // @access  Private/admin
 const deleteUser = asyncHandler(async (req, res) => {
-  const users = await User.findById(req.params.id)
+  const users = User.find({ _id: { $in: req.params.id.split(',') } })
 
   if (users) {
     await users.remove()

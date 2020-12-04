@@ -9,6 +9,8 @@ import { listProducts } from '../actions/productActions'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 
+import { PRODUCT_DETAILS_RESET } from '../constants/productConstants'
+
 export const HomeScreen = ({ match }) => {
   const dispatch = useDispatch()
   const keyword = match.params.keyword
@@ -19,6 +21,7 @@ export const HomeScreen = ({ match }) => {
 
   useEffect(() => {
     dispatch(listProducts(keyword, pageNumber))
+    dispatch({ type: PRODUCT_DETAILS_RESET })
   }, [dispatch, keyword, pageNumber])
 
   const classes = useStyles()

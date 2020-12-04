@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { useStyles } from './acStyle'
 import {
   Button,
   Menu,
@@ -58,8 +59,9 @@ const StyledMenuItem = withStyles((theme) => ({
 export const Admin = () => {
   const [anchorEl, setAnchorEl] = React.useState(null)
 
+  const classes = useStyles()
   const theme = useTheme()
-  const sm = useMediaQuery(theme.breakpoints.down('sm'))
+  const sm = useMediaQuery(theme.breakpoints.down('xs'))
 
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
@@ -87,7 +89,8 @@ export const Admin = () => {
           margin: '0 0 0 5px',
           // padding: '5px',
           boxSizing: 'border-box',
-          color: 'grey',
+          color: '#000',
+          fontWeight: 400,
         }}
         variant='text'
         disableElevation
@@ -126,25 +129,20 @@ export const Admin = () => {
         onClose={handleClose}
       >
         <StyledMenuItem onClick={handleClose}>
-          <Link
-            style={{
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-            to='/admin/userlist'
-          >
+          <Link className={classes.link} to='/admin/userlist'>
             <ListItemIcon>
               <EmojiPeopleIcon fontSize='small' />
             </ListItemIcon>
             <ListItemText primary='Users' />
           </Link>
         </StyledMenuItem>
-        <StyledMenuItem>
-          <ListItemIcon>
-            <StoreIcon fontSize='small' />
-          </ListItemIcon>
-          <ListItemText primary='Products' />
+        <StyledMenuItem onClick={handleClose}>
+          <Link className={classes.link} to='/admin/productlist'>
+            <ListItemIcon>
+              <StoreIcon fontSize='small' />
+            </ListItemIcon>
+            <ListItemText primary='Products' />
+          </Link>
         </StyledMenuItem>
         <StyledMenuItem>
           <ListItemIcon>

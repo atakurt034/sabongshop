@@ -22,6 +22,8 @@ import { OrderScreen } from './screens/OrderScreen/OrderScreen'
 import { ProfileScreen } from './screens/ProfileScreen/ProfileScreen'
 import { UserListScreen } from './screens/UserListScreen/UserListScreen'
 import { UserEditScreen } from './screens/UserEditScreen/UserEditScreen'
+import { ProductListScreen } from './screens/ProductList/ProductListScreen'
+import { ProductEditScreen } from './screens/ProductEditScreen/ProductEditScreen'
 
 function App() {
   const useStyle = makeStyles((theme) => ({
@@ -56,6 +58,12 @@ function App() {
           <Route
             path='/search/:keyword/page/:pageNumber'
             component={HomeScreen}
+            exact
+          />
+          <Route path='/admin/product/:id/edit' component={ProductEditScreen} />
+          <Route
+            path='/admin/productlist'
+            component={ProductListScreen}
             exact
           />
           <Route path='/admin/user/:id/edit' component={UserEditScreen} />
