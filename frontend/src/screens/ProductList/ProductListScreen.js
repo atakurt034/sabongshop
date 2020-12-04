@@ -1,34 +1,62 @@
 import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import Paper from '@material-ui/core/Paper'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TablePagination from '@material-ui/core/TablePagination'
-import TableRow from '@material-ui/core/TableRow'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { Button, Typography } from '@material-ui/core'
-import AddCircleIcon from '@material-ui/icons/AddCircle'
-import EditIcon from '@material-ui/icons/Edit'
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 
-import { columns, createData } from './plsData'
-import { useStyles } from './plsStyle'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TablePagination,
+  TableRow,
+  Typography,
+  Paper,
+  Checkbox,
+  FormControlLabel,
+  Switch,
+} from '@material-ui/core'
+
+import EditIcon from '@material-ui/icons/Edit'
+import AddCircleIcon from '@material-ui/icons/AddCircle'
+
+import {
+  createData,
+  getComparator,
+  EnhancedTableHead,
+  EnhancedTableToolbar,
+  stableSort,
+} from './plsData'
+import { Button } from '@material-ui/core'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import {
   listProducts,
   deleteProduct,
   createProduct,
 } from '../../actions/productActions'
-import { PRODUCT_CREATE_RESET } from '../../constants/productConstants'
+import {
+  PRODUCT_CREATE_RESET,
+  PRODUCT_UPDATE_RESET,
+} from '../../constants/productConstants'
 
-import { ModalLoader } from '../../components/ModalLoader'
 import { ModalMessage } from '../../components/ModalMessage'
+import { ModalLoader } from '../../components/ModalLoader'
+import { useStyles } from './plsStyle'
 
 export const ProductListScreen = ({ history }) => {
+  const classes = useStyles()
+  const [order, setOrder] = React.useState('asc')
+  const [orderBy, setOrderBy] = React.useState('calories')
+  const [selected, setSelected] = React.useState([])
+  const [page, setPage] = React.useState(0)
+  const [dense, setDense] = React.useState(false)
+  const [rowsPerPage, setRowsPerPage] = React.useState(5)
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc'
+    setOrder(isAsc ? 'desc' : 'asc')
+    setOrderBy(property)
+  }
+
   const dispatch = useDispatch()
 
   const productList = useSelector((state) => state.productList)
@@ -62,6 +90,9 @@ export const ProductListScreen = ({ history }) => {
     } else {
       dispatch(listProducts())
     }
+    if (successDelete) {
+      setSelected([])
+    }
   }, [
     dispatch,
     userInfo,
@@ -71,8 +102,8 @@ export const ProductListScreen = ({ history }) => {
     successDelete,
   ])
 
-  const deleteHandler = (id, name) => {
-    if (window.confirm(`Delete: ${name} ?`)) {
+  const deleteHandler = (id) => {
+    if (window.confirm(`Delete: ${id} ?`)) {
       dispatch(deleteProduct(id))
     }
   }
@@ -88,7 +119,7 @@ export const ProductListScreen = ({ history }) => {
         createData(
           product._id,
           product.name,
-          `₱ ${product.price}`,
+          product.price,
           product.category,
           product.brand,
           <Link
@@ -104,58 +135,154 @@ export const ProductListScreen = ({ history }) => {
             >
               <Typography>Edit</Typography>
             </Button>
-          </Link>,
-          <Button
-            size='small'
-            variant='contained'
-            color='secondary'
-            startIcon={<DeleteForeverIcon />}
-            onClick={() => deleteHandler(product._id, product.name)}
-          >
-            <Typography>Delete</Typography>
-          </Button>
+          </Link>
         )
       )
     })
   }
 
-  const classes = useStyles()
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = rows.map((n) => n.id)
+      setSelected(newSelecteds)
+      return
+    }
+    setSelected([])
+  }
+
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name)
+    let newSelected = []
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name)
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1))
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1))
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      )
+    }
+
+    setSelected(newSelected)
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value)
+    setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
   }
 
+  const handleChangeDense = (event) => {
+    setDense(event.target.checked)
+  }
+
+  const isSelected = (name) => selected.indexOf(name) !== -1
+
+  const emptyRows =
+    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
+
   return (
-    <Paper className={classes.root}>
-      {loading ? (
-        <ModalLoader />
-      ) : (
-        error && <ModalMessage variant='error'>{error}</ModalMessage>
+    <div className={classes.root}>
+      {loading && <ModalLoader />}
+      {loadingCreate && <ModalLoader />}
+      {loadingDelete && <ModalLoader />}
+      {error && <ModalMessage variant='error'>{error}</ModalMessage>}
+      {errorCreate && (
+        <ModalMessage variant='error'>{errorCreate}</ModalMessage>
       )}
-      {loadingCreate ? (
-        <ModalLoader />
-      ) : (
-        errorCreate && (
-          <ModalMessage variant='error'>{errorCreate}</ModalMessage>
-        )
+      {errorDelete && (
+        <ModalMessage variant='error'>{errorDelete}</ModalMessage>
       )}
-      {loadingDelete ? (
-        <ModalLoader />
-      ) : (
-        errorDelete && (
-          <ModalMessage variant='error'>{errorDelete}</ModalMessage>
-        )
-      )}
-      <Typography className={classes.title} variant='h5' component='h1'>
-        PRODUCTS
-      </Typography>
+
+      <Paper className={classes.paper}>
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          clicked={() => deleteHandler(selected)}
+        />
+        <TableContainer>
+          <Table
+            className={classes.table}
+            aria-labelledby='tableTitle'
+            size={dense ? 'small' : 'medium'}
+            aria-label='enhanced table'
+          >
+            <EnhancedTableHead
+              classes={classes}
+              numSelected={selected.length}
+              order={order}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={rows.length}
+            />
+            <TableBody>
+              {stableSort(rows, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  const isItemSelected = isSelected(row.id)
+                  const labelId = `enhanced-table-checkbox-${index}`
+
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) => handleClick(event, row.id)}
+                      role='checkbox'
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isItemSelected}
+                    >
+                      <TableCell padding='checkbox'>
+                        <Checkbox
+                          checked={isItemSelected}
+                          inputProps={{ 'aria-labelledby': labelId }}
+                        />
+                      </TableCell>
+                      <TableCell
+                        component='th'
+                        id={labelId}
+                        scope='row'
+                        padding='none'
+                      >
+                        {row.id}
+                      </TableCell>
+                      <TableCell align='left'>{row.name}</TableCell>
+                      <TableCell align='left'>{row.price}</TableCell>
+                      <TableCell align='left'>{row.category}</TableCell>
+                      <TableCell align='left'>{row.brand}</TableCell>
+                      <TableCell align='left'>{row.edit}</TableCell>
+                    </TableRow>
+                  )
+                })}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component='div'
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+        />
+      </Paper>
+      <FormControlLabel
+        control={<Switch checked={dense} onChange={handleChangeDense} />}
+        label='Dense padding'
+      />
       <Button
         className={classes.button}
         size='small'
@@ -165,53 +292,6 @@ export const ProductListScreen = ({ history }) => {
       >
         <Typography>Create Product</Typography>
       </Button>
-      <TableContainer className={classes.container}>
-        <Table stickyHeader aria-label='sticky table'>
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  className={classes.tableHead}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow hover role='checkbox' tabIndex={-1} key={row.id}>
-                    {columns.map((column) => {
-                      const value = row[column.id]
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      )
-                    })}
-                  </TableRow>
-                )
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component='div'
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
-      />
-    </Paper>
+    </div>
   )
 }

@@ -20,7 +20,6 @@ import EditIcon from '@material-ui/icons/Edit'
 
 import {
   createData,
-  useStyles,
   getComparator,
   EnhancedTableHead,
   EnhancedTableToolbar,
@@ -30,6 +29,7 @@ import { Button } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 import { listUsers, deleteUser } from '../../actions/userActions'
 import { Link } from 'react-router-dom'
+import { useStyles } from './ulsStyle'
 
 import { ModalMessage } from '../../components/ModalMessage'
 import { ModalLoader } from '../../components/ModalLoader'
@@ -69,6 +69,9 @@ export const UserListScreen = ({ history }) => {
       dispatch(listUsers())
     } else {
       history.push('/login')
+    }
+    if (successDelete) {
+      setSelected([])
     }
   }, [dispatch, history, userInfo, successDelete])
 

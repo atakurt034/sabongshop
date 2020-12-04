@@ -53,7 +53,7 @@ export const getProductById = asyncHandler(async (req, res) => {
 // @route   DELETE /api/products:id
 // @access  Private/Admin
 export const deleteProduct = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id)
+  const product = Product.find({ _id: { $in: req.params.id.split(',') } })
 
   if (product) {
     await product.remove()

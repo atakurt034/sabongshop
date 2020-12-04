@@ -10,6 +10,7 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
+  Paper,
 } from '@material-ui/core'
 
 import AccountCircle from '@material-ui/icons/AccountCircle'
@@ -84,76 +85,78 @@ export const UserEditScreen = ({ match, history }) => {
       ) : error ? (
         <ModalMessage variant='error'>{error}</ModalMessage>
       ) : (
-        <Container maxWidth='xs'>
-          <form onSubmit={submitHandler}>
-            <FormControl fullWidth required>
-              <InputLabel htmlFor='name'>Name</InputLabel>
-              <Input
-                required
-                type='name'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                id='name'
-                startAdornment={
-                  <InputAdornment position='start'>
-                    <AccountCircle />
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
+        <Container maxWidth='sm'>
+          <Paper style={{ padding: 25 }}>
+            <form onSubmit={submitHandler}>
+              <FormControl fullWidth required>
+                <InputLabel htmlFor='name'>Name</InputLabel>
+                <Input
+                  required
+                  type='name'
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  id='name'
+                  startAdornment={
+                    <InputAdornment position='start'>
+                      <AccountCircle />
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
 
-            <FormControl required fullWidth>
-              <InputLabel htmlFor='email'>Email</InputLabel>
-              <Input
-                required
-                type='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                id='email'
-                startAdornment={
-                  <InputAdornment position='start'>
-                    <EmailIcon />
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
+              <FormControl required fullWidth>
+                <InputLabel htmlFor='email'>Email</InputLabel>
+                <Input
+                  required
+                  type='email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  id='email'
+                  startAdornment={
+                    <InputAdornment position='start'>
+                      <EmailIcon />
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
 
-            <Box py={2} display='flex'>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={isAdmin}
-                    onChange={(e) => setIsAdmin(e.target.checked)}
-                    icon={<NotInterestedIcon color='secondary' />}
-                    checkedIcon={
-                      <CheckCircleIcon
-                        style={{
-                          color: 'green',
-                          backgroundColor: '#fff',
-                          borderRadius: '50%',
-                        }}
-                      />
-                    }
-                    name='isAdmin'
-                  />
-                }
-                label='Admin?'
-              />
-            </Box>
+              <Box py={2} display='flex'>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={isAdmin}
+                      onChange={(e) => setIsAdmin(e.target.checked)}
+                      icon={<NotInterestedIcon color='secondary' />}
+                      checkedIcon={
+                        <CheckCircleIcon
+                          style={{
+                            color: 'green',
+                            backgroundColor: '#fff',
+                            borderRadius: '50%',
+                          }}
+                        />
+                      }
+                      name='isAdmin'
+                    />
+                  }
+                  label='Admin?'
+                />
+              </Box>
 
-            <Box justifyContent='center' display='flex' p={2}>
-              <div>
-                <Button
-                  type='submit'
-                  variant='contained'
-                  color='primary'
-                  disabled={loading}
-                >
-                  UPDATE
-                </Button>
-              </div>
-            </Box>
-          </form>
+              <Box justifyContent='center' display='flex' p={2}>
+                <div>
+                  <Button
+                    type='submit'
+                    variant='contained'
+                    color='primary'
+                    disabled={loading}
+                  >
+                    UPDATE
+                  </Button>
+                </div>
+              </Box>
+            </form>
+          </Paper>
         </Container>
       )}
     </Container>

@@ -1,20 +1,26 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles, lighten } from '@material-ui/core'
 
-export const useStyles = makeStyles({
+export const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    borderRadius: 10,
   },
-  container: {
-    maxHeight: '75vh',
+  paper: {
+    width: '100%',
+    marginBottom: theme.spacing(2),
   },
-  tableHead: { fontWeight: 900, borderRadius: 10 },
-  title: {
-    textAlign: 'center',
-    padding: 10,
-    margin: 10,
+  table: {
+    minWidth: 750,
+  },
+  visuallyHidden: {
+    border: 0,
+    clip: 'rect(0 0 0 0)',
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+    padding: 0,
     position: 'absolute',
-    fontWeight: 600,
+    top: 20,
+    width: 1,
   },
   button: {
     color: '#fff',
@@ -23,4 +29,24 @@ export const useStyles = makeStyles({
     padding: 10,
     margin: 10,
   },
-})
+}))
+
+export const useToolbarStyles = makeStyles((theme) => ({
+  root: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(1),
+  },
+  highlight:
+    theme.palette.type === 'light'
+      ? {
+          color: theme.palette.secondary.main,
+          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+        }
+      : {
+          color: theme.palette.text.primary,
+          backgroundColor: theme.palette.secondary.dark,
+        },
+  title: {
+    flex: '1 1 100%',
+  },
+}))

@@ -9,14 +9,10 @@ import {
   InputAdornment,
   Box,
   Button,
-  Checkbox,
-  FormControlLabel,
 } from '@material-ui/core'
 
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import EmailIcon from '@material-ui/icons/Email'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle'
-import NotInterestedIcon from '@material-ui/icons/NotInterested'
 
 import { PRODUCT_UPDATE_RESET } from '../../constants/productConstants'
 import { listProductDetails, updateProduct } from '../../actions/productActions'
