@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -10,12 +10,25 @@ import {
   ListItemText,
   Grid,
   Container,
+  useTheme,
+  useMediaQuery,
 } from '@material-ui/core'
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft'
+import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount'
 import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import StoreIcon from '@material-ui/icons/Store'
+
+let anchorOriginSettings = {
+  vertical: 'top',
+  horizontal: 'left',
+}
+
+let transformOriginSettings = {
+  vertical: 'top',
+  horizontal: 'right',
+}
 
 const StyledMenu = withStyles({
   paper: {
@@ -25,14 +38,8 @@ const StyledMenu = withStyles({
   <Menu
     elevation={0}
     getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: 'top',
-      horizontal: 'left',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
+    anchorOrigin={anchorOriginSettings}
+    transformOrigin={transformOriginSettings}
     {...props}
   />
 ))
@@ -51,6 +58,9 @@ const StyledMenuItem = withStyles((theme) => ({
 export const Admin = () => {
   const [anchorEl, setAnchorEl] = React.useState(null)
 
+  const theme = useTheme()
+  const sm = useMediaQuery(theme.breakpoints.down('sm'))
+
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
@@ -61,6 +71,11 @@ export const Admin = () => {
     setAnchorEl(null)
   }
 
+  let arrowIcon = <ArrowLeftIcon fontSize='small' />
+  if (sm) {
+    arrowIcon = <ArrowRightIcon fontSize='small' />
+  }
+
   const logged = (
     <>
       <Button
@@ -69,21 +84,25 @@ export const Admin = () => {
         style={{
           textTransform: 'capitalize',
           fontSize: 'inherit',
-          margin: 0,
-          padding: '5px',
+          margin: '0 0 0 5px',
+          // padding: '5px',
           boxSizing: 'border-box',
+          color: 'grey',
         }}
         variant='text'
         disableElevation
         disableFocusRipple
-        color='inherit'
         onClick={handleClick}
         size='small'
       >
         <Container disableGutters>
           <Grid justify='flex-start' container>
             <Grid item xs={4}>
-              <SupervisorAccountIcon fontSize='inherit' />
+              <SupervisorAccountIcon
+                style={{ marginRight: 10 }}
+                fontSize='small'
+                color='action'
+              />
             </Grid>
             <Grid
               style={{
@@ -93,7 +112,7 @@ export const Admin = () => {
               item
               xs={8}
             >
-              <ArrowLeftIcon fontSize='small' /> {'Admin'}
+              {arrowIcon} {'Admin'}
             </Grid>
           </Grid>
         </Container>
@@ -136,6 +155,20 @@ export const Admin = () => {
       </StyledMenu>
     </>
   )
+
+  if (sm) {
+    anchorOriginSettings = {
+      vertical: 'bottom',
+      horizontal: 'right',
+    }
+    transformOriginSettings = {
+      vertical: 'bottom',
+      horizontal: 'left',
+    }
+  }
+
+  // useEffect(() => {
+  // }, [])
 
   return logged
 }

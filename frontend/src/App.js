@@ -8,7 +8,7 @@ import {
   Container,
   makeStyles,
 } from '@material-ui/core'
-import BottomNav from './components/NavItems/BottomNav'
+import BottomNav from './components/NavItems/BottomNav/BottomNav'
 
 import { HomeScreen } from './screens/HomeScreen'
 import { ProductScreen } from './screens/ProductScreen/ProductScreen'

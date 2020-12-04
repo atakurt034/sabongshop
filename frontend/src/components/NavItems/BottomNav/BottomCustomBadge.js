@@ -5,17 +5,19 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  useTheme,
+  useMediaQuery,
 } from '@material-ui/core/'
 import { withStyles } from '@material-ui/core/styles'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import HomeIcon from '@material-ui/icons/Home'
 import PersonIcon from '@material-ui/icons/Person'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import InboxIcon from '@material-ui/icons/MoveToInbox'
+import { Admin } from '../Account/Admin'
 
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { logout } from '../../actions/userActions'
+import { logout } from '../../../actions/userActions'
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
@@ -55,9 +57,22 @@ export const Account = () => {
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
+  const theme = useTheme()
+  const sm = useMediaQuery(theme.breakpoints.down('sm'))
+
   let link = '/login'
   if (userInfo) {
     link = '#'
+  }
+
+  let anchorOriginSettings = {
+    vertical: 'bottom',
+    horizontal: 'center',
+  }
+
+  let transformOriginSettings = {
+    vertical: 'top',
+    horizontal: 'center',
   }
 
   const StyledMenu = withStyles({
@@ -68,14 +83,8 @@ export const Account = () => {
     <Menu
       elevation={0}
       getContentAnchorEl={null}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'center',
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'center',
-      }}
+      anchorOrigin={anchorOriginSettings}
+      transformOrigin={transformOriginSettings}
       {...props}
     />
   ))
@@ -137,17 +146,12 @@ export const Account = () => {
             <ListItemText primary='Profile' />
           </Link>
         </StyledMenuItem>
+        {userInfo && userInfo.isAdmin && <Admin />}
         <StyledMenuItem onClick={logoutHandler}>
           <ListItemIcon>
             <ExitToAppIcon fontSize='small' />
           </ListItemIcon>
           <ListItemText primary='Logout' />
-        </StyledMenuItem>
-        <StyledMenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <InboxIcon fontSize='small' />
-          </ListItemIcon>
-          <ListItemText primary='Inbox' />
         </StyledMenuItem>
       </StyledMenu>
     </>
