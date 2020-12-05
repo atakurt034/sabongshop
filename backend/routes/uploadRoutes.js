@@ -1,11 +1,12 @@
+import path from 'path'
 import express from 'express'
 import multer from 'multer'
-import path from 'path'
-
+import normalize from 'normalize-path'
 const router = express.Router()
+
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, 'uploads')
+    cb(null, 'uploads/')
   },
   filename(req, file, cb) {
     cb(
@@ -15,7 +16,7 @@ const storage = multer.diskStorage({
   },
 })
 
-const checkFileType = (file, cb) => {
+function checkFileType(file, cb) {
   const filetypes = /jpg|jpeg|png/
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase())
   const mimetype = filetypes.test(file.mimetype)
@@ -23,7 +24,7 @@ const checkFileType = (file, cb) => {
   if (extname && mimetype) {
     return cb(null, true)
   } else {
-    cb('images only')
+    cb('Images only!')
   }
 }
 
@@ -35,7 +36,7 @@ const upload = multer({
 })
 
 router.post('/', upload.single('image'), (req, res) => {
-  res.send(`/${req.file.path}`)
+  res.send(`/${normalize(req.file.path)}`)
 })
 
 export default router

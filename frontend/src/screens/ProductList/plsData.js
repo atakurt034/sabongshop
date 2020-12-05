@@ -33,7 +33,7 @@ const headCells = [
     id: 'price',
     numeric: false,
     disablePadding: false,
-    label: '₱ Price',
+    label: 'Price',
     format: (value) => value.toLocaleString('en', options),
   },
   { id: 'category', numeric: false, disablePadding: false, label: 'Category' },

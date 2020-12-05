@@ -37,6 +37,7 @@ import {
   PRODUCT_CREATE_RESET,
   PRODUCT_UPDATE_RESET,
 } from '../../constants/productConstants'
+import NumberFormat from 'react-number-format'
 
 import { ModalMessage } from '../../components/ModalMessage'
 import { ModalLoader } from '../../components/ModalLoader'
@@ -254,7 +255,18 @@ export const ProductListScreen = ({ history }) => {
                         {row.id}
                       </TableCell>
                       <TableCell align='left'>{row.name}</TableCell>
-                      <TableCell align='left'>{row.price}</TableCell>
+                      <TableCell align='left'>
+                        {
+                          <NumberFormat
+                            prefix={'₱ '}
+                            readOnly
+                            thousandSeparator
+                            decimalScale={2}
+                            displayType='text'
+                            value={row.price}
+                          />
+                        }
+                      </TableCell>
                       <TableCell align='left'>{row.category}</TableCell>
                       <TableCell align='left'>{row.brand}</TableCell>
                       <TableCell align='left'>{row.edit}</TableCell>

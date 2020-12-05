@@ -5,14 +5,20 @@ import {
   Container,
   FormControl,
   InputLabel,
-  Input,
   InputAdornment,
   Box,
   Button,
+  CardMedia,
+  OutlinedInput,
+  useMediaQuery,
+  useTheme,
 } from '@material-ui/core'
 
+import { useStyles } from './pesStyle'
 import AccountCircle from '@material-ui/icons/AccountCircle'
-import EmailIcon from '@material-ui/icons/Email'
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
+import CloudUploadIcon from '@material-ui/icons/CloudUpload'
+import NumberFormat from 'react-number-format'
 
 import { PRODUCT_UPDATE_RESET } from '../../constants/productConstants'
 import { listProductDetails, updateProduct } from '../../actions/productActions'
@@ -23,6 +29,9 @@ import { BackButton } from '../../components/NavItems/BackButton'
 
 export const ProductEditScreen = ({ match, history }) => {
   const productId = match.params.id
+  const classes = useStyles()
+  const theme = useTheme()
+  const xs = useMediaQuery(theme.breakpoints.down('xs'))
 
   const [name, setName] = useState('')
   const [price, setPrice] = useState(0)
@@ -31,7 +40,6 @@ export const ProductEditScreen = ({ match, history }) => {
   const [category, setCategory] = useState('')
   const [countInStock, setCountInStock] = useState(0)
   const [description, setDescription] = useState('')
-  const [numReviews, setNumReviews] = useState(0)
   const [uploading, setUploading] = useState(false)
 
   const dispatch = useDispatch()
@@ -61,23 +69,25 @@ export const ProductEditScreen = ({ match, history }) => {
         setCategory(product.category)
         setCountInStock(product.countInStock)
         setDescription(product.description)
-        setNumReviews(product.numReviews)
       }
     }
-  }, [dispatch, product, productId, history, successUpdate])
+  }, [dispatch, history, productId, product, successUpdate])
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0]
     const formData = new FormData()
     formData.append('image', file)
     setUploading(true)
+
     try {
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       }
+
       const { data } = await axios.post('/api/upload', formData, config)
+
       setImage(data)
       setUploading(false)
     } catch (error) {
@@ -96,15 +106,14 @@ export const ProductEditScreen = ({ match, history }) => {
         image,
         brand,
         category,
-        countInStock,
         description,
-        numReviews,
+        countInStock,
       })
     )
   }
 
   return (
-    <Container maxWidth='sm'>
+    <Container maxWidth='md'>
       <h2>Edit Product</h2>
       <BackButton to={'/admin/productlist'} />
       {loadingUpdate && <ModalLoader />}
@@ -116,56 +125,94 @@ export const ProductEditScreen = ({ match, history }) => {
       ) : error ? (
         <ModalMessage variant='error'>{error}</ModalMessage>
       ) : (
-        <Container maxWidth='xs'>
+        <Container maxWidth='sm'>
+          <Box p={1}>
+            <CardMedia image={image} component='img' />
+          </Box>
           <form onSubmit={submitHandler}>
-            <FormControl fullWidth required>
-              <InputLabel htmlFor='name'>Name</InputLabel>
-              <Input
-                required
-                type='name'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                id='name'
-                startAdornment={
-                  <InputAdornment position='start'>
-                    <AccountCircle />
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-
-            <FormControl required fullWidth>
-              <InputLabel htmlFor='price'>Price</InputLabel>
-              <Input
-                required
-                type='number'
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                id='price'
-                startAdornment={
-                  <InputAdornment position='start'>
-                    <EmailIcon />
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-
-            <FormControl required fullWidth>
-              <InputLabel htmlFor='price'>Price</InputLabel>
-              <Input
-                required
-                type='number'
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                id='price'
-                startAdornment={
-                  <InputAdornment position='start'>
-                    <EmailIcon />
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-
+            <Box m={2}>
+              <FormControl fullWidth required>
+                <InputLabel variant='outlined' htmlFor='name'>
+                  Name
+                </InputLabel>
+                <OutlinedInput
+                  labelWidth={60}
+                  required
+                  type='name'
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  id='name'
+                  startAdornment={
+                    <InputAdornment position='start'>
+                      <AccountCircle />
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </Box>
+            <Box m={2}>
+              <FormControl required fullWidth>
+                <InputLabel variant='outlined' htmlFor='price'>
+                  Price
+                </InputLabel>
+                <NumberFormat
+                  type='text'
+                  id='price'
+                  value={price}
+                  labelWidth={50}
+                  customInput={OutlinedInput}
+                  startAdornment={
+                    <InputAdornment position='start'>₱</InputAdornment>
+                  }
+                  thousandSeparator
+                  decimalScale={2}
+                  onValueChange={(values) => {
+                    setPrice(values.value)
+                  }}
+                />
+              </FormControl>
+            </Box>
+            <Box m={2}>
+              <FormControl required fullWidth>
+                <InputLabel htmlFor='image' variant='outlined'>
+                  Image
+                </InputLabel>
+                <OutlinedInput
+                  id='image'
+                  required
+                  value={image}
+                  labelWidth={50}
+                  onChange={(e) => setImage(e.target.value)}
+                  endAdornment={
+                    <InputAdornment>
+                      <input
+                        accept='image/*'
+                        multiple
+                        className={classes.input}
+                        id='contained-button-file'
+                        type='file'
+                        onChange={uploadFileHandler}
+                      />
+                      <label htmlFor='contained-button-file'>
+                        <Button
+                          variant='contained'
+                          color='primary'
+                          component='span'
+                          size='small'
+                          startIcon={
+                            !xs && <CloudUploadIcon fontSize='small' />
+                          }
+                        >
+                          {xs && <CloudUploadIcon fontSize='small' />}
+                          {!xs && 'Upload'}
+                        </Button>
+                      </label>
+                    </InputAdornment>
+                  }
+                />
+                {uploading && <ModalLoader />}
+              </FormControl>
+            </Box>
             <Box justifyContent='center' display='flex' p={2}>
               <div>
                 <Button
