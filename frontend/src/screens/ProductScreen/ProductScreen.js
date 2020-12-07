@@ -31,8 +31,10 @@ import {
 import { PRODUCT_CREATE_REVIEW_RESET } from '../../constants/productConstants'
 
 import { BackButton } from '../../components/NavItems/BackButton'
-import Loader from '../../components/Loader'
+import { ModalLoader } from '../../components/ModalLoader'
+import { ModalMessage } from '../../components/ModalMessage'
 import Message from '../../components/Message'
+import Loader from '../../components/Loader'
 import { useStyle } from './ProductStyles'
 import Ratings from '../../components/Rating'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
@@ -95,11 +97,9 @@ export const ProductScreen = ({ match, history }) => {
   }
 
   const classes = useStyle()
-
-  return (
+  let content = (
     <>
       <Grid container spacing={2} justify='center'>
-        {loading ? <Loader /> : error && <Message error={error} />}
         <Grid item xs={12} className={classes.button}>
           <BackButton to={'/'} />
         </Grid>
@@ -337,4 +337,11 @@ export const ProductScreen = ({ match, history }) => {
       </Grid>
     </>
   )
+  if (loading) {
+    content = <ModalLoader />
+  } else if (error) {
+    content = <ModalMessage variant='error'>{error}</ModalMessage>
+  }
+
+  return content
 }

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Container, Grid } from '@material-ui/core'
+import { Container, Grid, Modal } from '@material-ui/core'
 import { useStyles } from './hsStyle'
 import { useDispatch, useSelector } from 'react-redux'
 import { Paginate } from '../components/Paginate'
@@ -27,30 +27,30 @@ export const HomeScreen = ({ match }) => {
   const classes = useStyles()
   return (
     <Container style={{ padding: 15 }}>
-      <Grid container spacing={4}>
-        {products.map((product) => {
-          return (
-            <Grid
-              className={classes.item}
-              key={product._id}
-              item
-              xs={12}
-              sm={6}
-              md={6}
-              lg={3}
-              xl={2}
-            >
-              {loading ? (
-                <ModalLoader />
-              ) : error ? (
-                <ModalMessage variant='error'>{error}</ModalMessage>
-              ) : (
+      {loading ? (
+        <ModalLoader />
+      ) : error ? (
+        <ModalMessage variant='error'>{error}</ModalMessage>
+      ) : (
+        <Grid container spacing={4}>
+          {products.map((product) => {
+            return (
+              <Grid
+                className={classes.item}
+                key={product._id}
+                item
+                xs={12}
+                sm={6}
+                md={6}
+                lg={3}
+                xl={2}
+              >
                 <Product product={product} />
-              )}
-            </Grid>
-          )
-        })}
-      </Grid>
+              </Grid>
+            )
+          })}
+        </Grid>
+      )}
       <Grid container justify='center' className={classes.rootPaginate}>
         <Paginate pages={pages} page={page} keyword={keyword ? keyword : ''} />
       </Grid>
