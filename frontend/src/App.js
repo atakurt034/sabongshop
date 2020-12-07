@@ -25,6 +25,7 @@ import { UserListScreen } from './screens/UserListScreen/UserListScreen'
 import { UserEditScreen } from './screens/UserEditScreen/UserEditScreen'
 import { ProductListScreen } from './screens/ProductList/ProductListScreen'
 import { ProductEditScreen } from './screens/ProductEditScreen/ProductEditScreen'
+import { MyOrdersScreen } from './screens/MyOrdersScreen/MyOrdersScreen'
 
 function App() {
   const useStyle = makeStyles((theme) => ({
@@ -45,6 +46,7 @@ function App() {
       <Header />
       <main>
         <Container className={classes.root}>
+          <Route path='/myorders' component={MyOrdersScreen} />
           <Route path='/order/:id' component={OrderScreen} />
           <Route path='/admin/orderlist' component={OrderListScreen} />
           <Route path='/placeorder' component={PlaceOrderScreen} />

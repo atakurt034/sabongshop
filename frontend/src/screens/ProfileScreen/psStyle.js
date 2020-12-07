@@ -37,4 +37,18 @@ export const useStyles = makeStyles((theme) => ({
       backgroundColor: 'red',
     },
   },
+  success: {
+    color: green[500],
+  },
+  chip: {
+    backgroundColor: 'transparent',
+  },
+  rootTable: {
+    width: '100%',
+    borderRadius: 10,
+  },
+  container: {
+    maxHeight: 440,
+  },
+  tableHead: { fontWeight: 900, borderRadius: 10 },
 }))

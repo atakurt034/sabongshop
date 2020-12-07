@@ -1,5 +1,4 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -10,8 +9,12 @@ import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Button } from '@material-ui/core'
+import { Button, Chip } from '@material-ui/core'
+
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import NotInterestedIcon from '@material-ui/icons/NotInterested'
+import { useStyles } from './psStyle'
+import NumberFormat from 'react-number-format'
 
 const options = {
   minimumFractionDigits: 2,
@@ -54,53 +57,61 @@ function createData(id, date, total, paid, delivered, details) {
   return { id, date, total, paid, delivered, details }
 }
 
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-    borderRadius: 10,
-  },
-  container: {
-    maxHeight: 440,
-  },
-  tableHead: { fontWeight: 900, borderRadius: 10 },
-})
-
 export const TableOrders = () => {
+  const classes = useStyles()
+  const [page, setPage] = React.useState(0)
+  const [rowsPerPage, setRowsPerPage] = React.useState(10)
+
   const rows = []
   const orderListMy = useSelector((state) => state.orderListMy)
   const { orders } = orderListMy
   orders.map((order) => {
     return rows.push(
-      createData(
-        order._id,
-        order.createdAt.substring(0, 10),
-        order.totalPrice,
-        order.isPaid ? (
-          order.paidAt.substring(0, 10)
-        ) : (
-          <NotInterestedIcon color='error' />
-        ),
-        order.isDelivered ? (
-          order.deliveredAt.substring(0, 10)
-        ) : (
-          <NotInterestedIcon color='error' />
-        ),
-        <Link
-          key={order._id}
-          to={`/order/${order._id}`}
-          style={{ textDecoration: 'none' }}
-        >
-          <Button variant='contained' color='primary'>
-            Details
-          </Button>
-        </Link>
-      )
+      order.isPaid &&
+        order.isDelivered &&
+        createData(
+          order._id,
+          order.createdAt.substring(0, 10),
+          <NumberFormat
+            prefix={'₱ '}
+            readOnly
+            thousandSeparator
+            decimalScale={2}
+            displayType='text'
+            value={order.totalPrice}
+          />,
+          order.isPaid ? (
+            <Chip
+              className={classes.chip}
+              size='small'
+              label={order.paidAt.substring(0, 10)}
+              icon={<CheckCircleIcon className={classes.success} />}
+            />
+          ) : (
+            <NotInterestedIcon color='error' />
+          ),
+          order.isDelivered ? (
+            <Chip
+              className={classes.chip}
+              size='small'
+              label={order.deliveredAt.substring(0, 10)}
+              icon={<CheckCircleIcon className={classes.success} />}
+            />
+          ) : (
+            <NotInterestedIcon color='error' />
+          ),
+          <Link
+            key={order._id}
+            to={`/order/${order._id}`}
+            style={{ textDecoration: 'none' }}
+          >
+            <Button variant='contained' color='primary'>
+              Details
+            </Button>
+          </Link>
+        )
     )
   })
-
-  const classes = useStyles()
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -112,7 +123,7 @@ export const TableOrders = () => {
   }
 
   return (
-    <Paper className={classes.root}>
+    <Paper className={classes.rootTable}>
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label='sticky table'>
           <TableHead>

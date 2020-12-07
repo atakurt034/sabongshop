@@ -28,7 +28,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 
-import { getUserDetails, updateUserProfile } from '../../actions/userActions'
+import {
+  getUserDetails,
+  updateUserProfile,
+  getAvatar,
+} from '../../actions/userActions'
 import { listMyOrders } from '../../actions/orderActions'
 import { USER_UPDATE_PROFILE_RESET } from '../../constants/userConstants'
 
@@ -76,6 +80,7 @@ export const ProfileScreen = ({ location, history }) => {
     } else {
       if (!user || !user.name || success) {
         dispatch({ type: USER_UPDATE_PROFILE_RESET })
+        dispatch(getAvatar('profile'))
         dispatch(getUserDetails('profile'))
         dispatch(listMyOrders())
       } else {
@@ -143,7 +148,7 @@ export const ProfileScreen = ({ location, history }) => {
         },
       }
 
-      const { data } = await axios.post('/api/upload', formData, config)
+      const { data } = await axios.post('/api/upload/avatar', formData, config)
 
       setImage(data)
       setUploading(false)
@@ -302,7 +307,7 @@ export const ProfileScreen = ({ location, history }) => {
           </Container>
         </Grid>
         <Grid item xs={12} sm={9}>
-          <h2>My Orders</h2>
+          <h2>My Order History</h2>
           {loadingOrders ? (
             <Loader />
           ) : errorOrders ? (

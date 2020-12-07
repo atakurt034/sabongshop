@@ -15,6 +15,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { createOrder } from '../../actions/orderActions'
+import { CART_RESET } from '../../constants/cartConstants'
 
 import { CheckSteps } from '../../components/NavItems/Stepper'
 import Message from '../../components/Message'
@@ -43,16 +44,18 @@ export const PlaceOrderScreen = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
+  const dispatch = useDispatch()
+
   useEffect(() => {
     if (!userInfo) {
       history.push('/login')
     }
     if (success) {
       history.push(`/order/${order._id}`)
+      dispatch({ type: CART_RESET })
     }
-  }, [history, success, order, userInfo])
+  }, [history, success, order, userInfo, dispatch])
 
-  const dispatch = useDispatch()
   const placeOrderHandler = (params) => {
     dispatch(
       createOrder({

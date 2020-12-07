@@ -18,6 +18,7 @@ import { login } from '../../actions/userActions'
 import Message from '../../components/Message'
 import Loader from '../../components/Loader'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import { listMyOrders } from '../../actions/orderActions'
 
 export const LoginScreen = ({ location, history }) => {
   const [email, setEmail] = useState('')
@@ -33,8 +34,9 @@ export const LoginScreen = ({ location, history }) => {
   useEffect(() => {
     if (userInfo) {
       history.push(redirect)
+      dispatch(listMyOrders())
     }
-  }, [history, redirect, userInfo])
+  }, [history, redirect, userInfo, dispatch])
 
   const submitHandler = (e) => {
     e.preventDefault()

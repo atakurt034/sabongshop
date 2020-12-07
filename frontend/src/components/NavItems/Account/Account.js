@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
-import { useStyles } from './acStyle'
+import { useStyles, StyledBadge } from './acStyle'
 import {
   Button,
   Menu,
@@ -13,12 +13,16 @@ import {
   Typography,
   Avatar,
 } from '@material-ui/core'
+
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import PersonIcon from '@material-ui/icons/Person'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import { MyOrdersBadge } from './MyOrdersBadge'
+
 import { Admin } from './Admin'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout } from '../../../actions/userActions'
+import { listMyOrders } from '../../../actions/orderActions'
 
 import { getAvatar } from '../../../actions/userActions'
 
@@ -60,11 +64,25 @@ export const Account = (e) => {
   const sm = useMediaQuery(theme.breakpoints.up('md'))
   const classes = useStyles()
 
+  const orderCount = []
+  const orderListMy = useSelector((state) => state.orderListMy)
+  const { orders } = orderListMy
+  if (orders) {
+    orders.map((order) => !order.isPaid && orderCount.push(order._id))
+  }
+  const count = orderCount.length
+
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
   const userAvatar = useSelector((state) => state.userAvatar)
   const { user } = userAvatar
+
+  const orderCreate = useSelector((state) => state.orderCreate)
+  const { success } = orderCreate
+
+  const orderPay = useSelector((state) => state.orderPay)
+  const { success: successPay } = orderPay
 
   const dispatch = useDispatch()
 
@@ -74,7 +92,10 @@ export const Account = (e) => {
     } else {
       setAvatars(user.image)
     }
-  }, [dispatch, user, userInfo])
+    if (success || successPay) {
+      dispatch(listMyOrders())
+    }
+  }, [dispatch, user, userInfo, success, successPay])
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
@@ -91,6 +112,18 @@ export const Account = (e) => {
   if (sm) {
     size = 'large'
   }
+  const avatarIcon = (
+    <StyledBadge
+      overlap='circle'
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      variant={count !== 0 ? 'dot' : 'standard'}
+    >
+      <Avatar alt='Remy Sharp' src={avatar} className={classes.avatar} />
+    </StyledBadge>
+  )
 
   const logged = (
     <>
@@ -101,11 +134,7 @@ export const Account = (e) => {
         onClick={userInfo && handleClick}
         size='small'
         startIcon={
-          userInfo && user ? (
-            <Avatar src={avatar} className={classes.avatar} />
-          ) : (
-            <PersonIcon fontSize={size} />
-          )
+          userInfo && user ? avatarIcon : <PersonIcon fontSize={size} />
         }
         endIcon={userInfo && <ArrowDropDownIcon />}
       >
@@ -138,6 +167,14 @@ export const Account = (e) => {
           </Link>
         </StyledMenuItem>
         {userInfo && userInfo.isAdmin && <Admin />}
+        <StyledMenuItem onClick={handleClose}>
+          <Link className={classes.link} to='/myorders'>
+            <ListItemIcon>
+              <MyOrdersBadge />
+            </ListItemIcon>
+            <ListItemText primary='Orders' />
+          </Link>
+        </StyledMenuItem>
         <StyledMenuItem onClick={logoutHandler}>
           <ListItemIcon>
             <ExitToAppIcon fontSize='small' />

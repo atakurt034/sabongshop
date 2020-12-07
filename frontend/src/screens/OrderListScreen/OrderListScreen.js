@@ -12,6 +12,7 @@ import {
   Checkbox,
   FormControlLabel,
   Switch,
+  Chip,
 } from '@material-ui/core'
 
 import NotInterestedIcon from '@material-ui/icons/NotInterested'
@@ -92,17 +93,22 @@ export const OrderListScreen = ({ history }) => {
           order.createdAt.substring(0, 10),
           order.totalPrice,
           order.isPaid ? (
-            `${(<CheckCircleIcon fontSize='small' />)} ${order.paidAt.substring(
-              0,
-              10
-            )}`
+            <Chip
+              className={classes.chip}
+              size='small'
+              label={order.paidAt.substring(0, 10)}
+              icon={<CheckCircleIcon className={classes.success} />}
+            />
           ) : (
             <NotInterestedIcon color='secondary' />
           ),
           order.isDelivered ? (
-            `${(
-              <CheckCircleIcon fontSize='small' />
-            )} ${order.deliveredAt.substring(0, 10)}`
+            <Chip
+              className={classes.chip}
+              size='small'
+              label={order.deliveredAt.substring(0, 10)}
+              icon={<CheckCircleIcon className={classes.success} />}
+            />
           ) : (
             <NotInterestedIcon color='secondary' />
           ),
