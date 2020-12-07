@@ -49,7 +49,7 @@ export const getProductById = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Delete a products
+// @desc    Delete a product or products
 // @route   DELETE /api/products:id
 // @access  Private/Admin
 export const deleteProduct = asyncHandler(async (req, res) => {
@@ -132,6 +132,7 @@ export const createProductReview = asyncHandler(async (req, res) => {
     }
     const review = {
       name: req.user.name,
+      image: req.user.image,
       rating: Number(rating),
       comment,
       user: req.user._id,

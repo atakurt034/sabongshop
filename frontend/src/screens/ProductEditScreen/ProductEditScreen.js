@@ -12,13 +12,16 @@ import {
   OutlinedInput,
   useMediaQuery,
   useTheme,
+  TextField,
 } from '@material-ui/core'
 
 import { useStyles } from './pesStyle'
-import AccountCircle from '@material-ui/icons/AccountCircle'
-import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 import NumberFormat from 'react-number-format'
+import ExtensionIcon from '@material-ui/icons/Extension'
+import EcoIcon from '@material-ui/icons/Eco'
+import WhatshotIcon from '@material-ui/icons/Whatshot'
+import DynamicFeedIcon from '@material-ui/icons/DynamicFeed'
 
 import { PRODUCT_UPDATE_RESET } from '../../constants/productConstants'
 import { listProductDetails, updateProduct } from '../../actions/productActions'
@@ -144,12 +147,96 @@ export const ProductEditScreen = ({ match, history }) => {
                   id='name'
                   startAdornment={
                     <InputAdornment position='start'>
-                      <AccountCircle />
+                      <WhatshotIcon />
                     </InputAdornment>
                   }
                 />
               </FormControl>
             </Box>
+
+            <Box m={2}>
+              <FormControl fullWidth required>
+                <InputLabel variant='outlined' htmlFor='brand'>
+                  Brand
+                </InputLabel>
+                <OutlinedInput
+                  labelWidth={60}
+                  required
+                  type='brand'
+                  value={brand}
+                  onChange={(e) => setBrand(e.target.value)}
+                  id='brand'
+                  startAdornment={
+                    <InputAdornment position='start'>
+                      <EcoIcon />
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </Box>
+
+            <Box m={2}>
+              <FormControl fullWidth required>
+                <InputLabel variant='outlined' htmlFor='category'>
+                  Category
+                </InputLabel>
+                <OutlinedInput
+                  labelWidth={90}
+                  required
+                  type='text'
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  id='category'
+                  startAdornment={
+                    <InputAdornment position='start'>
+                      <ExtensionIcon />
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </Box>
+
+            <Box m={2}>
+              <FormControl fullWidth required>
+                <TextField
+                  required
+                  value={description}
+                  id='description'
+                  label='Description'
+                  multiline
+                  rowsMax={6}
+                  fullWidth
+                  variant='outlined'
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </FormControl>
+            </Box>
+
+            <Box m={2}>
+              <FormControl required fullWidth>
+                <InputLabel variant='outlined' htmlFor='countInStock'>
+                  Stock
+                </InputLabel>
+
+                <NumberFormat
+                  type='text'
+                  id='countInStock'
+                  value={countInStock}
+                  labelWidth={50}
+                  customInput={OutlinedInput}
+                  thousandSeparator
+                  startAdornment={
+                    <InputAdornment position='start'>
+                      <DynamicFeedIcon />
+                    </InputAdornment>
+                  }
+                  onValueChange={(values) => {
+                    setCountInStock(values.value)
+                  }}
+                />
+              </FormControl>
+            </Box>
+
             <Box m={2}>
               <FormControl required fullWidth>
                 <InputLabel variant='outlined' htmlFor='price'>
@@ -172,6 +259,7 @@ export const ProductEditScreen = ({ match, history }) => {
                 />
               </FormControl>
             </Box>
+
             <Box m={2}>
               <FormControl required fullWidth>
                 <InputLabel htmlFor='image' variant='outlined'>
@@ -213,6 +301,7 @@ export const ProductEditScreen = ({ match, history }) => {
                 {uploading && <ModalLoader />}
               </FormControl>
             </Box>
+
             <Box justifyContent='center' display='flex' p={2}>
               <div>
                 <Button

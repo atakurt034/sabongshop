@@ -19,6 +19,7 @@ import { ShippingScreen } from './screens/ShippingScreen/ShippingScreen'
 import { PaymentScreen } from './screens/PaymentScreen/PaymentScreen'
 import { PlaceOrderScreen } from './screens/PlaceOrderScreen/PlaceOrderScreen'
 import { OrderScreen } from './screens/OrderScreen/OrderScreen'
+import { OrderListScreen } from './screens/OrderListScreen/OrderListScreen'
 import { ProfileScreen } from './screens/ProfileScreen/ProfileScreen'
 import { UserListScreen } from './screens/UserListScreen/UserListScreen'
 import { UserEditScreen } from './screens/UserEditScreen/UserEditScreen'
@@ -45,6 +46,7 @@ function App() {
       <main>
         <Container className={classes.root}>
           <Route path='/order/:id' component={OrderScreen} />
+          <Route path='/admin/orderlist' component={OrderListScreen} />
           <Route path='/placeorder' component={PlaceOrderScreen} />
           <Route path='/payment' component={PaymentScreen} />
           <Route path='/shipping' component={ShippingScreen} />

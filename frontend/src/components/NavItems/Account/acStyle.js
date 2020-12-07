@@ -12,4 +12,8 @@ export const useStyles = makeStyles((theme) => ({
       color: 'inherit',
     },
   },
+  avatar: {
+    height: 30,
+    width: 30,
+  },
 }))

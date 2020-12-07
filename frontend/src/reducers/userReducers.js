@@ -25,6 +25,10 @@ import {
   USER_UPDATE_FAIL,
   USER_UPDATE_RESET,
   USER_UPDATE_PROFILE_RESET,
+  USER_AVATAR_REQUEST,
+  USER_AVATAR_SUCCESS,
+  USER_AVATAR_FAIL,
+  USER_AVATAR_RESET,
 } from '../constants/userConstants'
 
 export const userLoginReducer = (state = {}, action) => {
@@ -121,6 +125,21 @@ export const userUpdateReducer = (state = { user: {} }, action) => {
     case USER_UPDATE_FAIL:
       return { loading: false, error: action.payload }
     case USER_UPDATE_RESET:
+      return { user: {} }
+    default:
+      return state
+  }
+}
+
+export const userAvatarReducer = (state = { user: {} }, action) => {
+  switch (action.type) {
+    case USER_AVATAR_REQUEST:
+      return { ...state, loading: true }
+    case USER_AVATAR_SUCCESS:
+      return { loading: false, user: action.payload }
+    case USER_AVATAR_FAIL:
+      return { loading: false, error: action.payload }
+    case USER_AVATAR_RESET:
       return { user: {} }
     default:
       return state

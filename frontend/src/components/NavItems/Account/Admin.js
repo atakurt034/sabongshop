@@ -145,10 +145,12 @@ export const Admin = () => {
           </Link>
         </StyledMenuItem>
         <StyledMenuItem>
-          <ListItemIcon>
-            <AssignmentIcon fontSize='small' />
-          </ListItemIcon>
-          <ListItemText primary='Orders' />
+          <Link className={classes.link} to='/admin/orderlist'>
+            <ListItemIcon>
+              <AssignmentIcon fontSize='small' />
+            </ListItemIcon>
+            <ListItemText primary='Orders' />
+          </Link>
         </StyledMenuItem>
       </StyledMenu>
     </>

@@ -14,8 +14,10 @@ import {
   Switch,
 } from '@material-ui/core'
 
+import NotInterestedIcon from '@material-ui/icons/NotInterested'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import EditIcon from '@material-ui/icons/Edit'
-import AddCircleIcon from '@material-ui/icons/AddCircle'
+import NumberFormat from 'react-number-format'
 
 import {
   createData,
@@ -23,24 +25,17 @@ import {
   EnhancedTableHead,
   EnhancedTableToolbar,
   stableSort,
-} from './plsData'
+} from './olsData'
 import { Button } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
+import { listOrders, deleteOrder } from '../../actions/orderActions'
 import { Link } from 'react-router-dom'
-
-import {
-  listProducts,
-  deleteProduct,
-  createProduct,
-} from '../../actions/productActions'
-import { PRODUCT_CREATE_RESET } from '../../constants/productConstants'
-import NumberFormat from 'react-number-format'
+import { useStyles } from './olsStyle'
 
 import { ModalMessage } from '../../components/ModalMessage'
 import { ModalLoader } from '../../components/ModalLoader'
-import { useStyles } from './plsStyle'
 
-export const ProductListScreen = ({ history }) => {
+export const OrderListScreen = ({ history }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState('asc')
   const [orderBy, setOrderBy] = React.useState('calories')
@@ -57,81 +52,72 @@ export const ProductListScreen = ({ history }) => {
 
   const dispatch = useDispatch()
 
-  const productList = useSelector((state) => state.productList)
-  const { error, loading, products } = productList
+  const orderList = useSelector((state) => state.orderList)
+  const { error, loading, orders } = orderList
 
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
-  const productDelete = useSelector((state) => state.productDelete)
+  const orderDelete = useSelector((state) => state.orderDelete)
   const {
     error: errorDelete,
     loading: loadingDelete,
     success: successDelete,
-  } = productDelete
+  } = orderDelete
 
-  const productCreate = useSelector((state) => state.productCreate)
-  const {
-    error: errorCreate,
-    loading: loadingCreate,
-    success: successCreate,
-    product: createdProduct,
-  } = productCreate
+  const deleteHandler = (id) => {
+    if (window.confirm(`Delete: ${id} ?`)) {
+      dispatch(deleteOrder(id))
+    }
+  }
 
   useEffect(() => {
-    dispatch({ type: PRODUCT_CREATE_RESET })
-    if (!userInfo && userInfo.isAdmin) {
-      history.push('/login')
-    }
-    if (successCreate) {
-      history.push(`/admin/product/${createdProduct._id}/edit`)
+    if (userInfo.isAdmin) {
+      dispatch(listOrders())
     } else {
-      dispatch(listProducts())
+      history.push('/login')
     }
     if (successDelete) {
       setSelected([])
     }
-  }, [
-    dispatch,
-    userInfo,
-    history,
-    successCreate,
-    createdProduct,
-    successDelete,
-  ])
-
-  const deleteHandler = (id) => {
-    if (window.confirm(`Delete: ${id} ?`)) {
-      dispatch(deleteProduct(id))
-    }
-  }
-
-  const createProductHandler = () => {
-    dispatch(createProduct())
-  }
+  }, [dispatch, history, userInfo, successDelete])
 
   const rows = []
-  if (products) {
-    products.map((product) => {
+  if (orders) {
+    orders.map((order) => {
       return rows.push(
         createData(
-          product._id,
-          product.name,
-          product.price,
-          product.category,
-          product.brand,
+          order._id,
+          order.user && order.user.name,
+          order.createdAt.substring(0, 10),
+          order.totalPrice,
+          order.isPaid ? (
+            `${(<CheckCircleIcon fontSize='small' />)} ${order.paidAt.substring(
+              0,
+              10
+            )}`
+          ) : (
+            <NotInterestedIcon color='secondary' />
+          ),
+          order.isDelivered ? (
+            `${(
+              <CheckCircleIcon fontSize='small' />
+            )} ${order.deliveredAt.substring(0, 10)}`
+          ) : (
+            <NotInterestedIcon color='secondary' />
+          ),
           <Link
-            key={product._id}
-            to={`/admin/product/${product._id}/edit`}
+            key={order._id}
+            to={`/order/${order._id}`}
             style={{ textDecoration: 'none' }}
           >
             <Button
               size='small'
               variant='contained'
-              color='default'
+              color='primary'
               startIcon={<EditIcon fontSize='small' />}
             >
-              <Typography>Edit</Typography>
+              <Typography>Details</Typography>
             </Button>
           </Link>
         )
@@ -189,16 +175,11 @@ export const ProductListScreen = ({ history }) => {
   return (
     <div className={classes.root}>
       {loading && <ModalLoader />}
-      {loadingCreate && <ModalLoader />}
       {loadingDelete && <ModalLoader />}
       {error && <ModalMessage variant='error'>{error}</ModalMessage>}
-      {errorCreate && (
-        <ModalMessage variant='error'>{errorCreate}</ModalMessage>
-      )}
       {errorDelete && (
         <ModalMessage variant='error'>{errorDelete}</ModalMessage>
       )}
-
       <Paper className={classes.paper}>
         <EnhancedTableToolbar
           numSelected={selected.length}
@@ -251,7 +232,8 @@ export const ProductListScreen = ({ history }) => {
                       >
                         {row.id}
                       </TableCell>
-                      <TableCell align='left'>{row.name}</TableCell>
+                      <TableCell align='left'>{row.user}</TableCell>
+                      <TableCell align='left'>{row.date}</TableCell>
                       <TableCell align='left'>
                         {
                           <NumberFormat
@@ -260,12 +242,12 @@ export const ProductListScreen = ({ history }) => {
                             thousandSeparator
                             decimalScale={2}
                             displayType='text'
-                            value={row.price}
+                            value={row.totalPrice}
                           />
                         }
                       </TableCell>
-                      <TableCell align='left'>{row.category}</TableCell>
-                      <TableCell align='left'>{row.brand}</TableCell>
+                      <TableCell align='left'>{row.paid}</TableCell>
+                      <TableCell align='left'>{row.delivered}</TableCell>
                       <TableCell align='left'>{row.edit}</TableCell>
                     </TableRow>
                   )
@@ -292,15 +274,6 @@ export const ProductListScreen = ({ history }) => {
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label='Dense padding'
       />
-      <Button
-        className={classes.button}
-        size='small'
-        variant='contained'
-        startIcon={<AddCircleIcon />}
-        onClick={createProductHandler}
-      >
-        <Typography>Create Product</Typography>
-      </Button>
     </div>
   )
 }

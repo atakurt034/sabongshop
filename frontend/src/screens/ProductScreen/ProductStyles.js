@@ -8,6 +8,9 @@ export const useStyle = makeStyles((theme) => ({
   button: {
     padding: 10,
   },
+  buttonComment: {
+    textTransform: 'none',
+  },
   image: {
     width: 'auto',
   },
@@ -37,5 +40,20 @@ export const useStyle = makeStyles((theme) => ({
     backgroundColor: '#000',
     border: 'none',
     height: 0.5,
+  },
+  formControl: {
+    margin: theme.spacing(3),
+  },
+  inline: {
+    display: 'inline',
+  },
+  textField: {
+    margin: '15px 0',
+  },
+  textReviews: {
+    wordWrap: 'break-word',
+  },
+  paginaation: {
+    // marginTop: 10,
   },
 }))

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import { useStyles } from './acStyle'
@@ -11,6 +11,7 @@ import {
   useMediaQuery,
   useTheme,
   Typography,
+  Avatar,
 } from '@material-ui/core'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import PersonIcon from '@material-ui/icons/Person'
@@ -18,6 +19,8 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { Admin } from './Admin'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout } from '../../../actions/userActions'
+
+import { getAvatar } from '../../../actions/userActions'
 
 const StyledMenu = withStyles({
   paper: {
@@ -51,7 +54,8 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem)
 
 export const Account = (e) => {
-  const [anchorEl, setAnchorEl] = React.useState(null)
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [avatar, setAvatars] = useState('')
   const theme = useTheme()
   const sm = useMediaQuery(theme.breakpoints.up('md'))
   const classes = useStyles()
@@ -59,14 +63,25 @@ export const Account = (e) => {
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
+  const userAvatar = useSelector((state) => state.userAvatar)
+  const { user } = userAvatar
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (!user || !user.name || !userInfo) {
+      dispatch(getAvatar('profile'))
+    } else {
+      setAvatars(user.image)
+    }
+  }, [dispatch, user, userInfo])
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
   const handleClose = () => {
     setAnchorEl(null)
   }
-
-  const dispatch = useDispatch()
 
   const logoutHandler = () => {
     dispatch(logout())
@@ -76,6 +91,7 @@ export const Account = (e) => {
   if (sm) {
     size = 'large'
   }
+
   const logged = (
     <>
       <Button
@@ -84,7 +100,13 @@ export const Account = (e) => {
         color='primary'
         onClick={userInfo && handleClick}
         size='small'
-        startIcon={<PersonIcon fontSize={size} />}
+        startIcon={
+          userInfo && user ? (
+            <Avatar src={avatar} className={classes.avatar} />
+          ) : (
+            <PersonIcon fontSize={size} />
+          )
+        }
         endIcon={userInfo && <ArrowDropDownIcon />}
       >
         <Typography variant='caption'>

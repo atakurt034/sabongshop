@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import AccountCircle from '@material-ui/icons/AccountCircle'
+
 import EmailIcon from '@material-ui/icons/Email'
 import LockOpenIcon from '@material-ui/icons/LockOpen'
 import LockIcon from '@material-ui/icons/Lock'
@@ -20,8 +20,13 @@ import {
   InputAdornment,
   Box,
   Container,
+  OutlinedInput,
+  Avatar,
 } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
+
+import axios from 'axios'
+import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 
 import { getUserDetails, updateUserProfile } from '../../actions/userActions'
 import { listMyOrders } from '../../actions/orderActions'
@@ -38,12 +43,13 @@ export const ProfileScreen = ({ location, history }) => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [message, setMessage] = useState(null)
 
+  const [image, setImage] = useState('')
+  const [uploading, setUploading] = useState(false)
+
   const [loadingBtn, setLoading] = useState(false)
   const [successBtn, setSuccess] = useState(false)
   const [errorBtn, setErrorBtn] = useState(null)
   const timer = React.useRef()
-
-  console.log(errorBtn)
 
   const buttonClassname = clsx({
     [classes.buttonSuccess]: successBtn,
@@ -74,6 +80,7 @@ export const ProfileScreen = ({ location, history }) => {
         dispatch(listMyOrders())
       } else {
         setName(user.name)
+        setImage(user.image)
         setEmail(user.email)
         if (!error && password === confirmPassword && success)
           setErrorBtn(false)
@@ -117,7 +124,32 @@ export const ProfileScreen = ({ location, history }) => {
           }, 2000)
         }
       }
-      dispatch(updateUserProfile({ id: user._id, name, email, password }))
+      dispatch(
+        updateUserProfile({ id: user._id, name, image, email, password })
+      )
+    }
+  }
+
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0]
+    const formData = new FormData()
+    formData.append('image', file)
+    setUploading(true)
+
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+
+      const { data } = await axios.post('/api/upload', formData, config)
+
+      setImage(data)
+      setUploading(false)
+    } catch (error) {
+      console.error(error)
+      setUploading(false)
     }
   }
 
@@ -133,6 +165,44 @@ export const ProfileScreen = ({ location, history }) => {
             {loading && <Loader />}
 
             <form onSubmit={submitHandler}>
+              <Box m={2}>
+                <FormControl fullWidth>
+                  <InputLabel htmlFor='image' variant='outlined'>
+                    Image
+                  </InputLabel>
+                  <OutlinedInput
+                    id='image'
+                    value={image}
+                    labelWidth={50}
+                    onChange={(e) => setImage(e.target.value)}
+                  />
+                  <Grid container justify='center'>
+                    <input
+                      accept='image/*'
+                      multiple
+                      style={{ display: 'none' }}
+                      id='contained-button-file'
+                      type='file'
+                      onChange={uploadFileHandler}
+                    />
+                    <Box p={2}>
+                      <label htmlFor='contained-button-file'>
+                        <Button
+                          variant='contained'
+                          color='primary'
+                          component='span'
+                          size='small'
+                          startIcon={<CloudUploadIcon fontSize='small' />}
+                        >
+                          {'Upload'}
+                        </Button>
+                      </label>
+                    </Box>
+                  </Grid>
+                  {uploading && <Loader />}
+                </FormControl>
+              </Box>
+
               <FormControl fullWidth required>
                 <InputLabel htmlFor='name'>Name</InputLabel>
                 <Input
@@ -143,7 +213,7 @@ export const ProfileScreen = ({ location, history }) => {
                   id='name'
                   startAdornment={
                     <InputAdornment position='start'>
-                      <AccountCircle />
+                      <Avatar style={{ width: 20, height: 20 }} src={image} />
                     </InputAdornment>
                   }
                 />

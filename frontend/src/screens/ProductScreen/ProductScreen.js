@@ -13,9 +13,23 @@ import {
   FormControl,
   Button,
   TableBody,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Avatar,
+  InputLabel,
+  Select,
+  TextField,
+  Container,
 } from '@material-ui/core'
 
-import { listProductDetails } from '../../actions/productActions'
+import {
+  listProductDetails,
+  createProductReview,
+} from '../../actions/productActions'
+import { PRODUCT_CREATE_REVIEW_RESET } from '../../constants/productConstants'
+
 import { BackButton } from '../../components/NavItems/BackButton'
 import Loader from '../../components/Loader'
 import Message from '../../components/Message'
@@ -23,30 +37,69 @@ import { useStyle } from './ProductStyles'
 import Ratings from '../../components/Rating'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 
+import Rating from '../../components/Rating'
+import { Link } from 'react-router-dom'
+import { Comments } from './comments'
+import { ReviewPaginate } from '../../components/ReviewPaginate'
+
 export const ProductScreen = ({ match, history }) => {
   const [qty, setQty] = useState(1)
+  const [rating, setRating] = useState(0)
+  const [comment, setComment] = useState('')
+
+  const itemsPerPage = 2
+  const [page, setPage] = useState(1)
+
+  const handleChange = (event, value) => {
+    setPage(value)
+  }
 
   const dispatch = useDispatch()
 
   const productDetails = useSelector((state) => state.productDetails)
   const { loading, error, product } = productDetails
 
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+
+  const productReviewCreate = useSelector((state) => state.productReviewCreate)
+  const {
+    success: successProductReview,
+    loading: loadingProductReview,
+    error: errorProductReview,
+  } = productReviewCreate
+
   useEffect(() => {
+    if (successProductReview) {
+      setRating(0)
+      setComment('')
+    }
     if (!product._id || product._id !== match.params.id) {
       dispatch(listProductDetails(match.params.id))
+      dispatch({ type: PRODUCT_CREATE_REVIEW_RESET })
     }
-  }, [dispatch, match, product])
+  }, [dispatch, match, successProductReview, product])
 
   const addToCartHandler = () => {
     history.push(`/cart/${match.params.id}?qty=${qty}`)
   }
 
+  const submitHandler = (e) => {
+    e.preventDefault()
+    dispatch(
+      createProductReview(match.params.id, {
+        rating,
+        comment,
+      })
+    )
+  }
+
   const classes = useStyle()
+
   return (
     <>
       <Grid container spacing={2} justify='center'>
-        {loading && <Loader />}
-        {error && <Message error={error} />}
+        {loading ? <Loader /> : error && <Message error={error} />}
         <Grid item xs={12} className={classes.button}>
           <BackButton to={'/'} />
         </Grid>
@@ -153,71 +206,133 @@ export const ProductScreen = ({ match, history }) => {
           </TableContainer>
         </Grid>
       </Grid>
-      <Grid container>
-        <Grid item md={6}>
-          <h2>Reviews</h2>
-          {/* {product.reviews.length === 0 && <Message>No Reviews</Message>}
-          <List>
-            {product.reviews.map((review) => (
-              <ListItem key={review._id}>
-                <strong>{review.name}</strong>
-                <Ratings value={review.rating} />
-                <p>{review.createdAt.substring(0, 10)}</p>
-                <p>{review.comment}</p>
-              </ListItem>
-            ))} */}
-          {/* <ListItem>
-                  <h2>Write a Customer Review</h2>
-                  {successProductReview && (
-                    <Message variant='success'>
-                      Review submitted successfully
-                    </Message>
-                  )}
-                  {loadingProductReview && <Loader />}
-                  {errorProductReview && (
-                    <Message variant='error'>{errorProductReview}</Message>
-                  )}
-                  {userInfo ? (
-                    <Form onSubmit={submitHandler}>
-                      <Form.Group controlId='rating'>
-                        <Form.Label>Rating</Form.Label>
-                        <Form.Control
-                          as='select'
-                          value={rating}
-                          onChange={(e) => setRating(e.target.value)}
-                        >
-                          <option value=''>Select...</option>
-                          <option value='1'>1 - Poor</option>
-                          <option value='2'>2 - Fair</option>
-                          <option value='3'>3 - Good</option>
-                          <option value='4'>4 - Very Good</option>
-                          <option value='5'>5 - Excellent</option>
-                        </Form.Control>
-                      </Form.Group>
-                      <Form.Group controlId='comment'>
-                        <Form.Label>Comment</Form.Label>
-                        <Form.Control
-                          as='textarea'
-                          row='3'
-                          value={comment}
-                          onChange={(e) => setComment(e.target.value)}
-                        ></Form.Control>
-                      </Form.Group>
-                      <Button
-                        disabled={loadingProductReview}
-                        type='submit'
-                        variant='primary'
-                      >
-                        Submit
-                      </Button>
-                    </Form>
-                  ) : (
-                    <Message>
-                      Please <Link to='/login'>sign in</Link> to write a review{' '}
-                    </Message>
-                  )}
-                </ListItem> */}
-          {/* </List> */}
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <Box mt={2} mx={2}>
+            <Typography variant='h5' component='h1'>
+              Reviews
+            </Typography>
+          </Box>
+          <List dense className={classes.root}>
+            {product.reviews.length === 0 && (
+              <Message variant='error'>No Reviews</Message>
+            )}
+            {product.reviews
+              .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+              .map((review) => {
+                return (
+                  <React.Fragment key={review._id}>
+                    <ListItem key={review._id} alignItems='flex-start'>
+                      <ListItemAvatar>
+                        <Avatar alt='Remy Sharp' src={review.image} />
+                      </ListItemAvatar>
+
+                      <ListItemText
+                        primary={<Rating value={review.rating} />}
+                        secondary={
+                          <>
+                            <Typography
+                              component='span'
+                              variant='body2'
+                              className={classes.inline}
+                              color='textPrimary'
+                            >
+                              {review.name}
+                            </Typography>
+                            <Typography
+                              variant='body2'
+                              component='span'
+                              className={classes.textReviews}
+                            >
+                              {review.comment.length <= 100 ? (
+                                ` - ${review.comment}`
+                              ) : (
+                                <Comments text={review.comment} />
+                              )}
+                            </Typography>
+                          </>
+                        }
+                      />
+                    </ListItem>
+                    <Divider variant='inset' component='li' />
+                  </React.Fragment>
+                )
+              })}
+            <ReviewPaginate page={page} handleChange={handleChange} />
+          </List>
+        </Grid>
+        <Grid item sm={6}>
+          <Box mt={2} mx={2}>
+            <Typography variant='h5' component='h1'>
+              Write a Customer Review
+            </Typography>
+          </Box>
+          <Container maxWidth='md'>
+            {successProductReview && (
+              <Message variant='success'>Review submitted successfully</Message>
+            )}
+            {loadingProductReview && <Loader />}
+            {errorProductReview && (
+              <Message variant='error'>{errorProductReview}</Message>
+            )}
+            {userInfo ? (
+              <Grid container spacing={2}>
+                <FormControl
+                  component='form'
+                  onSubmit={submitHandler}
+                  fullWidth
+                  variant='outlined'
+                  className={classes.formControl}
+                >
+                  <Grid item xs={8}>
+                    <InputLabel required htmlFor='filled-age-native-simple'>
+                      Rating
+                    </InputLabel>
+                    <Select
+                      required
+                      labelWidth={50}
+                      native
+                      value={rating}
+                      onChange={(e) => setRating(e.target.value)}
+                    >
+                      <option aria-label='None' value='' />
+                      <option value={1}>1 - Poor</option>
+                      <option value={2}>2 - Fair</option>
+                      <option value={3}>3 - Good</option>
+                      <option value={4}>4 - Very Good</option>
+                      <option value={5}>5 - Excellent</option>
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} className={classes.textField}>
+                    <TextField
+                      id='outlined-multiline-static'
+                      label='Reviews'
+                      multiline
+                      rowsMax={6}
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      fullWidth
+                      variant='outlined'
+                    />
+                  </Grid>
+                  <Grid container justify='center'>
+                    <Button
+                      disabled={loadingProductReview}
+                      type='submit'
+                      size='large'
+                      variant='contained'
+                    >
+                      Submit
+                    </Button>
+                  </Grid>
+                </FormControl>
+              </Grid>
+            ) : (
+              <Message variant='warning'>
+                Please <Link to='/login'>Sign in</Link> to write a review{' '}
+              </Message>
+            )}
+          </Container>
         </Grid>
       </Grid>
     </>

@@ -18,6 +18,7 @@ import {
   orderDeliverReducer,
   orderListMyReducer,
   orderListReducer,
+  orderDeleteReducer,
 } from './reducers/orderReducers'
 import {
   userDetailsReducer,
@@ -27,6 +28,7 @@ import {
   userListReducer,
   userLoginReducer,
   userRegisterReducer,
+  userAvatarReducer,
 } from './reducers/userReducers'
 
 const midlleware = [thunk]
@@ -47,12 +49,14 @@ const reducer = combineReducers({
   userList: userListReducer,
   userDelete: userDeleteReducer,
   userUpdate: userUpdateReducer,
+  userAvatar: userAvatarReducer,
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
   orderPay: orderPayReducer,
   orderDeliver: orderDeliverReducer,
   orderListMy: orderListMyReducer,
   orderList: orderListReducer,
+  orderDelete: orderDeleteReducer,
 })
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')

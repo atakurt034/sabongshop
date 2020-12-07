@@ -6,8 +6,8 @@ import { Paginate } from '../components/Paginate'
 
 import { Product } from './ProductScreen/Products/Product'
 import { listProducts } from '../actions/productActions'
-import Loader from '../components/Loader'
-import Message from '../components/Message'
+import { ModalLoader } from '../components/ModalLoader'
+import { ModalMessage } from '../components/ModalMessage'
 
 import { PRODUCT_DETAILS_RESET } from '../constants/productConstants'
 
@@ -20,8 +20,8 @@ export const HomeScreen = ({ match }) => {
   const { loading, error, products, page, pages } = productList
 
   useEffect(() => {
-    dispatch(listProducts(keyword, pageNumber))
     dispatch({ type: PRODUCT_DETAILS_RESET })
+    dispatch(listProducts(keyword, pageNumber))
   }, [dispatch, keyword, pageNumber])
 
   const classes = useStyles()
@@ -41,9 +41,9 @@ export const HomeScreen = ({ match }) => {
               xl={2}
             >
               {loading ? (
-                <Loader />
+                <ModalLoader />
               ) : error ? (
-                <Message variant='error'>{error}</Message>
+                <ModalMessage variant='error'>{error}</ModalMessage>
               ) : (
                 <Product product={product} />
               )}

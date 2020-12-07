@@ -1,14 +1,6 @@
-import React, { useState } from 'react'
-import {
-  Badge,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  useTheme,
-  useMediaQuery,
-} from '@material-ui/core/'
-import { withStyles } from '@material-ui/core/styles'
+import React, { useState, useEffect } from 'react'
+import { ListItemIcon, ListItemText, Avatar } from '@material-ui/core/'
+
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import HomeIcon from '@material-ui/icons/Home'
 import PersonIcon from '@material-ui/icons/Person'
@@ -18,14 +10,9 @@ import { Admin } from '../Account/Admin'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout } from '../../../actions/userActions'
+import { StyledBadge, StyledMenu, StyledMenuItem, useStyles } from './bnStyle'
 
-const StyledBadge = withStyles((theme) => ({
-  badge: {
-    right: 3,
-    top: 1,
-    padding: '0 1px',
-  },
-}))(Badge)
+import { getAvatar } from '../../../actions/userActions'
 
 export const Cart = () => {
   const cart = useSelector((state) => state.cart)
@@ -53,52 +40,20 @@ export const Home = () => {
 }
 
 export const Account = () => {
+  const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
+  const [avatar, setAvatars] = useState('')
+
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
-  const theme = useTheme()
-  const sm = useMediaQuery(theme.breakpoints.down('sm'))
+  const userAvatar = useSelector((state) => state.userAvatar)
+  const { user } = userAvatar
 
   let link = '/login'
   if (userInfo) {
     link = '#'
   }
-
-  let anchorOriginSettings = {
-    vertical: 'bottom',
-    horizontal: 'center',
-  }
-
-  let transformOriginSettings = {
-    vertical: 'top',
-    horizontal: 'center',
-  }
-
-  const StyledMenu = withStyles({
-    paper: {
-      border: '1px solid #d3d4d5',
-    },
-  })((props) => (
-    <Menu
-      elevation={0}
-      getContentAnchorEl={null}
-      anchorOrigin={anchorOriginSettings}
-      transformOrigin={transformOriginSettings}
-      {...props}
-    />
-  ))
-
-  const StyledMenuItem = withStyles((theme) => ({
-    root: {
-      '&:focus': {
-        backgroundColor: theme.palette.primary.main,
-        '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-          color: theme.palette.common.white,
-        },
-      },
-    },
-  }))(MenuItem)
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
@@ -114,6 +69,14 @@ export const Account = () => {
     handleClose()
   }
 
+  useEffect(() => {
+    if (!user || !user.name || !userInfo) {
+      dispatch(getAvatar('profile'))
+    } else {
+      setAvatars(user.image)
+    }
+  }, [dispatch, user, userInfo])
+
   return (
     <>
       <Link
@@ -121,7 +84,11 @@ export const Account = () => {
         onClick={userInfo && handleClick}
         style={{ textDecoration: 'none', color: 'inherit' }}
       >
-        <PersonIcon fontSize='small' />
+        {userInfo && user ? (
+          <Avatar src={avatar} className={classes.avatar} />
+        ) : (
+          <PersonIcon />
+        )}
       </Link>
 
       <StyledMenu

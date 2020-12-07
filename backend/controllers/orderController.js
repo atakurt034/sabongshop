@@ -111,3 +111,18 @@ export const getAllOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({}).populate('user', 'id name')
   res.json(orders)
 })
+
+// @desc    Delete an Order or Orders
+// @route   DELETE /api/products:id
+// @access  Private/Admin
+export const deleteOrder = asyncHandler(async (req, res) => {
+  const order = Order.find({ _id: { $in: req.params.id.split(',') } })
+
+  if (order) {
+    await order.remove()
+    res.json({ message: 'Order removed' })
+  } else {
+    res.status(404)
+    throw new Error('Order not found')
+  }
+})
