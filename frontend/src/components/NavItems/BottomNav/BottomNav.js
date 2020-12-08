@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core'
-import { Cart, Home, Account } from './BottomCustomBadge'
+import { Cart, Account } from './BottomCustomBadge'
+import { useSelector } from 'react-redux'
+
+import HomeIcon from '@material-ui/icons/Home'
+
+import { withRouter } from 'react-router-dom'
 
 const useStyles = makeStyles({
   root: {
@@ -12,9 +17,24 @@ const useStyles = makeStyles({
   },
 })
 
-export default function SimpleBottomNavigation() {
+const SimpleBottomNavigation = ({ history }) => {
   const classes = useStyles()
-  const [value, setValue] = React.useState(0)
+  const [value, setValue] = useState('home')
+
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+
+  // let link = '/login'
+  // if (userInfo) {
+  //   link = '#'
+  // }
+  useEffect(() => {
+    if (value === 'home') {
+      history.push('/')
+    } else if (value === 'cart') {
+      history.push('/cart/:id?')
+    }
+  }, [value, history])
 
   return (
     <BottomNavigation
@@ -26,9 +46,15 @@ export default function SimpleBottomNavigation() {
       showLabels
       className={classes.root}
     >
-      <BottomNavigationAction label='Account' icon={<Account />} />
-      <BottomNavigationAction label='Home' icon={<Home />} />
-      <BottomNavigationAction label='Cart' icon={<Cart />} />
+      <BottomNavigationAction
+        value={'account'}
+        label='Account'
+        icon={<Account />}
+      />
+      <BottomNavigationAction value={'home'} label='Home' icon={<HomeIcon />} />
+      <BottomNavigationAction value={'cart'} label='Cart' icon={<Cart />} />
     </BottomNavigation>
   )
 }
+
+export default withRouter(SimpleBottomNavigation)
