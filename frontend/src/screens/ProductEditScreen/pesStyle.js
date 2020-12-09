@@ -7,4 +7,13 @@ export const useStyles = makeStyles((theme) => ({
   input: {
     display: 'none',
   },
+  cropper: {
+    position: 'relative',
+    width: '100%',
+    height: 300,
+    background: '#333',
+    [theme.breakpoints.up('sm')]: {
+      height: 400,
+    },
+  },
 }))

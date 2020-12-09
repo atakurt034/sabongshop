@@ -116,7 +116,7 @@ export const Account = (e) => {
     <StyledBadge
       overlap='circle'
       anchorOrigin={{
-        vertical: 'top',
+        vertical: 'bottom',
         horizontal: 'right',
       }}
       variant={count !== 0 ? 'dot' : 'standard'}

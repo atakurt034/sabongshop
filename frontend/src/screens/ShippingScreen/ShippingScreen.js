@@ -45,10 +45,18 @@ export const ShippingScreen = ({ history }) => {
 
   const dispatch = useDispatch()
 
-  const [address, setAddress] = useState(shippingAddress.address)
-  const [city, setCity] = useState(shippingAddress.city)
-  const [postalCode, setPostalCode] = useState(shippingAddress.postalCode)
-  const [country, setCountry] = useState(shippingAddress.country)
+  const [address, setAddress] = useState(
+    shippingAddress.address ? shippingAddress.address : ''
+  )
+  const [city, setCity] = useState(
+    shippingAddress.city ? shippingAddress.city : ''
+  )
+  const [postalCode, setPostalCode] = useState(
+    shippingAddress.postalCode ? shippingAddress.postalCode : ''
+  )
+  const [country, setCountry] = useState(
+    shippingAddress.country ? shippingAddress.country : ''
+  )
   const [message, setMessage] = useState(null)
   const [errorField, setErrorField] = useState({
     address: false,
@@ -105,7 +113,6 @@ export const ShippingScreen = ({ history }) => {
               <Grid item xs={12}>
                 <TextField
                   error={errorField.address}
-                  autoComplete='address'
                   name='address'
                   variant='outlined'
                   type='text'
@@ -121,7 +128,7 @@ export const ShippingScreen = ({ history }) => {
 
               <Grid item xs={12}>
                 <TextField
-                  error={!city}
+                  error={errorField.city}
                   type='text'
                   variant='outlined'
                   required
@@ -129,7 +136,6 @@ export const ShippingScreen = ({ history }) => {
                   id='city'
                   label='City'
                   name='city'
-                  autoComplete='city'
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                 />
@@ -144,7 +150,6 @@ export const ShippingScreen = ({ history }) => {
                   label='Postal Code'
                   type='text'
                   id='postalCode'
-                  autoComplete='current-postalCode'
                   value={postalCode}
                   onChange={(e) => setPostalCode(e.target.value)}
                 />
@@ -159,7 +164,6 @@ export const ShippingScreen = ({ history }) => {
                   label='Country'
                   type='text'
                   id='country'
-                  autoComplete='current-password'
                   value={country}
                   onChange={(e) => setCountry(e.target.value)}
                 />

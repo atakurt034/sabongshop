@@ -87,12 +87,6 @@ export const Account = () => {
 
   const avatarIcon = (
     <AvatarIcon
-      style={{
-        padding: '0 57px',
-        left: 0,
-        top: 0,
-        margin: 'auto',
-      }}
       onClick={handleClick}
       overlap='circle'
       anchorOrigin={{

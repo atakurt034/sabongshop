@@ -259,7 +259,6 @@ export const ProductEditScreen = ({ match, history }) => {
                 />
               </FormControl>
             </Box>
-
             <Box m={2}>
               <FormControl required fullWidth>
                 <InputLabel htmlFor='image' variant='outlined'>

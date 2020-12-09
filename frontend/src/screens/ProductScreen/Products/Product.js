@@ -8,6 +8,7 @@ import {
   Divider,
   makeStyles,
   CardActionArea,
+  Box,
 } from '@material-ui/core'
 
 import Stars from '../../../components/Rating'
@@ -33,6 +34,17 @@ const useStyle = makeStyles((theme) => ({
 
 export const Product = ({ product }) => {
   const classes = useStyle()
+  const textSale = (
+    <Box
+      style={{
+        textDecoration: 'line-through',
+        color: 'red',
+        display: 'inline',
+      }}
+    >
+      ₱ 599.99
+    </Box>
+  )
   return (
     <>
       <Card className={classes.root}>
@@ -56,7 +68,10 @@ export const Product = ({ product }) => {
           </Typography>
           <Typography variant='h6' component='h2' style={{ padding: 5 }}>
             {' '}
-            ₱ {product.price}
+            {product._id === '5fce3fa433cdce48d4e49eae'
+              ? textSale
+              : `₱ ${product.price}`}{' '}
+            {product._id === '5fce3fa433cdce48d4e49eae' && `₱ ${product.price}`}
           </Typography>
         </CardContent>
       </Card>

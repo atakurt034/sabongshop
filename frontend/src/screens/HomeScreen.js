@@ -1,5 +1,12 @@
 import React, { useEffect } from 'react'
-import { Container, Grid, Modal } from '@material-ui/core'
+import {
+  Box,
+  Container,
+  Grid,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@material-ui/core'
 import { useStyles } from './hsStyle'
 import { useDispatch, useSelector } from 'react-redux'
 import { Paginate } from '../components/Paginate'
@@ -10,8 +17,14 @@ import { ModalLoader } from '../components/ModalLoader'
 import { ModalMessage } from '../components/ModalMessage'
 
 import { PRODUCT_DETAILS_RESET } from '../constants/productConstants'
+import { HomeSlider } from '../components/Sliders/HomeSlider'
+import { BackButton } from '../components/NavItems/BackButton'
+
+import HomeModal from '../components/HomeModal'
 
 export const HomeScreen = ({ match }) => {
+  const theme = useTheme()
+  const sm = useMediaQuery(theme.breakpoints.down('sm'))
   const dispatch = useDispatch()
   const keyword = match.params.keyword
   const pageNumber = match.params.pageNumber || 1
@@ -27,29 +40,49 @@ export const HomeScreen = ({ match }) => {
   const classes = useStyles()
   return (
     <Container style={{ padding: 15 }}>
+      {!keyword ? (
+        <HomeSlider />
+      ) : (
+        <Box p={1}>
+          <BackButton to='/' />
+        </Box>
+      )}
+
       {loading ? (
         <ModalLoader />
       ) : error ? (
         <ModalMessage variant='error'>{error}</ModalMessage>
       ) : (
-        <Grid container spacing={4}>
-          {products.map((product) => {
-            return (
-              <Grid
-                className={classes.item}
-                key={product._id}
-                item
-                xs={12}
-                sm={6}
-                md={6}
-                lg={3}
-                xl={2}
-              >
-                <Product product={product} />
-              </Grid>
-            )
-          })}
-        </Grid>
+        <>
+          <HomeModal />
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <Box m={4}>
+                {!keyword && (
+                  <Typography variant={sm ? 'h4' : 'h3'}>
+                    Latest Products
+                  </Typography>
+                )}
+              </Box>
+            </Grid>
+            {products.map((product) => {
+              return (
+                <Grid
+                  className={classes.item}
+                  key={product._id}
+                  item
+                  xs={12}
+                  sm={6}
+                  md={6}
+                  lg={3}
+                  xl={2}
+                >
+                  <Product product={product} />
+                </Grid>
+              )
+            })}
+          </Grid>
+        </>
       )}
       <Grid container justify='center' className={classes.rootPaginate}>
         <Paginate pages={pages} page={page} keyword={keyword ? keyword : ''} />

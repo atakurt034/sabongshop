@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core'
 import { Cart, Account } from './BottomCustomBadge'
-import { useSelector } from 'react-redux'
 
 import HomeIcon from '@material-ui/icons/Home'
 
@@ -21,13 +20,6 @@ const SimpleBottomNavigation = ({ history }) => {
   const classes = useStyles()
   const [value, setValue] = useState('home')
 
-  const userLogin = useSelector((state) => state.userLogin)
-  const { userInfo } = userLogin
-
-  // let link = '/login'
-  // if (userInfo) {
-  //   link = '#'
-  // }
   useEffect(() => {
     if (value === 'home') {
       history.push('/')
