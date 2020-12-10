@@ -5,7 +5,7 @@ import 'slick-carousel/slick/slick-theme.css'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { listTopProducts } from '../../actions/productActions'
-import { Box, CardMedia, Grid, Typography } from '@material-ui/core'
+import { Box, CardMedia, Grid, Typography, Paper } from '@material-ui/core'
 import Message from '../Message'
 import Loader from '../Loader'
 import { Link } from 'react-router-dom'
@@ -16,7 +16,7 @@ const CustomSlide = ({ image, name, id, price, ...props }) => {
 
   return (
     <Grid container justify='center' {...props}>
-      <Grid item xs={4}>
+      <Grid className={classes.item} item xs={8} sm={4}>
         <Link className={classes.link} to={`/product/${id}`}>
           <CardMedia
             className={classes.image}
@@ -51,6 +51,7 @@ export const HomeSlider = () => {
     speed: 4000,
     autoplaySpeed: 2000,
     arrows: false,
+    fade: true,
   }
 
   return (
@@ -61,23 +62,27 @@ export const HomeSlider = () => {
         <Message variant='error'>{error}</Message>
       ) : (
         <>
-          <Typography align='center' variant='h4' className={classes.title}>
-            TOP PRODUCTS
-          </Typography>
-          <Slider {...settings}>
-            {products.map((product) => {
-              return (
-                <Box key={product._id} p={2}>
-                  <CustomSlide
-                    image={product.image}
-                    name={product.name}
-                    id={product._id}
-                    price={product.price}
-                  />
-                </Box>
-              )
-            })}
-          </Slider>
+          <Grid container justify='center'>
+            <Paper className={classes.paper}>
+              <Typography align='center' variant='h4' className={classes.title}>
+                TOP PRODUCTS
+              </Typography>
+              <Slider {...settings}>
+                {products.map((product) => {
+                  return (
+                    <Box key={product._id} p={2}>
+                      <CustomSlide
+                        image={product.image}
+                        name={product.name}
+                        id={product._id}
+                        price={product.price}
+                      />
+                    </Box>
+                  )
+                })}
+              </Slider>
+            </Paper>
+          </Grid>
         </>
       )}
     </div>

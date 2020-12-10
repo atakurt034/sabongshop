@@ -4,13 +4,7 @@ import Modal from '@material-ui/core/Modal'
 import Backdrop from '@material-ui/core/Backdrop'
 import Fade from '@material-ui/core/Fade'
 import { withRouter } from 'react-router-dom'
-import {
-  CardMedia,
-  Container,
-  Grid,
-  Typography,
-  Button,
-} from '@material-ui/core'
+import { CardMedia, Container, Grid, Typography } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
@@ -45,20 +39,65 @@ const useStyles = makeStyles((theme) => ({
 const HomeModal = ({ match }) => {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
+  const key = 'modalState'
 
-  //   const handleOpen = () => {
-  //     setOpen(true)
-  //   }
+  function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    // if the item doesn't exist, return null
+    if (!itemStr) {
+      return null
+    }
+
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    // compare the expiry time of the item with the current time
+    if (now.getTime() > item.expiry) {
+      // If the item is expired, delete the item from storage
+      // and return null
+      localStorage.removeItem(key)
+      return null
+    }
+    return item.value
+  }
+
+  function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+
+    // `item` is an object which contains the original value
+    // as well as the time when it's supposed to expire
+    const item = {
+      value: value,
+      expiry: now.getTime() + ttl,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  }
 
   const handleClose = () => {
     setOpen(false)
   }
 
+  const modalState = getWithExpiry(key)
+
   useEffect(() => {
-    if (match.path === '/') {
-      setOpen(true)
+    if (match.url === '/') {
+      if (modalState === null) {
+        setOpen(true)
+      }
     }
-  }, [match])
+    if (open) {
+      setWithExpiry(key, false, 3600000)
+    }
+    if (
+      (Storage !== 'undefined' && modalState !== 'undefined') ||
+      modalState !== null
+    ) {
+      if (modalState === false) {
+        setOpen(false)
+      }
+    }
+  }, [match, open, modalState])
 
   return (
     <Container>

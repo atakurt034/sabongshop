@@ -18,4 +18,15 @@ export const useStyles = makeStyles((theme) => ({
     textDecoration: 'underline',
     padding: '0 10px',
   },
+  paper: {
+    width: '100%',
+    margin: 'auto',
+    padding: theme.spacing(2),
+  },
+  item: {
+    marginRight: 20,
+    [theme.breakpoints.down('xs')]: {
+      marginRight: 30,
+    },
+  },
 }))

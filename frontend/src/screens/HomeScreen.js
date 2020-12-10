@@ -59,7 +59,10 @@ export const HomeScreen = ({ match }) => {
             <Grid item xs={12}>
               <Box m={4}>
                 {!keyword && (
-                  <Typography variant={sm ? 'h4' : 'h3'}>
+                  <Typography
+                    variant={sm ? 'h4' : 'h3'}
+                    className={classes.title}
+                  >
                     Latest Products
                   </Typography>
                 )}

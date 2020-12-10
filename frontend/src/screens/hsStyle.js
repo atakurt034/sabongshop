@@ -10,4 +10,7 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
+  title: {
+    fontWeight: 600,
+  },
 }))

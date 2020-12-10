@@ -127,29 +127,29 @@ export const Account = (e) => {
 
   const logged = (
     <>
-      <Button
-        variant='contained'
-        disableElevation
-        color='primary'
-        onClick={userInfo && handleClick}
-        size='small'
-        startIcon={
-          userInfo && user ? avatarIcon : <PersonIcon fontSize={size} />
-        }
-        endIcon={userInfo && <ArrowDropDownIcon />}
-      >
-        <Typography variant='caption'>
-          {userInfo ? (
-            userInfo.name.split(' ')[0]
-          ) : (
-            <Link className={classes.link} to='/login'>
+      <Link className={classes.link} to='/login'>
+        <Button
+          variant='contained'
+          disableElevation
+          color='primary'
+          onClick={userInfo && handleClick}
+          size='small'
+          startIcon={
+            userInfo && user ? avatarIcon : <PersonIcon fontSize={size} />
+          }
+          endIcon={userInfo && <ArrowDropDownIcon />}
+        >
+          <Typography variant='caption'>
+            {userInfo ? (
+              userInfo.name.split(' ')[0]
+            ) : (
               <Typography style={{ fontWeight: 600 }} variant='caption'>
                 LOGIN
               </Typography>
-            </Link>
-          )}
-        </Typography>
-      </Button>
+            )}
+          </Typography>
+        </Button>
+      </Link>
 
       <StyledMenu
         id='customized-menu'
