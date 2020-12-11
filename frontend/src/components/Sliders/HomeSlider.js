@@ -10,6 +10,7 @@ import Message from '../Message'
 import Loader from '../Loader'
 import { Link } from 'react-router-dom'
 import { useStyles } from './hsStyle'
+import './slickStyle.css'
 
 const CustomSlide = ({ image, name, id, price, ...props }) => {
   const classes = useStyles()

@@ -40,6 +40,7 @@ export const HomeScreen = ({ match }) => {
   const classes = useStyles()
   return (
     <Container style={{ padding: 15 }}>
+      <HomeModal />
       {!keyword ? (
         <HomeSlider />
       ) : (
@@ -54,7 +55,6 @@ export const HomeScreen = ({ match }) => {
         <ModalMessage variant='error'>{error}</ModalMessage>
       ) : (
         <>
-          <HomeModal />
           <Grid container spacing={4}>
             <Grid item xs={12}>
               <Box m={4}>

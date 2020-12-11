@@ -1,0 +1,7 @@
+.slick-slide {
+    visibility: hidden;
+}
+
+.slick-slide.slick-active {
+    visibility: visible;
+}

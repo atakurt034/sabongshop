@@ -50,11 +50,11 @@ export const OrderScreen = ({ match, history }) => {
   const orderDeliver = useSelector((state) => state.orderDeliver)
   const { loading: loadingDeliver, success: successDeliver } = orderDeliver
 
-  if (!loading) {
-    order.itemsPrice = order.orderItems
-      .reduce((acc, item) => acc + item.price * item.qty, 0)
-      .toFixed(2)
-  }
+  // if (!loading) {
+  //   order.itemsPrice = order.orderItems
+  //     .reduce((acc, item) => acc + item.price * item.qty, 0)
+  //     .toFixed(2)
+  // }
 
   const dispatch = useDispatch()
 
