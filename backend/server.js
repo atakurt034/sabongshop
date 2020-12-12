@@ -1,6 +1,8 @@
 import path from 'path'
-import express from 'express'
 import dotenv from 'dotenv'
+dotenv.config()
+
+import express from 'express'
 import colors from 'colors'
 import morgan from 'morgan'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
@@ -12,7 +14,12 @@ import orderRoutes from './routes/orderRoutes.js'
 import uploadProductRoutes from './routes/uploadProductRoutes.js'
 import uploadAvatarRoutes from './routes/uploadAvatarRoutes.js'
 
-dotenv.config()
+import passport from 'passport'
+import session from 'express-session'
+import passportjs from './config/passport.js'
+import authRoutes from './routes/authRoutes.js'
+
+passportjs(passport)
 
 connectDB()
 
@@ -24,11 +31,25 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.json())
 
+// Sessions
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+)
+
+// Passport middleware
+app.use(passport.initialize())
+app.use(passport.session())
+
 app.use('/api/products', productRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/upload/product', uploadProductRoutes)
 app.use('/api/upload/avatar', uploadAvatarRoutes)
+app.use('/api/auth', authRoutes)
 
 app.get('/api/config/paypal', (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)

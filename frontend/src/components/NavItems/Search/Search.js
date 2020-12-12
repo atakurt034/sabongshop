@@ -8,8 +8,8 @@ export const Search = ({ history }) => {
   const [keyword, setKeyword] = useState('')
 
   const submitHandler = (e) => {
-    e.preventDefault()
     if (keyword.trim()) {
+      e.preventDefault()
       history.push(`/search/${keyword}`)
     } else {
       history.push('/')

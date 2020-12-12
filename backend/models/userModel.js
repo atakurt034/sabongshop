@@ -1,7 +1,8 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
+import findOrCreate from 'mongoose-findorcreate'
 
-const userSchema = mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -17,12 +18,17 @@ const userSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
     },
     isAdmin: {
       type: Boolean,
       required: true,
       default: false,
+    },
+    googleId: {
+      type: String,
+    },
+    facebookId: {
+      type: String,
     },
   },
   {
