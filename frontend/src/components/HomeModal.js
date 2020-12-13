@@ -122,7 +122,7 @@ const HomeModal = ({ match }) => {
               </Typography>
             </Grid>
             <Grid item sm={6}>
-              <Link to='/product/5fce3fa433cdce48d4e49eae'>
+              <Link to='/product/5fd314a3aa84b9123426ae0d'>
                 <CardMedia
                   className={classes.image}
                   image={'/uploads/product_images/image-1607530899536.jpg'}
