@@ -68,10 +68,10 @@ export const Product = ({ product }) => {
           </Typography>
           <Typography variant='h6' component='h2' style={{ padding: 5 }}>
             {' '}
-            {product._id === '5fd314a3aa84b9123426ae0d'
+            {product._id === '5fd70ea682fec60b7c97414d'
               ? textSale
               : `₱ ${product.price}`}{' '}
-            {product._id === '5fd314a3aa84b9123426ae0d' && `₱ ${product.price}`}
+            {product._id === '5fd70ea682fec60b7c97414d' && `₱ ${product.price}`}
           </Typography>
         </CardContent>
       </Card>

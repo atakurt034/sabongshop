@@ -158,19 +158,3 @@ export const productUpdateStockReducer = (state = {}, action) => {
       return state
   }
 }
-
-export const productCheckStockReducer = (state = {}, action) => {
-  switch (action.type) {
-    case PRODUCT_CHECK_STOCK_REQUEST: {
-      return { loading: true }
-    }
-    case PRODUCT_CHECK_STOCK_SUCCESS: {
-      return { loading: false, product: action.payload }
-    }
-    case PRODUCT_CHECK_STOCK_FAIL: {
-      return { loading: false, error: action.payload }
-    }
-    default:
-      return state
-  }
-}

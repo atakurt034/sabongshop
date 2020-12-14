@@ -11,7 +11,6 @@ import {
   productTopRatedReducer,
   productUpdateReducer,
   productUpdateStockReducer,
-  productCheckStockReducer,
 } from './reducers/productReducers'
 import {
   orderCreateReducer,
@@ -37,7 +36,6 @@ import {
 const midlleware = [thunk]
 
 const reducer = combineReducers({
-  productCheckStock: productCheckStockReducer,
   productUpdateStock: productUpdateStockReducer,
   productList: productListReducer,
   productDetails: productDetailsReducer,

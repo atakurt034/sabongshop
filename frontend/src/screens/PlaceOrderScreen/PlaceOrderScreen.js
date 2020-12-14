@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import LocalShippingIcon from '@material-ui/icons/LocalShipping'
 import PaymentIcon from '@material-ui/icons/Payment'
 import AssignmentIcon from '@material-ui/icons/Assignment'
@@ -17,7 +17,10 @@ import { Link } from 'react-router-dom'
 import { createOrder } from '../../actions/orderActions'
 import { CART_RESET } from '../../constants/cartConstants'
 
-import { updateProductStock } from '../../actions/productActions'
+import {
+  updateProductStock,
+  listProductDetails,
+} from '../../actions/productActions'
 import { PRODUCT_DETAILS_RESET } from '../../constants/productConstants'
 
 import { CheckSteps } from '../../components/NavItems/Stepper'
@@ -26,6 +29,7 @@ import Message from '../../components/Message'
 export const PlaceOrderScreen = ({ history }) => {
   const classes = useStyle()
   const cart = useSelector((state) => state.cart)
+  const [stock, setStock] = useState({ name: '', hasStock: true })
 
   //    Calculate prices
 
@@ -47,6 +51,9 @@ export const PlaceOrderScreen = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
+  const productDetails = useSelector((state) => state.productDetails)
+  const { product } = productDetails
+
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -64,7 +71,22 @@ export const PlaceOrderScreen = ({ history }) => {
       dispatch({ type: PRODUCT_DETAILS_RESET })
       localStorage.removeItem('cartItems')
     }
-  }, [history, success, order, userInfo, dispatch, cart])
+    if (cart) {
+      cart.cartItems.map((item) => dispatch(listProductDetails(item.product)))
+    }
+    if (product.countInStock === 0) {
+      setStock({ name: product.name, hasStock: false })
+    }
+  }, [
+    history,
+    success,
+    order,
+    userInfo,
+    dispatch,
+    cart,
+    product.countInStock,
+    product.name,
+  ])
 
   const placeOrderHandler = (params) => {
     dispatch(
@@ -218,14 +240,18 @@ export const PlaceOrderScreen = ({ history }) => {
               </Grid>
 
               <Grid justify='center' container>
-                <Button
-                  className={classes.placeOrderBtn}
-                  variant='contained'
-                  disabled={cart.cartItems === 0}
-                  onClick={placeOrderHandler}
-                >
-                  Place Order
-                </Button>
+                {!stock.hasStock ? (
+                  <Message variant='error'>{`${stock.name} is out of stock`}</Message>
+                ) : (
+                  <Button
+                    className={classes.placeOrderBtn}
+                    variant='contained'
+                    disabled={cart.cartItems === 0}
+                    onClick={placeOrderHandler}
+                  >
+                    Place Order
+                  </Button>
+                )}
               </Grid>
             </Grid>
           </Card>

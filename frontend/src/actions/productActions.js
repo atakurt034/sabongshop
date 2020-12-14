@@ -23,9 +23,6 @@ import {
   PRODUCT_UPDATE_STOCK_REQUEST,
   PRODUCT_UPDATE_STOCK_SUCCESS,
   PRODUCT_UPDATE_STOCK_FAIL,
-  PRODUCT_CHECK_STOCK_REQUEST,
-  PRODUCT_CHECK_STOCK_SUCCESS,
-  PRODUCT_CHECK_STOCK_FAIL,
 } from '../constants/productConstants'
 
 import Axios from 'axios'
@@ -283,31 +280,6 @@ export const updateProductStock = (id, qty, method) => async (
 
     dispatch({
       type: PRODUCT_UPDATE_STOCK_FAIL,
-      payload: message,
-    })
-  }
-}
-
-export const checkProductStock = (id) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: PRODUCT_CHECK_STOCK_REQUEST,
-    })
-
-    const { data } = await Axios.get(`/api/products/${id}`)
-
-    dispatch({
-      type: PRODUCT_CHECK_STOCK_SUCCESS,
-      payload: data,
-    })
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message
-
-    dispatch({
-      type: PRODUCT_CHECK_STOCK_FAIL,
       payload: message,
     })
   }
