@@ -10,6 +10,8 @@ import {
   productReviewCreateReducer,
   productTopRatedReducer,
   productUpdateReducer,
+  productUpdateStockReducer,
+  productCheckStockReducer,
 } from './reducers/productReducers'
 import {
   orderCreateReducer,
@@ -19,6 +21,7 @@ import {
   orderListMyReducer,
   orderListReducer,
   orderDeleteReducer,
+  orderCancelReducer,
 } from './reducers/orderReducers'
 import {
   userDetailsReducer,
@@ -34,6 +37,8 @@ import {
 const midlleware = [thunk]
 
 const reducer = combineReducers({
+  productCheckStock: productCheckStockReducer,
+  productUpdateStock: productUpdateStockReducer,
   productList: productListReducer,
   productDetails: productDetailsReducer,
   productDelete: productDeleteReducer,
@@ -57,6 +62,7 @@ const reducer = combineReducers({
   orderListMy: orderListMyReducer,
   orderList: orderListReducer,
   orderDelete: orderDeleteReducer,
+  orderCancel: orderCancelReducer,
 })
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')

@@ -17,6 +17,9 @@ import { Link } from 'react-router-dom'
 import { createOrder } from '../../actions/orderActions'
 import { CART_RESET } from '../../constants/cartConstants'
 
+import { updateProductStock } from '../../actions/productActions'
+import { PRODUCT_DETAILS_RESET } from '../../constants/productConstants'
+
 import { CheckSteps } from '../../components/NavItems/Stepper'
 import Message from '../../components/Message'
 
@@ -53,8 +56,15 @@ export const PlaceOrderScreen = ({ history }) => {
     if (success) {
       history.push(`/order/${order._id}`)
       dispatch({ type: CART_RESET })
+      if (cart.cartItems) {
+        cart.cartItems.map((item) =>
+          dispatch(updateProductStock(item.product, item.qty, 'placeorder'))
+        )
+      }
+      dispatch({ type: PRODUCT_DETAILS_RESET })
+      localStorage.removeItem('cartItems')
     }
-  }, [history, success, order, userInfo, dispatch])
+  }, [history, success, order, userInfo, dispatch, cart])
 
   const placeOrderHandler = (params) => {
     dispatch(
@@ -141,7 +151,7 @@ export const PlaceOrderScreen = ({ history }) => {
                           </Link>
                         </Grid>
                         <Grid item md={4}>
-                          {item.qty} x ${item.price} = $
+                          {item.qty} x ₱ {item.price} = ₱{' '}
                           {(item.qty * item.price).toFixed(2)}
                         </Grid>
                       </Grid>
@@ -190,7 +200,7 @@ export const PlaceOrderScreen = ({ history }) => {
                   Tax:{' '}
                 </Grid>
                 <Grid item xs={6}>
-                  ₱{cart.taxPrice}
+                  ₱ {cart.taxPrice}
                 </Grid>
               </Grid>
 

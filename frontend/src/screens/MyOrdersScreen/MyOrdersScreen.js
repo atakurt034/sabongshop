@@ -84,23 +84,27 @@ export const MyOrdersScreen = ({ history }) => {
             order._id,
             order.createdAt.substring(0, 10),
             order.totalPrice,
-            order.isPaid ? (
+            order.isPaid && !order.isCancelled ? (
               <Chip
                 className={classes.chip}
                 size='small'
                 label={order.paidAt.substring(0, 10)}
                 icon={<CheckCircleIcon className={classes.success} />}
               />
+            ) : order.isCancelled ? (
+              <Message variant='error'>Cancelled</Message>
             ) : (
               <NotInterestedIcon color='secondary' />
             ),
-            order.isDelivered ? (
+            order.isDelivered && !order.isCancelled ? (
               <Chip
                 className={classes.chip}
                 size='small'
                 label={order.deliveredAt.substring(0, 10)}
                 icon={<CheckCircleIcon className={classes.success} />}
               />
+            ) : order.isCancelled ? (
+              <Message variant='error'>Cancelled</Message>
             ) : (
               <NotInterestedIcon color='secondary' />
             ),

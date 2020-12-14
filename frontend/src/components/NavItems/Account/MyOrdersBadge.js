@@ -19,7 +19,10 @@ export const MyOrdersBadge = () => {
   const orderListMy = useSelector((state) => state.orderListMy)
   const { orders } = orderListMy
   if (orders) {
-    orders.map((order) => !order.isPaid && orderCount.push(order._id))
+    orders.map(
+      (order) =>
+        !order.isPaid && !order.isCancelled && orderCount.push(order._id)
+    )
   }
   const count = orderCount.length
 

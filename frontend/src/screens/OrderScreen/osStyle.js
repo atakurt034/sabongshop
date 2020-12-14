@@ -40,4 +40,8 @@ export const useStyle = makeStyles((theme) => ({
     margin: 5,
     padding: 5,
   },
+  cancel: {
+    backgroundColor: 'transparent',
+    boxShadow: 'none',
+  },
 }))

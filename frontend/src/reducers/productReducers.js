@@ -24,6 +24,13 @@ import {
   PRODUCT_TOP_FAIL,
   PRODUCT_TOP_REQUEST,
   PRODUCT_TOP_SUCCESS,
+  PRODUCT_UPDATE_STOCK_REQUEST,
+  PRODUCT_UPDATE_STOCK_SUCCESS,
+  PRODUCT_UPDATE_STOCK_FAIL,
+  PRODUCT_UPDATE_STOCK_RESET,
+  PRODUCT_CHECK_STOCK_REQUEST,
+  PRODUCT_CHECK_STOCK_SUCCESS,
+  PRODUCT_CHECK_STOCK_FAIL,
 } from '../constants/productConstants.js'
 
 export const productListReducer = (state = { products: [] }, action) => {
@@ -128,6 +135,41 @@ export const productTopRatedReducer = (state = { products: [] }, action) => {
       return { loading: false, products: action.payload }
     case PRODUCT_TOP_FAIL:
       return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+export const productUpdateStockReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PRODUCT_UPDATE_STOCK_REQUEST: {
+      return { loading: true }
+    }
+    case PRODUCT_UPDATE_STOCK_SUCCESS: {
+      return { loading: false, product: action.payload }
+    }
+    case PRODUCT_UPDATE_STOCK_FAIL: {
+      return { loading: false, error: action.payload }
+    }
+    case PRODUCT_UPDATE_STOCK_RESET: {
+      return {}
+    }
+    default:
+      return state
+  }
+}
+
+export const productCheckStockReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PRODUCT_CHECK_STOCK_REQUEST: {
+      return { loading: true }
+    }
+    case PRODUCT_CHECK_STOCK_SUCCESS: {
+      return { loading: false, product: action.payload }
+    }
+    case PRODUCT_CHECK_STOCK_FAIL: {
+      return { loading: false, error: action.payload }
+    }
     default:
       return state
   }

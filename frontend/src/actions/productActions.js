@@ -20,6 +20,12 @@ import {
   PRODUCT_TOP_FAIL,
   PRODUCT_TOP_REQUEST,
   PRODUCT_TOP_SUCCESS,
+  PRODUCT_UPDATE_STOCK_REQUEST,
+  PRODUCT_UPDATE_STOCK_SUCCESS,
+  PRODUCT_UPDATE_STOCK_FAIL,
+  PRODUCT_CHECK_STOCK_REQUEST,
+  PRODUCT_CHECK_STOCK_SUCCESS,
+  PRODUCT_CHECK_STOCK_FAIL,
 } from '../constants/productConstants'
 
 import Axios from 'axios'
@@ -234,6 +240,75 @@ export const listTopProducts = () => async (dispatch) => {
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message,
+    })
+  }
+}
+
+export const updateProductStock = (id, qty, method) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: PRODUCT_UPDATE_STOCK_REQUEST,
+    })
+
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+    const { data: details } = await Axios.get(`/api/products/${id}`)
+    let product = { ...details, countInStock: details.countInStock - qty }
+    if (method === 'cancel') {
+      product = { ...details, countInStock: details.countInStock + qty }
+    }
+
+    const { data } = await Axios.put(`/api/products/${id}`, product, config)
+
+    dispatch({
+      type: PRODUCT_UPDATE_STOCK_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+
+    dispatch({
+      type: PRODUCT_UPDATE_STOCK_FAIL,
+      payload: message,
+    })
+  }
+}
+
+export const checkProductStock = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: PRODUCT_CHECK_STOCK_REQUEST,
+    })
+
+    const { data } = await Axios.get(`/api/products/${id}`)
+
+    dispatch({
+      type: PRODUCT_CHECK_STOCK_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+
+    dispatch({
+      type: PRODUCT_CHECK_STOCK_FAIL,
+      payload: message,
     })
   }
 }

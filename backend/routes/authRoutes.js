@@ -36,6 +36,8 @@ router.get('/currentuser', (req, res) => {
     res.json({
       _id: user._id,
       googleId: user.googleId,
+      facebookId: user.facebookId,
+      image: user.image,
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
@@ -55,7 +57,10 @@ router.get(
     req.session.redirectPath = req.query.redirect
     next()
   },
-  passport.authenticate('facebook', { scope: ['public_profile', 'email'] })
+  passport.authenticate('facebook', {
+    authType: 'reauthenticate',
+    scope: ['public_profile', 'email'],
+  })
 )
 
 // @desc Facebook auth callback
@@ -69,23 +74,6 @@ router.get(
     res.redirect(`/login?redirect=${redirect}`)
   }
 )
-
-router.get('/currentuser', (req, res) => {
-  const user = req.user
-  if (user) {
-    res.json({
-      _id: user._id,
-      googleId: user.googleId,
-      facebookId: user.facebookId,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      token: generateToken(user._id),
-    })
-  } else {
-    res.send(null)
-  }
-})
 
 router.get('/logout', (req, res) => {
   req.logout()

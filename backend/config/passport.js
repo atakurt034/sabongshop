@@ -50,6 +50,10 @@ export default function (passport) {
           facebookId: profile.id,
           name: profile.displayName,
           email: profile.emails[0].value,
+          image:
+            profile.photos || profile.photos > 0
+              ? profile.photos[0].value
+              : 'none',
         }
 
         try {

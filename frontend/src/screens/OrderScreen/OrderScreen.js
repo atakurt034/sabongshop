@@ -3,6 +3,8 @@ import PaymentIcon from '@material-ui/icons/Payment'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import LocalShippingIcon from '@material-ui/icons/LocalShipping'
+import NotInterestedIcon from '@material-ui/icons/NotInterested'
+
 import { useStyle } from './osStyle'
 import {
   Grid,
@@ -20,13 +22,19 @@ import {
   getOrderDetails,
   payOrder,
   deliverOrder,
+  cancelOrder,
 } from '../../actions/orderActions'
 import Axios from 'axios'
 import { PayPalButton } from 'react-paypal-button-v2'
 import {
   ORDER_PAY_RESET,
   ORDER_DELIVER_RESET,
+  ORDER_CANCEL_RESET,
+  ORDER_CREATE_RESET,
 } from '../../constants/orderConstants'
+
+import { updateProductStock } from '../../actions/productActions'
+import { PRODUCT_DETAILS_RESET } from '../../constants/productConstants'
 
 import Message from '../../components/Message'
 import Loader from '../../components/Loader'
@@ -50,11 +58,8 @@ export const OrderScreen = ({ match, history }) => {
   const orderDeliver = useSelector((state) => state.orderDeliver)
   const { loading: loadingDeliver, success: successDeliver } = orderDeliver
 
-  // if (!loading) {
-  //   order.itemsPrice = order.orderItems
-  //     .reduce((acc, item) => acc + item.price * item.qty, 0)
-  //     .toFixed(2)
-  // }
+  const orderCancel = useSelector((state) => state.orderCancel)
+  const { loading: loadingCancel, success: successCancel } = orderCancel
 
   const dispatch = useDispatch()
 
@@ -74,10 +79,18 @@ export const OrderScreen = ({ match, history }) => {
       document.body.appendChild(script)
     }
 
-    if (!order || successPay || successDeliver || order._id !== orderId) {
+    if (
+      !order ||
+      successPay ||
+      successDeliver ||
+      order._id !== orderId ||
+      successCancel
+    ) {
+      dispatch(getOrderDetails(orderId))
       dispatch({ type: ORDER_PAY_RESET })
       dispatch({ type: ORDER_DELIVER_RESET })
-      dispatch(getOrderDetails(orderId))
+      dispatch({ type: ORDER_CANCEL_RESET })
+      dispatch({ type: ORDER_CREATE_RESET })
     } else if (!order.isPaid) {
       if (!window.paypal) {
         addPayPalScript()
@@ -85,14 +98,42 @@ export const OrderScreen = ({ match, history }) => {
         setSdkReady(true)
       }
     }
-  }, [dispatch, orderId, order, successPay, successDeliver, userInfo, history])
+    if (successCancel) {
+      if (order.orderItems) {
+        order.orderItems.map((item) =>
+          dispatch(updateProductStock(item.product, item.qty, 'cancel'))
+        )
+      }
+      dispatch({ type: PRODUCT_DETAILS_RESET })
+    }
+  }, [
+    dispatch,
+    orderId,
+    order,
+    successPay,
+    successDeliver,
+    userInfo,
+    history,
+    successCancel,
+  ])
 
-  const successPaymentHandler = (paymentResult) => {
+  const successPaymentHandler = async (paymentResult) => {
     dispatch(payOrder(orderId, paymentResult))
   }
 
   const deliverHandler = () => {
     dispatch(deliverOrder(order))
+  }
+  const cancelHandler = () => {
+    if (
+      window.confirm(
+        `cancel order: ${order.orderItems.map(
+          (item) => ' ' + JSON.stringify(item.name)
+        )} ?`
+      )
+    ) {
+      dispatch(cancelOrder(order))
+    }
   }
 
   return loading ? (
@@ -137,10 +178,16 @@ export const OrderScreen = ({ match, history }) => {
               {order.shippingAddress.postalCode},{' '}
               {order.shippingAddress.country}
             </Typography>
-            {order.isDelivered ? (
+            {order.isDelivered && !order.isCancelled ? (
               <Container>
                 <Message variant='success'>
                   Delivred On {order.deliveredAt}
+                </Message>
+              </Container>
+            ) : order.isCancelled ? (
+              <Container>
+                <Message variant='error'>
+                  CANCELLED on {order.cancelledAt.substring(0, 10)}
                 </Message>
               </Container>
             ) : (
@@ -149,34 +196,36 @@ export const OrderScreen = ({ match, history }) => {
               </Container>
             )}
           </Grid>
-          <Grid item xs={12}>
-            <Divider />
-            <Box className={classes.box}>
-              <Box alignItems='center' display='flex' mr={1}>
-                <PaymentIcon />
+          {!order.isCancelled && (
+            <Grid item xs={12}>
+              <Divider />
+              <Box className={classes.box}>
+                <Box alignItems='center' display='flex' mr={1}>
+                  <PaymentIcon />
+                </Box>
+                <Typography
+                  className={classes.title}
+                  variant='h5'
+                  component='span'
+                >
+                  Payment Method
+                </Typography>
               </Box>
-              <Typography
-                className={classes.title}
-                variant='h5'
-                component='span'
-              >
-                Payment Method
+              <Typography>
+                <strong>Method: </strong>
+                {order.paymentMethod}
               </Typography>
-            </Box>
-            <Typography>
-              <strong>Method: </strong>
-              {order.paymentMethod}
-            </Typography>
-            {order.isPaid ? (
-              <Container>
-                <Message variant='success'>Paid On {order.paidAt}</Message>
-              </Container>
-            ) : (
-              <Container>
-                <Message variant='warning'>Not Paid</Message>
-              </Container>
-            )}
-          </Grid>
+              {order.isPaid && !order.isCancelled ? (
+                <Container>
+                  <Message variant='success'>Paid On {order.paidAt}</Message>
+                </Container>
+              ) : (
+                <Container>
+                  <Message variant='warning'>Not Paid</Message>
+                </Container>
+              )}
+            </Grid>
+          )}
 
           <Grid item>
             <Divider />
@@ -225,94 +274,112 @@ export const OrderScreen = ({ match, history }) => {
             )}
           </Grid>
         </Grid>
-        <Grid container className={classes.summaryRoot} item md={4}>
-          <Container maxWidth='md'>
-            <Card raised={true} elevation={10} className={classes.card}>
-              <Grid spacing={1} container className={classes.summary}>
-                <Grid item xs={12}>
-                  <Typography align='center' variant='h5' component='h1'>
-                    <Button
-                      className={classes.summaryTitle}
-                      size='large'
-                      startIcon={<AssignmentIcon fontSize='small' />}
-                    >
-                      Order Summary
-                    </Button>
-                  </Typography>
-                </Grid>
-
-                <Grid container>
-                  <Grid item xs={6}>
-                    Items
-                  </Grid>
-                  <Grid item xs={6}>
-                    ₱ {order.itemsPrice}
-                  </Grid>
-                </Grid>
-
-                <Grid container>
-                  <Grid item xs={6}>
-                    Shipping
-                  </Grid>
-                  <Grid item xs={6}>
-                    ₱ {order.shippingPrice}
-                  </Grid>
-                </Grid>
-
-                <Grid container>
-                  <Grid item xs={6}>
-                    Tax
-                  </Grid>
-                  <Grid item xs={6}>
-                    ₱ {order.taxPrice}
-                  </Grid>
-                </Grid>
-
-                <Grid container>
-                  <Grid item xs={6}>
-                    <Typography variant='h6'>Total</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant='h6'>₱ {order.totalPrice}</Typography>
-                  </Grid>
-                </Grid>
-                {!order.isPaid && (
-                  <Grid container>
-                    {loadingPay && <Loader />}
-                    {!sdkReady ? (
-                      <Loader />
-                    ) : (
-                      <Box mx='auto' p={2}>
-                        <PayPalButton
-                          currency={'PHP'}
-                          amount={order.totalPrice}
-                          onSuccess={successPaymentHandler}
-                        />
-                      </Box>
-                    )}
-                  </Grid>
-                )}
-                <Grid container justify='center'>
-                  {loadingDeliver && <Loader />}
-                </Grid>
-                {userInfo &&
-                  userInfo.isAdmin &&
-                  order.isPaid &&
-                  !order.isDelivered && (
-                    <Grid container justify='center' style={{ padding: 10 }}>
+        {loadingCancel && <Loader />}
+        {!order.isCancelled && (
+          <Grid container className={classes.summaryRoot} item md={4}>
+            <Container maxWidth='md'>
+              <Card raised={true} elevation={10} className={classes.card}>
+                <Grid spacing={1} container className={classes.summary}>
+                  <Grid item xs={12}>
+                    <Typography align='center' variant='h5' component='h1'>
                       <Button
-                        variant='contained'
-                        startIcon={<LocalShippingIcon />}
-                        onClick={deliverHandler}
+                        className={classes.summaryTitle}
+                        size='large'
+                        startIcon={<AssignmentIcon fontSize='small' />}
                       >
-                        Mark as delivered
+                        Order Summary
                       </Button>
+                    </Typography>
+                  </Grid>
+
+                  <Grid container>
+                    <Grid item xs={6}>
+                      Items
+                    </Grid>
+                    <Grid item xs={6}>
+                      ₱ {order.itemsPrice}
+                    </Grid>
+                  </Grid>
+
+                  <Grid container>
+                    <Grid item xs={6}>
+                      Shipping
+                    </Grid>
+                    <Grid item xs={6}>
+                      ₱ {order.shippingPrice}
+                    </Grid>
+                  </Grid>
+
+                  <Grid container>
+                    <Grid item xs={6}>
+                      Tax
+                    </Grid>
+                    <Grid item xs={6}>
+                      ₱ {order.taxPrice}
+                    </Grid>
+                  </Grid>
+
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <Typography variant='h6'>Total</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant='h6'>₱ {order.totalPrice}</Typography>
+                    </Grid>
+                  </Grid>
+                  {!order.isPaid && (
+                    <Grid container>
+                      {loadingPay && <Loader />}
+                      {!sdkReady ? (
+                        <Loader />
+                      ) : (
+                        <Box mx='auto' p={2}>
+                          <PayPalButton
+                            currency={'PHP'}
+                            amount={order.totalPrice}
+                            onSuccess={successPaymentHandler}
+                          />
+                        </Box>
+                      )}
+                      <Grid
+                        item
+                        xs={12}
+                        style={{ padding: 10, textAlign: 'center' }}
+                      >
+                        <Button
+                          className={classes.cancel}
+                          variant='contained'
+                          color='secondary'
+                          startIcon={<NotInterestedIcon color='error' />}
+                          onClick={cancelHandler}
+                        >
+                          Cancel Order?
+                        </Button>
+                      </Grid>
                     </Grid>
                   )}
-              </Grid>
-            </Card>
-          </Container>
-        </Grid>
+                  <Grid container justify='center'>
+                    {loadingDeliver && <Loader />}
+                  </Grid>
+                  {userInfo &&
+                    userInfo.isAdmin &&
+                    order.isPaid &&
+                    !order.isDelivered && (
+                      <Grid container justify='center' style={{ padding: 10 }}>
+                        <Button
+                          variant='contained'
+                          startIcon={<LocalShippingIcon />}
+                          onClick={deliverHandler}
+                        >
+                          Mark as delivered
+                        </Button>
+                      </Grid>
+                    )}
+                </Grid>
+              </Card>
+            </Container>
+          </Grid>
+        )}
       </Grid>
     </>
   )

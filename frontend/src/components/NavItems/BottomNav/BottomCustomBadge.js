@@ -44,7 +44,10 @@ export const Account = () => {
   const orderListMy = useSelector((state) => state.orderListMy)
   const { orders } = orderListMy
   if (orders) {
-    orders.map((order) => !order.isPaid && orderCount.push(order._id))
+    orders.map(
+      (order) =>
+        !order.isPaid && !order.isCancelled && orderCount.push(order._id)
+    )
   }
   const count = orderCount.length
 
@@ -53,6 +56,9 @@ export const Account = () => {
 
   const orderPay = useSelector((state) => state.orderPay)
   const { success: successPay } = orderPay
+
+  const orderCancel = useSelector((state) => state.orderCancel)
+  const { success: successCancel } = orderCancel
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
@@ -66,10 +72,10 @@ export const Account = () => {
     } else {
       setAvatars(user.image)
     }
-    if (success || successPay) {
+    if (success || successPay || successCancel) {
       dispatch(listMyOrders())
     }
-  }, [dispatch, user, userInfo, success, successPay])
+  }, [dispatch, user, userInfo, success, successPay, successCancel])
 
   const handleClose = () => {
     setAnchorEl(null)

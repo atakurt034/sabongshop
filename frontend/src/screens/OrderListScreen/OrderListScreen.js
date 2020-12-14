@@ -35,6 +35,7 @@ import { useStyles } from './olsStyle'
 
 import { ModalMessage } from '../../components/ModalMessage'
 import { ModalLoader } from '../../components/ModalLoader'
+import Message from '../../components/Message'
 
 export const OrderListScreen = ({ history }) => {
   const classes = useStyles()
@@ -92,23 +93,27 @@ export const OrderListScreen = ({ history }) => {
           order.user && order.user.name,
           order.createdAt.substring(0, 10),
           order.totalPrice,
-          order.isPaid ? (
+          order.isPaid && !order.isCancelled ? (
             <Chip
               className={classes.chip}
               size='small'
               label={order.paidAt.substring(0, 10)}
               icon={<CheckCircleIcon className={classes.success} />}
             />
+          ) : order.isCancelled ? (
+            <Message variant='error'>Cancelled</Message>
           ) : (
             <NotInterestedIcon color='secondary' />
           ),
-          order.isDelivered ? (
+          order.isDelivered && !order.isCancelled ? (
             <Chip
               className={classes.chip}
               size='small'
               label={order.deliveredAt.substring(0, 10)}
               icon={<CheckCircleIcon className={classes.success} />}
             />
+          ) : order.isCancelled ? (
+            <Message variant='error'>Cancelled</Message>
           ) : (
             <NotInterestedIcon color='secondary' />
           ),
