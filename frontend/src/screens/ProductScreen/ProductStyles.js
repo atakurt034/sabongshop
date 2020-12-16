@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core'
+import { red } from '@material-ui/core/colors'
 
 export const useStyle = makeStyles((theme) => ({
   root: {
@@ -52,8 +53,5 @@ export const useStyle = makeStyles((theme) => ({
   },
   textReviews: {
     wordWrap: 'break-word',
-  },
-  paginaation: {
-    // marginTop: 10,
   },
 }))

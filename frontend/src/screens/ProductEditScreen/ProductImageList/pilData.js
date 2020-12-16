@@ -24,10 +24,11 @@ const headCells = [
     label: 'Image',
   },
   { id: 'path', numeric: false, disablePadding: false, label: 'Path' },
+  { id: 'primary', numeric: false, disablePadding: false, label: '' },
 ]
 
-function createData(image, path) {
-  return { image, path }
+function createData(image, path, primary) {
+  return { image, path, primary }
 }
 
 function descendingComparator(a, b, orderBy) {

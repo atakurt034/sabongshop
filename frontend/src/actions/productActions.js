@@ -27,6 +27,9 @@ import {
   PRODUCT_DELETE_IMAGE_RESET,
   PRODUCT_DELETE_IMAGE_SUCCESS,
   PRODUCT_DELETE_IMAGE_REQUEST,
+  PRODUCT_PRIMARY_IMAGE_REQUEST,
+  PRODUCT_PRIMARY_IMAGE_SUCCESS,
+  PRODUCT_PRIMARY_IMAGE_FAIL,
 } from '../constants/productConstants'
 
 import Axios from 'axios'
@@ -325,6 +328,50 @@ export const deleteProductImage = (id, image) => async (dispatch, getState) => {
 
     dispatch({
       type: PRODUCT_DELETE_IMAGE_FAIL,
+      payload: message,
+    })
+  }
+}
+
+export const setPrimaryImage = (id, path) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: PRODUCT_PRIMARY_IMAGE_REQUEST,
+    })
+
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+    const { data: details } = await Axios.get(`/api/products/${id}`)
+    const image = details.image.filter((img) => img === path)
+    const images = details.image.filter((img) => img !== path)
+    const newImage = images.concat(image)
+    const product = {
+      ...details,
+      image: newImage,
+    }
+
+    const { data } = await Axios.put(`/api/products/${id}`, product, config)
+
+    dispatch({
+      type: PRODUCT_PRIMARY_IMAGE_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+
+    dispatch({
+      type: PRODUCT_PRIMARY_IMAGE_FAIL,
       payload: message,
     })
   }

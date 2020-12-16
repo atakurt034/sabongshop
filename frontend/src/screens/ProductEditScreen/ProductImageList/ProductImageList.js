@@ -11,6 +11,7 @@ import {
   Checkbox,
   FormControlLabel,
   Switch,
+  Typography,
 } from '@material-ui/core'
 
 import {
@@ -27,6 +28,7 @@ import { PRODUCT_DELETE_IMAGE_RESET } from '../../../constants/productConstants'
 import {
   deleteProductImage,
   listProductDetails,
+  setPrimaryImage,
 } from '../../../actions/productActions'
 
 import Message from '../../../components/Message'
@@ -46,6 +48,13 @@ export const ProductImageList = ({ history, imageProduct, upload, id }) => {
   const productDeleteImage = useSelector((state) => state.productDeleteImage)
   const { loading, error, success } = productDeleteImage
 
+  const productPrimaryImage = useSelector((state) => state.productPrimaryImage)
+  const {
+    success: successPrimary,
+    error: errorPrimary,
+    loading: loadingPrimary,
+  } = productPrimaryImage
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
@@ -60,20 +69,47 @@ export const ProductImageList = ({ history, imageProduct, upload, id }) => {
     }
   }
 
+  const primaryHandler = (path) => {
+    console.log(path)
+    dispatch(setPrimaryImage(id, path))
+  }
+
   useEffect(() => {
-    if (success) {
+    if (success || successPrimary) {
       dispatch(listProductDetails(id))
       dispatch({ type: PRODUCT_DELETE_IMAGE_RESET })
     }
-  }, [dispatch, success, id])
+  }, [dispatch, success, id, successPrimary])
 
   const rows = []
   if (imageProduct !== undefined) {
-    imageProduct.map((img) => {
+    imageProduct.map((img, index) => {
       return rows.push(
         createData(
           <img src={img} alt={img} style={{ height: 50, padding: 10 }} />,
-          img
+          img,
+          index === imageProduct.length - 1 ? (
+            <Typography color='error' style={{ textAlign: 'center' }}>
+              Primary
+            </Typography>
+          ) : (
+            <Button
+              variant='outlined'
+              size='small'
+              onClick={() => primaryHandler(img)}
+            >
+              <Typography
+                variant='caption'
+                style={{
+                  fontSize: '8px',
+                  fontWeight: 600,
+                  textAlign: 'center',
+                }}
+              >
+                Set to Primary
+              </Typography>
+            </Button>
+          )
         )
       )
     })
@@ -167,7 +203,11 @@ export const ProductImageList = ({ history, imageProduct, upload, id }) => {
                       selected={isItemSelected}
                     >
                       {loading && <Loader />}
+                      {loadingPrimary && <Loader />}
                       {error && <Message variant='error'>{error}</Message>}
+                      {errorPrimary && (
+                        <Message variant='error'>{errorPrimary}</Message>
+                      )}
                       <TableCell padding='checkbox'>
                         <Checkbox
                           checked={isItemSelected}
@@ -183,6 +223,7 @@ export const ProductImageList = ({ history, imageProduct, upload, id }) => {
                         {row.image}
                       </TableCell>
                       <TableCell align='left'>{row.path}</TableCell>
+                      <TableCell align='left'>{row.primary}</TableCell>
                     </TableRow>
                   )
                 })}

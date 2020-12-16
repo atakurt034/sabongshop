@@ -32,6 +32,10 @@ import {
   PRODUCT_DELETE_IMAGE_REQUEST,
   PRODUCT_DELETE_IMAGE_RESET,
   PRODUCT_DELETE_IMAGE_SUCCESS,
+  PRODUCT_PRIMARY_IMAGE_SUCCESS,
+  PRODUCT_PRIMARY_IMAGE_FAIL,
+  PRODUCT_PRIMARY_IMAGE_RESET,
+  PRODUCT_PRIMARY_IMAGE_REQUEST,
 } from '../constants/productConstants.js'
 
 export const productListReducer = (state = { products: [] }, action) => {
@@ -173,6 +177,25 @@ export const productDeleteImageReducer = (state = { img: [] }, action) => {
     }
     case PRODUCT_DELETE_IMAGE_RESET: {
       return { img: [] }
+    }
+    default:
+      return state
+  }
+}
+
+export const productPrimaryImageReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PRODUCT_PRIMARY_IMAGE_REQUEST: {
+      return { loading: true }
+    }
+    case PRODUCT_PRIMARY_IMAGE_SUCCESS: {
+      return { loading: false, success: true, image: action.payload }
+    }
+    case PRODUCT_PRIMARY_IMAGE_FAIL: {
+      return { loading: false, error: action.payload }
+    }
+    case PRODUCT_PRIMARY_IMAGE_RESET: {
+      return {}
     }
     default:
       return state

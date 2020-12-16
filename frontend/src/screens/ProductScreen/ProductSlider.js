@@ -10,6 +10,22 @@ export const ProductSlider = ({ image }) => {
   const [slider2, setSlider2] = useState(null)
   const [images, setImages] = useState([])
 
+  function NextPrevArrow(props) {
+    const { className, style, onClick } = props
+    return (
+      <div
+        className={className}
+        style={{
+          ...style,
+          display: 'block',
+          backgroundColor: 'GrayText',
+          borderRadius: '100%',
+        }}
+        onClick={onClick}
+      />
+    )
+  }
+
   useEffect(() => {
     setNav1(slider1)
     setNav2(slider2)
@@ -35,6 +51,8 @@ export const ProductSlider = ({ image }) => {
     focusOnSelect: true,
     infinite: true,
     centerPadding: '10px',
+    prevArrow: <NextPrevArrow />,
+    nextArrow: <NextPrevArrow />,
   }
 
   return (

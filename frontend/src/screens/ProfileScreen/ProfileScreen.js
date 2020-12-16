@@ -22,6 +22,7 @@ import {
   Container,
   OutlinedInput,
   Avatar,
+  CardMedia,
 } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -171,6 +172,11 @@ export const ProfileScreen = ({ location, history }) => {
 
             <form onSubmit={submitHandler}>
               <Box m={2}>
+                <CardMedia
+                  image={image}
+                  component='img'
+                  className={classes.avatar}
+                />
                 <FormControl fullWidth>
                   <InputLabel htmlFor='image' variant='outlined'>
                     Image

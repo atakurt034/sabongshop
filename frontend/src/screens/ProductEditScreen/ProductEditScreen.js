@@ -120,7 +120,7 @@ export const ProductEditScreen = ({ match, history }) => {
         _id: productId,
         name,
         price,
-        image,
+        image: [...product.image, image],
         brand,
         category,
         description,

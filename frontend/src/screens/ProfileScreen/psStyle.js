@@ -51,4 +51,9 @@ export const useStyles = makeStyles((theme) => ({
     maxHeight: 440,
   },
   tableHead: { fontWeight: 900, borderRadius: 10 },
+  avatar: {
+    borderRadius: '50%',
+    margin: 10,
+    height: '100%',
+  },
 }))
