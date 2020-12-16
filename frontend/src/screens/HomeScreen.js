@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   Container,
@@ -22,12 +22,13 @@ import { BackButton } from '../components/NavItems/BackButton'
 
 import HomeModal from '../components/HomeModal'
 
-export const HomeScreen = ({ match }) => {
+export const HomeScreen = ({ match, history }) => {
   const theme = useTheme()
   const sm = useMediaQuery(theme.breakpoints.down('sm'))
   const dispatch = useDispatch()
   const keyword = match.params.keyword
   const pageNumber = match.params.pageNumber || 1
+  const [change, setChange] = useState(false)
 
   const productList = useSelector((state) => state.productList)
   const { loading, error, products, page, pages } = productList
@@ -36,6 +37,19 @@ export const HomeScreen = ({ match }) => {
     dispatch({ type: PRODUCT_DETAILS_RESET })
     dispatch(listProducts(keyword, pageNumber))
   }, [dispatch, keyword, pageNumber])
+
+  useEffect(() => {
+    if (keyword) {
+      if (!loading && products) {
+        if (products.length === 0 && change) {
+          history.push(`/notfound/${keyword}`)
+          setChange(false)
+        }
+      } else {
+        setChange(true)
+      }
+    }
+  }, [products, history, keyword, loading, dispatch, pageNumber, change])
 
   const classes = useStyles()
   return (

@@ -7,14 +7,17 @@ import HomeIcon from '@material-ui/icons/Home'
 
 import { withRouter } from 'react-router-dom'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     position: 'fixed',
     bottom: 0,
     padding: '5px 0',
   },
-})
+  icon: {
+    color: theme.palette.action.active,
+  },
+}))
 
 const SimpleBottomNavigation = ({ history }) => {
   const classes = useStyles()
@@ -41,10 +44,18 @@ const SimpleBottomNavigation = ({ history }) => {
       <BottomNavigationAction
         value={'account'}
         label='Account'
-        icon={<Account />}
+        icon={<Account className={classes.icon} />}
       />
-      <BottomNavigationAction value={'home'} label='Home' icon={<HomeIcon />} />
-      <BottomNavigationAction value={'cart'} label='Cart' icon={<Cart />} />
+      <BottomNavigationAction
+        value={'home'}
+        label='Home'
+        icon={<HomeIcon className={classes.icon} />}
+      />
+      <BottomNavigationAction
+        value={'cart'}
+        label='Cart'
+        icon={<Cart className={classes.icon} />}
+      />
     </BottomNavigation>
   )
 }

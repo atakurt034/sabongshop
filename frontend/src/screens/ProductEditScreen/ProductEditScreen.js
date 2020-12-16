@@ -10,31 +10,29 @@ import {
   Button,
   CardMedia,
   OutlinedInput,
-  useMediaQuery,
-  useTheme,
   TextField,
 } from '@material-ui/core'
 
-import { useStyles } from './pesStyle'
-import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 import NumberFormat from 'react-number-format'
 import ExtensionIcon from '@material-ui/icons/Extension'
 import EcoIcon from '@material-ui/icons/Eco'
 import WhatshotIcon from '@material-ui/icons/Whatshot'
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed'
 
-import { PRODUCT_UPDATE_RESET } from '../../constants/productConstants'
+import {
+  PRODUCT_UPDATE_RESET,
+  PRODUCT_DELETE_IMAGE_RESET,
+} from '../../constants/productConstants'
 import { listProductDetails, updateProduct } from '../../actions/productActions'
 
 import { ModalMessage } from '../../components/ModalMessage'
 import { ModalLoader } from '../../components/ModalLoader'
 import { BackButton } from '../../components/NavItems/BackButton'
 
+import { ProductImageList } from './ProductImageList/ProductImageList'
+
 export const ProductEditScreen = ({ match, history }) => {
   const productId = match.params.id
-  const classes = useStyles()
-  const theme = useTheme()
-  const xs = useMediaQuery(theme.breakpoints.down('xs'))
 
   const [name, setName] = useState('')
   const [price, setPrice] = useState(0)
@@ -57,24 +55,40 @@ export const ProductEditScreen = ({ match, history }) => {
     success: successUpdate,
   } = productUpdate
 
+  const productDeleteImage = useSelector((state) => state.productDeleteImage)
+  const { success: successDelete, loading: loadingDelete } = productDeleteImage
+
   useEffect(() => {
-    if (successUpdate) {
+    if (successUpdate || successDelete) {
+      dispatch(listProductDetails(productId))
       dispatch({ type: PRODUCT_UPDATE_RESET })
-      history.push('/admin/productlist')
-    } else {
+      // history.push('/admin/productlist')
+    } else if (!loading && !loadingDelete && !loadingUpdate) {
       if (!product.name || product._id !== productId) {
         dispatch(listProductDetails(productId))
       } else {
         setName(product.name)
         setPrice(product.price)
-        setImage(product.image)
+        setImage(product.image[product.image.length - 1])
         setBrand(product.brand)
         setCategory(product.category)
         setCountInStock(product.countInStock)
         setDescription(product.description)
       }
+    } else {
+      dispatch(listProductDetails(productId))
     }
-  }, [dispatch, history, productId, product, successUpdate])
+  }, [
+    dispatch,
+    history,
+    productId,
+    product,
+    successUpdate,
+    successDelete,
+    loadingDelete,
+    loadingUpdate,
+    loading,
+  ])
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0]
@@ -261,42 +275,15 @@ export const ProductEditScreen = ({ match, history }) => {
             </Box>
             <Box m={2}>
               <FormControl required fullWidth>
-                <InputLabel htmlFor='image' variant='outlined'>
-                  Image
-                </InputLabel>
-                <OutlinedInput
-                  id='image'
-                  required
-                  value={image}
-                  labelWidth={50}
-                  onChange={(e) => setImage(e.target.value)}
-                  endAdornment={
-                    <InputAdornment>
-                      <input
-                        accept='image/*'
-                        multiple
-                        className={classes.input}
-                        id='contained-button-file'
-                        type='file'
-                        onChange={uploadFileHandler}
-                      />
-                      <label htmlFor='contained-button-file'>
-                        <Button
-                          variant='contained'
-                          color='primary'
-                          component='span'
-                          size='small'
-                          startIcon={
-                            !xs && <CloudUploadIcon fontSize='small' />
-                          }
-                        >
-                          {xs && <CloudUploadIcon fontSize='small' />}
-                          {!xs && 'Upload'}
-                        </Button>
-                      </label>
-                    </InputAdornment>
-                  }
-                />
+                {loadingDelete ? (
+                  <ModalLoader />
+                ) : (
+                  <ProductImageList
+                    imageProduct={product.image}
+                    upload={uploadFileHandler}
+                    id={productId}
+                  />
+                )}
                 {uploading && <ModalLoader />}
               </FormControl>
             </Box>

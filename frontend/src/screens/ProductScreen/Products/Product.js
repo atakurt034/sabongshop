@@ -50,7 +50,10 @@ export const Product = ({ product }) => {
       <Card className={classes.root}>
         <CardActionArea>
           <Link className={classes.link} to={`/product/${product._id}`}>
-            <CardMedia image={product.image} className={classes.media} />
+            <CardMedia
+              image={product.image[product.image.length - 1]}
+              className={classes.media}
+            />
             <CardContent>
               <Typography variant='h6' component='h2' gutterBottom>
                 {product.name}

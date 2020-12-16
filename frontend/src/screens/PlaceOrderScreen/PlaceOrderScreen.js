@@ -162,7 +162,7 @@ export const PlaceOrderScreen = ({ history }) => {
                       <Grid container alignItems='center' spacing={1}>
                         <Grid item xs={2} md={1}>
                           <CardMedia
-                            image={item.image}
+                            image={item.image[item.image.length - 1]}
                             alt={item.name}
                             component='img'
                           />
@@ -246,6 +246,7 @@ export const PlaceOrderScreen = ({ history }) => {
                   <Button
                     className={classes.placeOrderBtn}
                     variant='contained'
+                    color='primary'
                     disabled={cart.cartItems === 0}
                     onClick={placeOrderHandler}
                   >

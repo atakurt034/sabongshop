@@ -73,7 +73,7 @@ export const HomeSlider = () => {
                   return (
                     <Box key={product._id} p={2}>
                       <CustomSlide
-                        image={product.image}
+                        image={product.image[product.image.length - 1]}
                         name={product.name}
                         id={product._id}
                         price={product.price}

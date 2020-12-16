@@ -11,6 +11,7 @@ import {
   productTopRatedReducer,
   productUpdateReducer,
   productUpdateStockReducer,
+  productDeleteImageReducer,
 } from './reducers/productReducers'
 import {
   orderCreateReducer,
@@ -32,10 +33,13 @@ import {
   userRegisterReducer,
   userAvatarReducer,
 } from './reducers/userReducers'
+import { setModeReducer } from './reducers/modeReducers'
 
 const midlleware = [thunk]
 
 const reducer = combineReducers({
+  setMode: setModeReducer,
+  productDeleteImage: productDeleteImageReducer,
   productUpdateStock: productUpdateStockReducer,
   productList: productListReducer,
   productDetails: productDetailsReducer,

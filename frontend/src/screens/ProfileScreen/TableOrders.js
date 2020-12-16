@@ -15,6 +15,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import NotInterestedIcon from '@material-ui/icons/NotInterested'
 import { useStyles } from './psStyle'
 import NumberFormat from 'react-number-format'
+import Message from '../../components/Message'
 
 const options = {
   minimumFractionDigits: 2,
@@ -67,8 +68,7 @@ export const TableOrders = () => {
   const { orders } = orderListMy
   orders.map((order) => {
     return rows.push(
-      order.isPaid &&
-        order.isDelivered &&
+      ((order.isPaid && order.isDelivered) || order.isCancelled) &&
         createData(
           order._id,
           order.createdAt.substring(0, 10),
@@ -80,23 +80,27 @@ export const TableOrders = () => {
             displayType='text'
             value={order.totalPrice}
           />,
-          order.isPaid ? (
+          order.isPaid && !order.isCancelled ? (
             <Chip
               className={classes.chip}
               size='small'
               label={order.paidAt.substring(0, 10)}
               icon={<CheckCircleIcon className={classes.success} />}
             />
+          ) : order.isCancelled ? (
+            <Message variant='error'>Cancelled</Message>
           ) : (
             <NotInterestedIcon color='error' />
           ),
-          order.isDelivered ? (
+          order.isDelivered && !order.isCancelled ? (
             <Chip
               className={classes.chip}
               size='small'
               label={order.deliveredAt.substring(0, 10)}
               icon={<CheckCircleIcon className={classes.success} />}
             />
+          ) : order.isCancelled ? (
+            <Message variant='error'>Cancelled</Message>
           ) : (
             <NotInterestedIcon color='error' />
           ),

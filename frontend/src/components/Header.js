@@ -16,6 +16,8 @@ import { Brand } from './NavItems/Brand'
 import CustomBadge from './NavItems/CustomBadge'
 import { Account } from './NavItems/Account/Account'
 
+import { DarkModeBtn } from './DarkModeBtn'
+
 const useStyle = makeStyles((theme) => ({
   brand: {
     flex: 1,
@@ -39,6 +41,7 @@ const Header = () => {
         <Grid className={classes.brand}>
           <Brand />
         </Grid>
+        <DarkModeBtn />
         <Route render={({ history }) => <Search history={history} />} />
         {sm && <CustomBadge />}
         {sm && <Account />}

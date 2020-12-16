@@ -23,6 +23,10 @@ import {
   PRODUCT_UPDATE_STOCK_REQUEST,
   PRODUCT_UPDATE_STOCK_SUCCESS,
   PRODUCT_UPDATE_STOCK_FAIL,
+  PRODUCT_DELETE_IMAGE_FAIL,
+  PRODUCT_DELETE_IMAGE_RESET,
+  PRODUCT_DELETE_IMAGE_SUCCESS,
+  PRODUCT_DELETE_IMAGE_REQUEST,
 } from '../constants/productConstants'
 
 import Axios from 'axios'
@@ -280,6 +284,47 @@ export const updateProductStock = (id, qty, method) => async (
 
     dispatch({
       type: PRODUCT_UPDATE_STOCK_FAIL,
+      payload: message,
+    })
+  }
+}
+
+export const deleteProductImage = (id, image) => async (dispatch, getState) => {
+  console.log(JSON.stringify(image))
+  try {
+    dispatch({
+      type: PRODUCT_DELETE_IMAGE_REQUEST,
+    })
+
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+
+    const { data } = await Axios.put(
+      `/api/products/${id}/deleteimg`,
+      image,
+      config
+    )
+
+    dispatch({
+      type: PRODUCT_DELETE_IMAGE_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+
+    dispatch({
+      type: PRODUCT_DELETE_IMAGE_FAIL,
       payload: message,
     })
   }

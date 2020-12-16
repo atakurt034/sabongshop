@@ -44,6 +44,8 @@ import { Link } from 'react-router-dom'
 import { Comments } from './comments'
 import { ReviewPaginate } from '../../components/ReviewPaginate'
 
+import { ProductSlider } from './ProductSlider'
+
 export const ProductScreen = ({ match, history }) => {
   const [qty, setQty] = useState(1)
   const [rating, setRating] = useState(0)
@@ -104,7 +106,8 @@ export const ProductScreen = ({ match, history }) => {
           <BackButton to={'/'} />
         </Grid>
         <Grid item xs={12} sm={6} md={6}>
-          <CardMedia component='img' image={product.image} />
+          {/* <CardMedia component='img' image={product.image} /> */}
+          <ProductSlider image={product.image} />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <Box p={2}>

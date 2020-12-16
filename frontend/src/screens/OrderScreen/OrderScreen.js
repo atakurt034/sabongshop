@@ -255,7 +255,7 @@ export const OrderScreen = ({ match, history }) => {
                     >
                       <Grid item xs={2} md={1}>
                         <CardMedia
-                          image={item.image}
+                          image={item.image[item.image.length - 1]}
                           alt={item.name}
                           component='img'
                         />

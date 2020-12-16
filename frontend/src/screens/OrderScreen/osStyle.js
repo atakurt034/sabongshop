@@ -33,8 +33,6 @@ export const useStyle = makeStyles((theme) => ({
     width: '65%',
     padding: 10,
     margin: '20px auto auto',
-    backgroundColor: '#ab000d',
-    color: '#fff',
   },
   summary: {
     margin: 5,
@@ -42,6 +40,6 @@ export const useStyle = makeStyles((theme) => ({
   },
   cancel: {
     backgroundColor: 'transparent',
-    boxShadow: 'none',
+    color: '#000',
   },
 }))

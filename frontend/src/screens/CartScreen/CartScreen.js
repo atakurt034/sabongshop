@@ -80,7 +80,7 @@ export const CartScreen = ({ match, location, history }) => {
                         <CardMedia
                           style={{ borderRadius: 10 }}
                           component='img'
-                          image={item.image}
+                          image={item.image[item.image.length - 1]}
                           alt={item.name}
                         />
                       </Grid>

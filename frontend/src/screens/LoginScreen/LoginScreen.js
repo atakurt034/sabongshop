@@ -30,6 +30,7 @@ import {
 
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all'
+import clsx from 'clsx'
 
 export const LoginScreen = ({ location, history }) => {
   const [email, setEmail] = useState('')
@@ -109,10 +110,9 @@ export const LoginScreen = ({ location, history }) => {
         </Button>
         <Button
           onClick={signInWithFacebookHandler}
-          className={classes.button}
+          className={clsx(classes.button, classes.facebook)}
           fullWidth
           variant='contained'
-          color='primary'
           startIcon={<FacebookIcon />}
         >
           Sign in with facebook

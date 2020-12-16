@@ -28,9 +28,10 @@ import {
   PRODUCT_UPDATE_STOCK_SUCCESS,
   PRODUCT_UPDATE_STOCK_FAIL,
   PRODUCT_UPDATE_STOCK_RESET,
-  PRODUCT_CHECK_STOCK_REQUEST,
-  PRODUCT_CHECK_STOCK_SUCCESS,
-  PRODUCT_CHECK_STOCK_FAIL,
+  PRODUCT_DELETE_IMAGE_FAIL,
+  PRODUCT_DELETE_IMAGE_REQUEST,
+  PRODUCT_DELETE_IMAGE_RESET,
+  PRODUCT_DELETE_IMAGE_SUCCESS,
 } from '../constants/productConstants.js'
 
 export const productListReducer = (state = { products: [] }, action) => {
@@ -153,6 +154,25 @@ export const productUpdateStockReducer = (state = {}, action) => {
     }
     case PRODUCT_UPDATE_STOCK_RESET: {
       return {}
+    }
+    default:
+      return state
+  }
+}
+
+export const productDeleteImageReducer = (state = { img: [] }, action) => {
+  switch (action.type) {
+    case PRODUCT_DELETE_IMAGE_REQUEST: {
+      return { loading: true }
+    }
+    case PRODUCT_DELETE_IMAGE_SUCCESS: {
+      return { loading: false, success: true, img: action.payload }
+    }
+    case PRODUCT_DELETE_IMAGE_FAIL: {
+      return { loading: false, error: action.payload }
+    }
+    case PRODUCT_DELETE_IMAGE_RESET: {
+      return { img: [] }
     }
     default:
       return state

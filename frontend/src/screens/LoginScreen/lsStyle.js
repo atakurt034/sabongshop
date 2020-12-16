@@ -1,5 +1,7 @@
 import { makeStyles } from '@material-ui/core'
 
+import blue from '@material-ui/core/colors/blue'
+
 export const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -26,6 +28,13 @@ export const useStyles = makeStyles((theme) => ({
   button: {
     textTransform: 'none',
     margin: '5px 0',
+  },
+  facebook: {
+    backgroundColor: blue[700],
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: blue[900],
+    },
   },
   svg: {
     color: '#fff',

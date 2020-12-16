@@ -19,7 +19,7 @@ export const getProducts = asyncHandler(async (req, res) => {
   }
 
   const page = Number(req.query.pageNumber) || 1
-  const keyword = req.query.keyword
+  const keyword1 = req.query.keyword
     ? {
         name: {
           $regex: req.query.keyword,
@@ -27,8 +27,22 @@ export const getProducts = asyncHandler(async (req, res) => {
         },
       }
     : {}
-  const count = await Product.countDocuments({ ...keyword })
-  const products = await Product.find({ ...keyword })
+
+  const keyword2 = req.query.keyword
+    ? {
+        brand: {
+          $regex: req.query.keyword,
+          $options: 'i',
+        },
+      }
+    : {}
+
+  const count = await Product.countDocuments({
+    $or: [{ ...keyword1 }, { ...keyword2 }],
+  })
+  const products = await Product.find({
+    $or: [{ ...keyword1 }, { ...keyword2 }],
+  })
     .limit(pageSize)
     .skip(pageSize * (page - 1))
 
@@ -102,7 +116,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
     product.name = name
     product.price = price
     product.description = description
-    product.image = image
+    product.image = [...product.image, image]
     product.brand = brand
     product.category = category
     product.countInStock = countInStock
@@ -158,4 +172,23 @@ export const getTopProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({}).sort({ rating: -1 }).limit(3)
 
   res.json(products)
+})
+
+export const deleteImage = asyncHandler(async (req, res) => {
+  // const product = Product.update({ _id: { $in: req.params.id.split(',') } })
+  const image = req.body
+  const product = Product.update(
+    { _id: req.params.id },
+    { $pull: { image: { $in: image } } },
+    function (err, data) {
+      console.log(err, data)
+    }
+  )
+
+  if (product) {
+    res.json({ message: 'Product removed' })
+  } else {
+    res.status(404)
+    throw new Error('Product not found')
+  }
 })
