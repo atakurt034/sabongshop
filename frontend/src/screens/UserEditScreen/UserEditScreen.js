@@ -11,6 +11,7 @@ import {
   Checkbox,
   FormControlLabel,
   Paper,
+  CardMedia,
 } from '@material-ui/core'
 
 import AccountCircle from '@material-ui/icons/AccountCircle'
@@ -38,6 +39,7 @@ export const UserEditScreen = ({ match, history }) => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [isAdmin, setIsAdmin] = useState(false)
+  const [image, setImage] = useState('')
 
   const dispatch = useDispatch()
 
@@ -64,6 +66,7 @@ export const UserEditScreen = ({ match, history }) => {
         setName(user.name)
         setEmail(user.email)
         setIsAdmin(user.isAdmin)
+        setImage(user.image)
       }
     }
   }, [dispatch, user, userId, successUpdate, history, name, email])
@@ -87,6 +90,16 @@ export const UserEditScreen = ({ match, history }) => {
       ) : (
         <Container maxWidth='sm'>
           <Paper style={{ padding: 25 }}>
+            <CardMedia
+              image={image}
+              component='img'
+              style={{
+                borderRadius: '100%',
+                width: '50%',
+                padding: 10,
+                margin: 'auto',
+              }}
+            />
             <form onSubmit={submitHandler}>
               <FormControl fullWidth required>
                 <InputLabel htmlFor='name'>Name</InputLabel>

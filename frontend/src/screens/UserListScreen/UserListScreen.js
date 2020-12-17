@@ -59,9 +59,9 @@ export const UserListScreen = ({ history }) => {
 
   const userDelete = useSelector((state) => state.userDelete)
   const {
-    // loading: loadingDelete,
+    loading: loadingDelete,
     success: successDelete,
-    // error: errorDelete,
+    error: errorDelete,
   } = userDelete
 
   useEffect(() => {
@@ -163,7 +163,11 @@ export const UserListScreen = ({ history }) => {
   return (
     <div className={classes.root}>
       {loading && <ModalLoader />}
+      {loadingDelete && <ModalLoader />}
       {error && <ModalMessage variant='error'>{error}</ModalMessage>}
+      {errorDelete && (
+        <ModalMessage variant='error'>{errorDelete}</ModalMessage>
+      )}
       <Paper className={classes.paper}>
         <EnhancedTableToolbar
           numSelected={selected.length}

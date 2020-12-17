@@ -70,7 +70,7 @@ export const deleteProduct = asyncHandler(async (req, res) => {
   const product = Product.find({ _id: { $in: req.params.id.split(',') } })
 
   if (product) {
-    await product.remove()
+    await Product.deleteMany(product)
     res.json({ message: 'Product removed' })
   } else {
     res.status(404)

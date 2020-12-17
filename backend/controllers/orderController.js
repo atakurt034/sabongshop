@@ -119,7 +119,7 @@ export const deleteOrder = asyncHandler(async (req, res) => {
   const order = Order.find({ _id: { $in: req.params.id.split(',') } })
 
   if (order) {
-    await order.remove()
+    await Order.deleteMany(order)
     res.json({ message: 'Order removed' })
   } else {
     res.status(404)
