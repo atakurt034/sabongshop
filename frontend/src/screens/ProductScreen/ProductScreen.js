@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   Grid,
-  CardMedia,
   Typography,
   Divider,
   Box,
@@ -45,11 +44,13 @@ import { Comments } from './comments'
 import { ReviewPaginate } from '../../components/ReviewPaginate'
 
 import { ProductSlider } from './ProductSlider'
+import { textSale } from '../../components/TextSale'
 
 export const ProductScreen = ({ match, history }) => {
   const [qty, setQty] = useState(1)
   const [rating, setRating] = useState(0)
   const [comment, setComment] = useState('')
+  const [price, setPrice] = useState()
 
   const itemsPerPage = 2
   const [page, setPage] = useState(1)
@@ -81,6 +82,12 @@ export const ProductScreen = ({ match, history }) => {
     if (!product._id || product._id !== match.params.id) {
       dispatch(listProductDetails(match.params.id))
       dispatch({ type: PRODUCT_CREATE_REVIEW_RESET })
+    } else {
+      if (product.isOnSale) {
+        setPrice(product.salePrice)
+      } else {
+        setPrice(product.price)
+      }
     }
   }, [dispatch, match, successProductReview, product])
 
@@ -106,7 +113,6 @@ export const ProductScreen = ({ match, history }) => {
           <BackButton to={'/'} />
         </Grid>
         <Grid item xs={12} sm={6} md={6}>
-          {/* <CardMedia component='img' image={product.image} /> */}
           <ProductSlider image={product.image} />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -125,7 +131,10 @@ export const ProductScreen = ({ match, history }) => {
           </Box>
           <Divider className={classes.divider} />
           <Box p={2}>
-            <Typography>Price: ₱ {product.price}</Typography>
+            <Typography component='div'>
+              Price:{' '}
+              {product.isOnSale ? textSale(product.price, price) : `₱ ${price}`}
+            </Typography>
           </Box>
           <Divider className={classes.divider} />
           <Box p={1}>
@@ -144,9 +153,7 @@ export const ProductScreen = ({ match, history }) => {
                     <Typography>Price: </Typography>
                   </TableCell>
                   <TableCell className={classes.cell}>
-                    <Typography>
-                      ₱ {(product.price * qty).toFixed(2)}
-                    </Typography>
+                    <Typography>₱ {(price * qty).toFixed(2)}</Typography>
                   </TableCell>
                 </TableRow>
               </TableBody>

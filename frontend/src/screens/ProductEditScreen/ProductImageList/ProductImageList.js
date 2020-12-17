@@ -70,7 +70,6 @@ export const ProductImageList = ({ history, imageProduct, upload, id }) => {
   }
 
   const primaryHandler = (path) => {
-    console.log(path)
     dispatch(setPrimaryImage(id, path))
   }
 

@@ -36,10 +36,9 @@ import {
   PRODUCT_PRIMARY_IMAGE_FAIL,
   PRODUCT_PRIMARY_IMAGE_RESET,
   PRODUCT_PRIMARY_IMAGE_REQUEST,
-  PRODUCT_ON_SALE_REQUEST,
-  PRODUCT_ON_SALE_SUCCESS,
-  PRODUCT_ON_SALE_FAIL,
-  PRODUCT_ON_SALE_RESET,
+  PRODUCT_SALE_REQUEST,
+  PRODUCT_SALE_SUCCESS,
+  PRODUCT_SALE_FAIL,
 } from '../constants/productConstants.js'
 
 export const productListReducer = (state = { products: [] }, action) => {
@@ -201,6 +200,19 @@ export const productPrimaryImageReducer = (state = {}, action) => {
     case PRODUCT_PRIMARY_IMAGE_RESET: {
       return {}
     }
+    default:
+      return state
+  }
+}
+
+export const productSaleReducer = (state = { products: [] }, action) => {
+  switch (action.type) {
+    case PRODUCT_SALE_REQUEST:
+      return { loading: true, products: [] }
+    case PRODUCT_SALE_SUCCESS:
+      return { loading: false, products: action.payload }
+    case PRODUCT_SALE_FAIL:
+      return { loading: false, error: action.payload }
     default:
       return state
   }

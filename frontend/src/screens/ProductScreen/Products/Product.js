@@ -42,11 +42,10 @@ export const Product = ({ product }) => {
         display: 'inline',
       }}
     >
-      {product.salePrice}
+      {`₱ ${product.price}`}
     </Box>
   )
 
-  console.log(product)
   return (
     <>
       <Card className={classes.root}>
@@ -74,7 +73,7 @@ export const Product = ({ product }) => {
           <Typography variant='h6' component='h2' style={{ padding: 5 }}>
             {' '}
             {product.isOnSale ? textSale : `₱ ${product.price}`}{' '}
-            {product._id === '5fd70ea682fec60b7c97414d' && `₱ ${product.price}`}
+            {product.isOnSale && `₱ ${product.salePrice}`}
           </Typography>
         </CardContent>
       </Card>

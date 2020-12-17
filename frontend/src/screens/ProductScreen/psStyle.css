@@ -28,3 +28,15 @@
 .box {
     height: 70px;
 }
+
+.slick-prev:before,
+.slick-next:before {
+    /* color: #201e20; */
+    background-color: transparent;
+}
+
+.slick-prev,
+.slick-next {
+    color: #cebfce;
+    background-color: transparent;
+}

@@ -13,6 +13,7 @@ import {
   productUpdateStockReducer,
   productDeleteImageReducer,
   productPrimaryImageReducer,
+  productSaleReducer,
 } from './reducers/productReducers'
 import {
   orderCreateReducer,
@@ -40,6 +41,7 @@ const midlleware = [thunk]
 
 const reducer = combineReducers({
   setMode: setModeReducer,
+  productSale: productSaleReducer,
   productPrimaryImage: productPrimaryImageReducer,
   productDeleteImage: productDeleteImageReducer,
   productUpdateStock: productUpdateStockReducer,

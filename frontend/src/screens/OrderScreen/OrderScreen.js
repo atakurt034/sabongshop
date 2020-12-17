@@ -238,7 +238,7 @@ export const OrderScreen = ({ match, history }) => {
                 variant='h5'
                 component='span'
               >
-                Order Items
+                Items Ordered
               </Typography>
             </Box>
             {order.orderItems.length === 0 ? (
@@ -264,8 +264,12 @@ export const OrderScreen = ({ match, history }) => {
                         <Link to={`/product/${item.product}`}>{item.name}</Link>
                       </Grid>
                       <Grid item md={4}>
-                        {item.qty} x ₱ {item.price} = ₱{' '}
-                        {(item.qty * item.price).toFixed(2)}
+                        {item.qty} x ₱{' '}
+                        {item.isOnSale ? item.salePrice : item.price} = ₱{' '}
+                        {(item.isOnSale
+                          ? item.qty * item.salePrice
+                          : item.qty * item.price
+                        ).toFixed(2)}
                       </Grid>
                     </Grid>
                   </Grid>

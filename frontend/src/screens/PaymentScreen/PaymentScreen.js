@@ -95,14 +95,16 @@ export const PaymentScreen = ({ history }) => {
                       label='PayPal / Credit Card'
                     />
                     <FormControlLabel
+                      disabled
                       value='Gcash'
                       control={<Radio />}
-                      label='Gcash'
+                      label='Gcash - coming soon...'
                     />
                     <FormControlLabel
+                      disabled
                       value='other'
                       control={<Radio />}
-                      label='Other'
+                      label='Other - coming soon...'
                     />
                   </RadioGroup>
                 </FormControl>

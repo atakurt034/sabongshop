@@ -29,6 +29,9 @@ import {
   PRODUCT_PRIMARY_IMAGE_REQUEST,
   PRODUCT_PRIMARY_IMAGE_SUCCESS,
   PRODUCT_PRIMARY_IMAGE_FAIL,
+  PRODUCT_SALE_REQUEST,
+  PRODUCT_SALE_SUCCESS,
+  PRODUCT_SALE_FAIL,
 } from '../constants/productConstants'
 
 import Axios from 'axios'
@@ -372,6 +375,27 @@ export const setPrimaryImage = (id, path) => async (dispatch, getState) => {
     dispatch({
       type: PRODUCT_PRIMARY_IMAGE_FAIL,
       payload: message,
+    })
+  }
+}
+
+export const listSaleProducts = () => async (dispatch) => {
+  try {
+    dispatch({ type: PRODUCT_SALE_REQUEST })
+
+    const { data } = await Axios.get(`/api/products/sale`)
+
+    dispatch({
+      type: PRODUCT_SALE_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_SALE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     })
   }
 }

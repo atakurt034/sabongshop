@@ -12,7 +12,17 @@ import { Link } from 'react-router-dom'
 import { useStyles } from './hsStyle'
 import './slickStyle.css'
 
-const CustomSlide = ({ image, name, id, price, ...props }) => {
+import { textSale } from '../TextSale'
+
+export const CustomSlide = ({
+  image,
+  name,
+  id,
+  price,
+  salePrice,
+  isOnSale,
+  ...props
+}) => {
   const classes = useStyles()
 
   return (
@@ -26,7 +36,9 @@ const CustomSlide = ({ image, name, id, price, ...props }) => {
             component='img'
           />
           <Typography variant='h5'>{name}</Typography>
-          <Typography variant='h6'>₱ {price}</Typography>
+          <Typography variant='h6'>
+            {isOnSale ? textSale(price, salePrice) : `₱ ${price}`}
+          </Typography>
         </Link>
       </Grid>
     </Grid>
@@ -77,6 +89,8 @@ export const HomeSlider = () => {
                         name={product.name}
                         id={product._id}
                         price={product.price}
+                        isOnSale={product.isOnSale}
+                        salePrice={product.salePrice}
                       />
                     </Box>
                   )

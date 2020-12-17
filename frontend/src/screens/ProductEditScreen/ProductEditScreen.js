@@ -61,6 +61,8 @@ export const ProductEditScreen = ({ match, history }) => {
   const productDeleteImage = useSelector((state) => state.productDeleteImage)
   const { success: successDelete, loading: loadingDelete } = productDeleteImage
 
+  console.log('[pes] ' + JSON.stringify(product))
+
   useEffect(() => {
     if (successUpdate || successDelete) {
       dispatch(listProductDetails(productId))
@@ -294,7 +296,6 @@ export const ProductEditScreen = ({ match, history }) => {
                   type='text'
                   id='saleprice'
                   value={salePrice}
-                  placeholder={'Sale Price'}
                   customInput={OutlinedInput}
                   startAdornment={
                     <InputAdornment position='start'>₱</InputAdornment>

@@ -1,11 +1,18 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import Backdrop from '@material-ui/core/Backdrop'
 import Fade from '@material-ui/core/Fade'
 import { withRouter } from 'react-router-dom'
-import { CardMedia, Container, Grid, Typography } from '@material-ui/core'
-import { Link } from 'react-router-dom'
+import { Box, Container, Grid, Paper, Typography } from '@material-ui/core'
+import { useSelector, useDispatch } from 'react-redux'
+
+import { listSaleProducts } from '../actions/productActions'
+import { ModalLoader } from './ModalLoader'
+import { ModalMessage } from './ModalMessage'
+import Slider from 'react-slick'
+
+import { CustomSlide } from './Sliders/HomeSlider'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -35,12 +42,18 @@ const useStyles = makeStyles((theme) => ({
   text: {
     textAlign: 'center',
   },
+  title: {
+    color: 'red',
+  },
 }))
 
 const HomeModal = ({ match }) => {
   const classes = useStyles()
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
   const key = 'modalState'
+
+  const productSale = useSelector((state) => state.productSale)
+  const { products, loading, error } = productSale
 
   function getWithExpiry(key) {
     const itemStr = localStorage.getItem(key)
@@ -79,7 +92,19 @@ const HomeModal = ({ match }) => {
     setOpen(false)
   }
 
+  const settings = {
+    infinite: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    speed: 4000,
+    autoplaySpeed: 2000,
+    arrows: false,
+    fade: true,
+  }
+
   const modalState = getWithExpiry(key)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (match.url === '/') {
@@ -98,57 +123,64 @@ const HomeModal = ({ match }) => {
         setOpen(false)
       }
     }
-  }, [match, open, modalState])
+  }, [match, open, modalState, dispatch])
+  useEffect(() => {
+    dispatch(listSaleProducts())
+  }, [dispatch])
 
   return (
-    <Container>
-      <Modal
-        aria-labelledby='transition-modal-title'
-        aria-describedby='transition-modal-description'
-        className={classes.modal}
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={open}>
-          <Grid container className={classes.paper}>
-            <Grid item className={classes.button} xs={12}>
-              <Typography size='small' onClick={handleClose}>
-                X
-              </Typography>
-            </Grid>
-            <Grid item sm={6}>
-              <Link to='/product/5fd70ea682fec60b7c97414d'>
-                <CardMedia
-                  className={classes.image}
-                  image={'/images/phone.jpg'}
-                  component='img'
-                />
-              </Link>
-            </Grid>
-            <Grid item sm={6}>
-              <Typography variant='h2' className={classes.saleText}>
-                On Sale Right Now!!!
-              </Typography>
-              <Typography
-                style={{ textDecoration: 'line-through' }}
-                variant='h5'
-                className={classes.text}
-              >
-                from ₱ 599.99
-              </Typography>
-              <Typography variant='h5' className={classes.text}>
-                to 399.99
-              </Typography>
-            </Grid>
-          </Grid>
-        </Fade>
-      </Modal>
-    </Container>
+    <>
+      {loading ? (
+        <ModalLoader />
+      ) : error ? (
+        <ModalMessage variant='error'>{error}</ModalMessage>
+      ) : (
+        <Container>
+          <Modal
+            aria-labelledby='transition-modal-title'
+            aria-describedby='transition-modal-description'
+            className={classes.modal}
+            open={open}
+            onClose={handleClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
+            }}
+          >
+            <Fade in={open}>
+              <Grid container justify='center'>
+                <Paper className={classes.paper}>
+                  <Typography
+                    align='center'
+                    variant='h4'
+                    className={classes.title}
+                  >
+                    ON SALE
+                  </Typography>
+                  <Slider {...settings}>
+                    {products.map((product) => {
+                      return (
+                        <Box key={product._id} p={2}>
+                          <CustomSlide
+                            image={product.image[product.image.length - 1]}
+                            name={product.name}
+                            id={product._id}
+                            price={product.price}
+                            isOnSale={product.isOnSale}
+                            salePrice={product.salePrice}
+                          />
+                        </Box>
+                      )
+                    })}
+                  </Slider>
+                </Paper>
+              </Grid>
+            </Fade>
+          </Modal>
+        </Container>
+      )}
+    </>
   )
 }
 

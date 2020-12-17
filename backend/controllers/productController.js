@@ -79,6 +79,8 @@ export const createProduct = asyncHandler(async (req, res) => {
     countInStock: 0,
     numReviews: 0,
     description: 'Sample Description',
+    isOnSale: false,
+    salePrice: 0,
   })
   const createdProduct = await product.save()
   res.status(201).json(createdProduct)
@@ -96,6 +98,8 @@ export const updateProduct = asyncHandler(async (req, res) => {
     brand,
     category,
     countInStock,
+    isOnSale,
+    salePrice,
   } = req.body
   const product = await Product.findById(req.params.id)
 
@@ -107,6 +111,8 @@ export const updateProduct = asyncHandler(async (req, res) => {
     product.brand = brand
     product.category = category
     product.countInStock = countInStock
+    product.isOnSale = isOnSale
+    product.salePrice = salePrice
 
     const updatedProduct = await product.save()
     res.json(updatedProduct)
@@ -178,4 +184,10 @@ export const deleteImage = asyncHandler(async (req, res) => {
     res.status(404)
     throw new Error('Product not found')
   }
+})
+
+export const getSaleProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find({ isOnSale: true })
+
+  res.json(products)
 })

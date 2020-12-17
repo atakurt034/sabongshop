@@ -99,7 +99,10 @@ export const CartScreen = ({ match, location, history }) => {
                       </Grid>
                       <Grid item xs={4} sm={2}>
                         <Typography>
-                          ₱ {(item.price * item.qty).toFixed(2)}
+                          ₱{' '}
+                          {item.isOnSale
+                            ? item.salePrice.toFixed(2)
+                            : item.price.toFixed(2)}
                         </Typography>
                       </Grid>
                       <Grid item xs={4} sm={2}>
@@ -168,7 +171,13 @@ export const CartScreen = ({ match, location, history }) => {
                 <Typography gutterBottom variant='body1' component='div'>
                   ₱{' '}
                   {cartItems
-                    .reduce((acc, item) => acc + item.qty * item.price, 0)
+                    .reduce(
+                      (acc, item) =>
+                        item.isOnSale
+                          ? acc + item.qty * item.salePrice
+                          : acc + item.qty * item.price,
+                      0
+                    )
                     .toFixed(2)}
                 </Typography>
               </ListItem>

@@ -17,10 +17,7 @@ import { Link } from 'react-router-dom'
 import { createOrder } from '../../actions/orderActions'
 import { CART_RESET } from '../../constants/cartConstants'
 
-import {
-  updateProductStock,
-  listProductDetails,
-} from '../../actions/productActions'
+import { updateProductStock } from '../../actions/productActions'
 import { PRODUCT_DETAILS_RESET } from '../../constants/productConstants'
 
 import { CheckSteps } from '../../components/NavItems/Stepper'
@@ -34,7 +31,13 @@ export const PlaceOrderScreen = ({ history }) => {
   //    Calculate prices
 
   cart.itemsPrice = cart.cartItems
-    .reduce((acc, item) => acc + item.price * item.qty, 0)
+    .reduce(
+      (acc, item) =>
+        item.isOnSale
+          ? acc + item.salePrice * item.qty
+          : acc + item.price * item.qty,
+      0
+    )
     .toFixed(2)
 
   cart.shippingPrice = (cart.itemsPrice > 100 ? 0 : 100).toFixed(2)
@@ -71,9 +74,7 @@ export const PlaceOrderScreen = ({ history }) => {
       dispatch({ type: PRODUCT_DETAILS_RESET })
       localStorage.removeItem('cartItems')
     }
-    if (cart) {
-      cart.cartItems.map((item) => dispatch(listProductDetails(item.product)))
-    }
+
     if (product.countInStock === 0) {
       setStock({ name: product.name, hasStock: false })
     }
@@ -173,8 +174,12 @@ export const PlaceOrderScreen = ({ history }) => {
                           </Link>
                         </Grid>
                         <Grid item md={4}>
-                          {item.qty} x ₱ {item.price} = ₱{' '}
-                          {(item.qty * item.price).toFixed(2)}
+                          {item.qty} x ₱{' '}
+                          {item.isOnSale ? item.salePrice : item.price} = ₱{' '}
+                          {(item.isOnSale
+                            ? item.qty * item.salePrice
+                            : item.qty * item.price
+                          ).toFixed(2)}
                         </Grid>
                       </Grid>
                     </Grid>
