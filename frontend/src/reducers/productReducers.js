@@ -36,6 +36,10 @@ import {
   PRODUCT_PRIMARY_IMAGE_FAIL,
   PRODUCT_PRIMARY_IMAGE_RESET,
   PRODUCT_PRIMARY_IMAGE_REQUEST,
+  PRODUCT_ON_SALE_REQUEST,
+  PRODUCT_ON_SALE_SUCCESS,
+  PRODUCT_ON_SALE_FAIL,
+  PRODUCT_ON_SALE_RESET,
 } from '../constants/productConstants.js'
 
 export const productListReducer = (state = { products: [] }, action) => {

@@ -42,9 +42,11 @@ export const Product = ({ product }) => {
         display: 'inline',
       }}
     >
-      ₱ 599.99
+      {product.salePrice}
     </Box>
   )
+
+  console.log(product)
   return (
     <>
       <Card className={classes.root}>
@@ -71,9 +73,7 @@ export const Product = ({ product }) => {
           </Typography>
           <Typography variant='h6' component='h2' style={{ padding: 5 }}>
             {' '}
-            {product._id === '5fd70ea682fec60b7c97414d'
-              ? textSale
-              : `₱ ${product.price}`}{' '}
+            {product.isOnSale ? textSale : `₱ ${product.price}`}{' '}
             {product._id === '5fd70ea682fec60b7c97414d' && `₱ ${product.price}`}
           </Typography>
         </CardContent>

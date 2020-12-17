@@ -11,6 +11,8 @@ import {
   CardMedia,
   OutlinedInput,
   TextField,
+  Checkbox,
+  FormControlLabel,
 } from '@material-ui/core'
 
 import NumberFormat from 'react-number-format'
@@ -18,11 +20,10 @@ import ExtensionIcon from '@material-ui/icons/Extension'
 import EcoIcon from '@material-ui/icons/Eco'
 import WhatshotIcon from '@material-ui/icons/Whatshot'
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
+import NotInterestedIcon from '@material-ui/icons/NotInterested'
 
-import {
-  PRODUCT_UPDATE_RESET,
-  PRODUCT_DELETE_IMAGE_RESET,
-} from '../../constants/productConstants'
+import { PRODUCT_UPDATE_RESET } from '../../constants/productConstants'
 import { listProductDetails, updateProduct } from '../../actions/productActions'
 
 import { ModalMessage } from '../../components/ModalMessage'
@@ -42,7 +43,8 @@ export const ProductEditScreen = ({ match, history }) => {
   const [countInStock, setCountInStock] = useState(0)
   const [description, setDescription] = useState('')
   const [uploading, setUploading] = useState(false)
-  const [uploadError, setUploadError] = useState(false)
+  const [isOnSale, setIsOnSale] = useState(false)
+  const [salePrice, setSalePrice] = useState(0)
 
   const dispatch = useDispatch()
 
@@ -75,6 +77,8 @@ export const ProductEditScreen = ({ match, history }) => {
         setCategory(product.category)
         setCountInStock(product.countInStock)
         setDescription(product.description)
+        setIsOnSale(product.isOnSale)
+        setSalePrice(product.salePrice)
       }
     } else {
       dispatch(listProductDetails(productId))
@@ -129,6 +133,8 @@ export const ProductEditScreen = ({ match, history }) => {
         category,
         description,
         countInStock,
+        isOnSale,
+        salePrice,
       })
     )
   }
@@ -277,6 +283,52 @@ export const ProductEditScreen = ({ match, history }) => {
                 />
               </FormControl>
             </Box>
+            <Box m={2}>
+              <FormControl fullWidth>
+                <InputLabel variant='outlined' htmlFor='saleprice'>
+                  Sale Price
+                </InputLabel>
+                <NumberFormat
+                  labelWidth={70}
+                  disabled={!isOnSale}
+                  type='text'
+                  id='saleprice'
+                  value={salePrice}
+                  placeholder={'Sale Price'}
+                  customInput={OutlinedInput}
+                  startAdornment={
+                    <InputAdornment position='start'>₱</InputAdornment>
+                  }
+                  thousandSeparator
+                  decimalScale={2}
+                  onValueChange={(values) => {
+                    setSalePrice(values.value)
+                  }}
+                />
+
+                <FormControlLabel
+                  label='Put on Sale?'
+                  control={
+                    <Checkbox
+                      checked={isOnSale}
+                      onChange={(e) => setIsOnSale(e.target.checked)}
+                      icon={<NotInterestedIcon color='secondary' />}
+                      checkedIcon={
+                        <CheckCircleIcon
+                          style={{
+                            color: 'green',
+                            backgroundColor: '#fff',
+                            borderRadius: '50%',
+                          }}
+                        />
+                      }
+                      name='isOnSale'
+                    />
+                  }
+                />
+              </FormControl>
+            </Box>
+
             <Box m={2}>
               <FormControl required fullWidth>
                 {loadingDelete ? (

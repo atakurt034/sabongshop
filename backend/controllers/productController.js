@@ -1,5 +1,8 @@
+import { query } from 'express'
 import asyncHandler from 'express-async-handler'
 import Product from '../models/productModel.js'
+
+import { Query } from '../utils/productKeywords.js'
 
 // @desc    Fetch all products
 // @route   GET /api/products
@@ -17,41 +20,15 @@ export const getProducts = asyncHandler(async (req, res) => {
   ) {
     pageSize = 4
   }
+  const search = req.query.keyword
 
   const page = Number(req.query.pageNumber) || 1
-  const keyword1 = req.query.keyword
-    ? {
-        name: {
-          $regex: req.query.keyword,
-          $options: 'i',
-        },
-      }
-    : {}
-
-  const keyword2 = req.query.keyword
-    ? {
-        brand: {
-          $regex: req.query.keyword,
-          $options: 'i',
-        },
-      }
-    : {}
-  const min = 0
-  const max = req.query.keyword
-  const keyword3 = req.query.keyword
-    ? {
-        price: {
-          $ls: max,
-          $gt: min,
-        },
-      }
-    : {}
 
   const count = await Product.countDocuments({
-    $or: [{ ...keyword1 }, { ...keyword2 }, { ...keyword3 }],
+    $or: [...Query(search)],
   })
   const products = await Product.find({
-    $or: [{ ...keyword1 }, { ...keyword2 }, { ...keyword3 }],
+    $or: [...Query(search)],
   })
     .limit(pageSize)
     .skip(pageSize * (page - 1))
