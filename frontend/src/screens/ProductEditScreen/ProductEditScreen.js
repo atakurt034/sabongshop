@@ -42,6 +42,7 @@ export const ProductEditScreen = ({ match, history }) => {
   const [countInStock, setCountInStock] = useState(0)
   const [description, setDescription] = useState('')
   const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -120,7 +121,10 @@ export const ProductEditScreen = ({ match, history }) => {
         _id: productId,
         name,
         price,
-        image: [...product.image, image],
+        image:
+          product.image[product.image.length - 1] === image
+            ? [...product.image]
+            : [...product.image, image],
         brand,
         category,
         description,

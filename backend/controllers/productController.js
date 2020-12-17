@@ -36,12 +36,22 @@ export const getProducts = asyncHandler(async (req, res) => {
         },
       }
     : {}
+  const min = 0
+  const max = req.query.keyword
+  const keyword3 = req.query.keyword
+    ? {
+        price: {
+          $ls: max,
+          $gt: min,
+        },
+      }
+    : {}
 
   const count = await Product.countDocuments({
-    $or: [{ ...keyword1 }, { ...keyword2 }],
+    $or: [{ ...keyword1 }, { ...keyword2 }, { ...keyword3 }],
   })
   const products = await Product.find({
-    $or: [{ ...keyword1 }, { ...keyword2 }],
+    $or: [{ ...keyword1 }, { ...keyword2 }, { ...keyword3 }],
   })
     .limit(pageSize)
     .skip(pageSize * (page - 1))
