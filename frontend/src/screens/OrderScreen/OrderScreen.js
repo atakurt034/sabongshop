@@ -37,7 +37,8 @@ import { updateProductStock } from '../../actions/productActions'
 import { PRODUCT_DETAILS_RESET } from '../../constants/productConstants'
 
 import Message from '../../components/Message'
-import Loader from '../../components/Loader'
+import { ModalLoader } from '../../components/ModalLoader'
+import { ModalMessage } from '../../components/ModalMessage'
 
 import NumberFormat from 'react-number-format'
 
@@ -139,9 +140,9 @@ export const OrderScreen = ({ match, history }) => {
   }
 
   return loading ? (
-    <Loader />
+    <ModalLoader />
   ) : error ? (
-    <Message variant='error'>{error}</Message>
+    <ModalMessage variant='error'>{error}</ModalMessage>
   ) : (
     <>
       <Typography
@@ -294,7 +295,7 @@ export const OrderScreen = ({ match, history }) => {
             )}
           </Grid>
         </Grid>
-        {loadingCancel && <Loader />}
+        {loadingCancel && <ModalLoader />}
         {!order.isCancelled && (
           <Grid container className={classes.summaryRoot} item md={4}>
             <Container maxWidth='md'>
@@ -375,9 +376,9 @@ export const OrderScreen = ({ match, history }) => {
                   </Grid>
                   {!order.isPaid && (
                     <Grid container>
-                      {loadingPay && <Loader />}
+                      {loadingPay && <ModalLoader />}
                       {!sdkReady ? (
-                        <Loader />
+                        <ModalLoader />
                       ) : (
                         <Box mx='auto' p={2}>
                           <PayPalButton
@@ -405,7 +406,7 @@ export const OrderScreen = ({ match, history }) => {
                     </Grid>
                   )}
                   <Grid container justify='center'>
-                    {loadingDeliver && <Loader />}
+                    {loadingDeliver && <ModalLoader />}
                   </Grid>
                   {userInfo &&
                     userInfo.isAdmin &&
