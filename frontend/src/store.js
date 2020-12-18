@@ -33,7 +33,7 @@ import {
   userListReducer,
   userLoginReducer,
   userRegisterReducer,
-  userAvatarReducer,
+  userReducer,
 } from './reducers/userReducers'
 import { setModeReducer } from './reducers/modeReducers'
 
@@ -60,7 +60,7 @@ const reducer = combineReducers({
   userList: userListReducer,
   userDelete: userDeleteReducer,
   userUpdate: userUpdateReducer,
-  userAvatar: userAvatarReducer,
+  user: userReducer,
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
   orderPay: orderPayReducer,

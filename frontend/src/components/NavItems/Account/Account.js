@@ -127,7 +127,7 @@ export const Account = (e) => {
       }}
       variant={count !== 0 ? 'dot' : 'standard'}
     >
-      <Avatar alt='Remy Sharp' src={avatar} className={classes.avatar} />
+      <Avatar alt={user.name} src={avatar} className={classes.avatar} />
     </StyledBadge>
   )
 
