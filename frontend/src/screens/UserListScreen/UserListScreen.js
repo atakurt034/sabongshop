@@ -64,6 +64,10 @@ export const UserListScreen = ({ history }) => {
     error: errorDelete,
   } = userDelete
 
+  const searchHandler = (keywords) => {
+    dispatch(listUsers(keywords))
+  }
+
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(listUsers())
@@ -172,6 +176,7 @@ export const UserListScreen = ({ history }) => {
         <EnhancedTableToolbar
           numSelected={selected.length}
           clicked={() => deleteHandler(selected)}
+          searched={searchHandler}
         />
         <TableContainer>
           <Table

@@ -110,6 +110,7 @@ function App() {
                 path='/admin/product/:id/edit'
                 component={ProductEditScreen}
               />
+
               <Route
                 path='/admin/productlist'
                 component={ProductListScreen}

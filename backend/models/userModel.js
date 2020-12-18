@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
-import findOrCreate from 'mongoose-findorcreate'
 
 const userSchema = new mongoose.Schema(
   {

@@ -2,6 +2,8 @@ import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 import generateToken from '../utils/generateTokens.js'
 
+import { Query } from '../utils/userKeywords.js'
+
 // @desc    Auth user & get token
 // @route   POST /api/users/login
 // @access   Public
@@ -113,7 +115,8 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Private/admin
 const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({})
+  const keyword = req.query.keywords || ''
+  const users = await User.find({ $or: [...Query(keyword)] })
   res.json(users)
 })
 
