@@ -4,6 +4,9 @@
   "description": "fighting cocks for sale",
   "main": "index.js",
   "type": "module",
+  "engines": {
+    "node": "14.15"
+  },
   "scripts": {
     "start": "node backend/server",
     "server": "nodemon backend/server",
