@@ -4,7 +4,14 @@ import Modal from '@material-ui/core/Modal'
 import Backdrop from '@material-ui/core/Backdrop'
 import Fade from '@material-ui/core/Fade'
 import { withRouter } from 'react-router-dom'
-import { Box, Container, Grid, Paper, Typography } from '@material-ui/core'
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Paper,
+  Typography,
+} from '@material-ui/core'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { listSaleProducts } from '../actions/productActions'
@@ -44,6 +51,10 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     color: 'red',
+  },
+  closeButton: {
+    float: 'right',
+    zIndex: 100,
   },
 }))
 
@@ -128,6 +139,10 @@ const HomeModal = ({ match }) => {
     dispatch(listSaleProducts())
   }, [dispatch])
 
+  const clickHandler = (params) => {
+    setOpen(false)
+  }
+
   return (
     <>
       {loading ? (
@@ -158,6 +173,12 @@ const HomeModal = ({ match }) => {
                   >
                     ON SALE
                   </Typography>
+                  <Button
+                    className={classes.closeButton}
+                    onClick={clickHandler}
+                  >
+                    X
+                  </Button>
                   <Slider {...settings}>
                     {products.map((product) => {
                       return (

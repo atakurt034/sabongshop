@@ -14,6 +14,7 @@ import clsx from 'clsx'
 
 import DeleteIcon from '@material-ui/icons/Delete'
 import FilterListIcon from '@material-ui/icons/FilterList'
+import SearchIcon from '@material-ui/icons/Search'
 import { useToolbarStyles } from './plsStyle'
 
 const options = {
@@ -169,9 +170,9 @@ const EnhancedTableToolbar = (props) => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title='Filter list'>
-          <IconButton aria-label='filter list'>
-            <FilterListIcon />
+        <Tooltip title='Search'>
+          <IconButton aria-label='Search'>
+            <SearchIcon />
           </IconButton>
         </Tooltip>
       )}
