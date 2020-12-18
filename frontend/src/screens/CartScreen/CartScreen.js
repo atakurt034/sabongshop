@@ -24,6 +24,8 @@ import Message from '../../components/Message'
 import { addToCart, removeFromCart } from '../../actions/cartActions'
 import { BackButton } from '../../components/NavItems/BackButton'
 
+import NumberFormat from 'react-number-format'
+
 const useStyle = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
@@ -99,10 +101,23 @@ export const CartScreen = ({ match, location, history }) => {
                       </Grid>
                       <Grid item xs={4} sm={2}>
                         <Typography>
-                          ₱{' '}
-                          {item.isOnSale
-                            ? item.salePrice.toFixed(2)
-                            : item.price.toFixed(2)}
+                          {item.isOnSale ? (
+                            <NumberFormat
+                              prefix={'₱'}
+                              thousandSeparator
+                              decimalScale={2}
+                              displayType='text'
+                              value={item.salePrice}
+                            />
+                          ) : (
+                            <NumberFormat
+                              prefix={'₱'}
+                              thousandSeparator
+                              decimalScale={2}
+                              displayType='text'
+                              value={item.price}
+                            />
+                          )}
                         </Typography>
                       </Grid>
                       <Grid item xs={4} sm={2}>
@@ -169,16 +184,27 @@ export const CartScreen = ({ match, location, history }) => {
               </ListItem>
               <ListItem>
                 <Typography gutterBottom variant='body1' component='div'>
-                  ₱{' '}
-                  {cartItems
-                    .reduce(
-                      (acc, item) =>
-                        item.isOnSale
-                          ? acc + item.qty * item.salePrice
-                          : acc + item.qty * item.price,
-                      0
-                    )
-                    .toFixed(2)}
+                  {cartItems.reduce(
+                    (acc, item) =>
+                      item.isOnSale ? (
+                        <NumberFormat
+                          prefix={'₱'}
+                          thousandSeparator
+                          decimalScale={2}
+                          displayType='text'
+                          value={acc + item.qty * item.salePrice}
+                        />
+                      ) : (
+                        <NumberFormat
+                          prefix={'₱'}
+                          thousandSeparator
+                          decimalScale={2}
+                          displayType='text'
+                          value={acc + item.qty * item.price}
+                        />
+                      ),
+                    0
+                  )}
                 </Typography>
               </ListItem>
               <ListItem>

@@ -13,6 +13,7 @@ import { useStyles } from './hsStyle'
 import './slickStyle.css'
 
 import { textSale } from '../TextSale'
+import NumberFormat from 'react-number-format'
 
 export const CustomSlide = ({
   image,
@@ -37,7 +38,18 @@ export const CustomSlide = ({
           />
           <Typography variant='h5'>{name}</Typography>
           <Typography variant='h6'>
-            {isOnSale ? textSale(price, salePrice) : `₱ ${price}`}
+            {isOnSale ? (
+              textSale(price, salePrice)
+            ) : (
+              <NumberFormat
+                prefix={'₱ '}
+                readOnly
+                thousandSeparator
+                decimalScale={2}
+                displayType='text'
+                value={price}
+              />
+            )}
           </Typography>
         </Link>
       </Grid>

@@ -24,7 +24,11 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import NotInterestedIcon from '@material-ui/icons/NotInterested'
 
 import { PRODUCT_UPDATE_RESET } from '../../constants/productConstants'
-import { listProductDetails, updateProduct } from '../../actions/productActions'
+import {
+  listProductDetails,
+  updateProduct,
+  listProducts,
+} from '../../actions/productActions'
 
 import { ModalMessage } from '../../components/ModalMessage'
 import { ModalLoader } from '../../components/ModalLoader'
@@ -66,8 +70,8 @@ export const ProductEditScreen = ({ match, history }) => {
   useEffect(() => {
     if (successUpdate || successDelete) {
       dispatch(listProductDetails(productId))
+      history.push('/admin/productlist')
       dispatch({ type: PRODUCT_UPDATE_RESET })
-      // history.push('/admin/productlist')
     } else if (!loading && !loadingDelete && !loadingUpdate) {
       if (!product.name || product._id !== productId) {
         dispatch(listProductDetails(productId))
@@ -249,6 +253,7 @@ export const ProductEditScreen = ({ match, history }) => {
                   id='countInStock'
                   value={countInStock}
                   labelWidth={50}
+                  decimalScale={0}
                   customInput={OutlinedInput}
                   thousandSeparator
                   startAdornment={

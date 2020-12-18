@@ -45,6 +45,7 @@ import { ReviewPaginate } from '../../components/ReviewPaginate'
 
 import { ProductSlider } from './ProductSlider'
 import { textSale } from '../../components/TextSale'
+import NumberFormat from 'react-number-format'
 
 export const ProductScreen = ({ match, history }) => {
   const [qty, setQty] = useState(1)
@@ -153,7 +154,15 @@ export const ProductScreen = ({ match, history }) => {
                     <Typography>Price: </Typography>
                   </TableCell>
                   <TableCell className={classes.cell}>
-                    <Typography>₱ {(price * qty).toFixed(2)}</Typography>
+                    <Typography>
+                      <NumberFormat
+                        prefix={'₱'}
+                        thousandSeparator
+                        decimalScale={2}
+                        displayType='text'
+                        value={price * qty}
+                      />
+                    </Typography>
                   </TableCell>
                 </TableRow>
               </TableBody>

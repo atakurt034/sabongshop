@@ -1,5 +1,6 @@
+import mongoose from 'mongoose'
 import pkg from 'lodash'
-const { toNumber } = pkg
+const { toNumber, isObject } = pkg
 
 const key1 = (keyword) => {
   return keyword
@@ -23,8 +24,11 @@ const key2 = (keyword) => {
     : {}
 }
 
-function isNumeric(num) {
-  return !isNaN(num)
+function isNumeric(keywords) {
+  return !isNaN(keywords)
+}
+function isObjectID(keywords) {
+  return keywords.length === 24
 }
 
 const key3 = (keyword) => {
@@ -52,6 +56,14 @@ const key4 = (keyword) => {
     : {}
 }
 
+const key5 = (keyword) => {
+  return keyword
+    ? {
+        _id: keyword,
+      }
+    : {}
+}
+
 const isNumber = (keywords) => {
   return [
     { ...key1(keywords) },
@@ -65,9 +77,15 @@ const isString = (keywords) => {
   return [{ ...key1(keywords) }, { ...key2(keywords) }, { ...key4(keywords) }]
 }
 
+const isId = (keywords) => {
+  return [{ ...key5(keywords) }]
+}
+
 export const Query = (keywords) => {
   if (isNumeric(keywords)) {
     return isNumber(keywords)
+  } else if (isObjectID(keywords)) {
+    return isId(keywords)
   } else {
     return isString(keywords)
   }

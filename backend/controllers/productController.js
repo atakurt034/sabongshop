@@ -9,6 +9,7 @@ import { Query } from '../utils/productKeywords.js'
 // @access   Public
 export const getProducts = asyncHandler(async (req, res) => {
   let pageSize = 8
+  console.log('[list] ' + req.url)
   let ua = req.headers['user-agent'].toLowerCase()
   if (
     /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(
@@ -19,7 +20,10 @@ export const getProducts = asyncHandler(async (req, res) => {
     )
   ) {
     pageSize = 4
+  } else if (req.url === '/?keyword=&pageNumber=') {
+    pageSize = ''
   }
+
   const search = req.query.keyword
 
   const page = Number(req.query.pageNumber) || 1

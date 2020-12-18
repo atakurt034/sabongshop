@@ -39,6 +39,8 @@ import { PRODUCT_DETAILS_RESET } from '../../constants/productConstants'
 import Message from '../../components/Message'
 import Loader from '../../components/Loader'
 
+import NumberFormat from 'react-number-format'
+
 export const OrderScreen = ({ match, history }) => {
   const classes = useStyle()
 
@@ -264,12 +266,26 @@ export const OrderScreen = ({ match, history }) => {
                         <Link to={`/product/${item.product}`}>{item.name}</Link>
                       </Grid>
                       <Grid item md={4}>
-                        {item.qty} x ₱{' '}
-                        {item.isOnSale ? item.salePrice : item.price} = ₱{' '}
-                        {(item.isOnSale
-                          ? item.qty * item.salePrice
-                          : item.qty * item.price
-                        ).toFixed(2)}
+                        {item.qty} x{' '}
+                        <NumberFormat
+                          prefix={'₱'}
+                          thousandSeparator
+                          decimalScale={2}
+                          displayType='text'
+                          value={item.isOnSale ? item.salePrice : item.price}
+                        />{' '}
+                        ={' '}
+                        <NumberFormat
+                          prefix={'₱'}
+                          thousandSeparator
+                          decimalScale={2}
+                          displayType='text'
+                          value={
+                            item.isOnSale
+                              ? item.qty * item.salePrice
+                              : item.qty * item.price
+                          }
+                        />
                       </Grid>
                     </Grid>
                   </Grid>
@@ -301,7 +317,13 @@ export const OrderScreen = ({ match, history }) => {
                       Items
                     </Grid>
                     <Grid item xs={6}>
-                      ₱ {order.itemsPrice}
+                      <NumberFormat
+                        prefix={'₱ '}
+                        thousandSeparator
+                        decimalScale={2}
+                        displayType='text'
+                        value={order.itemsPrice}
+                      />
                     </Grid>
                   </Grid>
 
@@ -310,7 +332,13 @@ export const OrderScreen = ({ match, history }) => {
                       Shipping
                     </Grid>
                     <Grid item xs={6}>
-                      ₱ {order.shippingPrice}
+                      <NumberFormat
+                        prefix={'₱ '}
+                        thousandSeparator
+                        decimalScale={2}
+                        displayType='text'
+                        value={order.shippingPrice}
+                      />
                     </Grid>
                   </Grid>
 
@@ -319,7 +347,13 @@ export const OrderScreen = ({ match, history }) => {
                       Tax
                     </Grid>
                     <Grid item xs={6}>
-                      ₱ {order.taxPrice}
+                      <NumberFormat
+                        prefix={'₱ '}
+                        thousandSeparator
+                        decimalScale={2}
+                        displayType='text'
+                        value={order.taxPrice}
+                      />
                     </Grid>
                   </Grid>
 
@@ -328,7 +362,15 @@ export const OrderScreen = ({ match, history }) => {
                       <Typography variant='h6'>Total</Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography variant='h6'>₱ {order.totalPrice}</Typography>
+                      <Typography variant='h6'>
+                        <NumberFormat
+                          prefix={'₱ '}
+                          thousandSeparator
+                          decimalScale={2}
+                          displayType='text'
+                          value={order.totalPrice}
+                        />
+                      </Typography>
                     </Grid>
                   </Grid>
                   {!order.isPaid && (

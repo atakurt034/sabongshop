@@ -99,6 +99,9 @@ export const ProductListScreen = ({ history }) => {
     createdProduct,
     successDelete,
   ])
+  const searchHandler = (e) => {
+    dispatch(listProducts(e))
+  }
 
   const deleteHandler = (id) => {
     if (window.confirm(`Delete: ${id} ?`)) {
@@ -116,8 +119,10 @@ export const ProductListScreen = ({ history }) => {
       return rows.push(
         createData(
           product._id,
-          product.name,
-          product.price,
+          <Typography style={{ color: `${product.isOnSale && 'red'}` }}>
+            {product.name}
+          </Typography>,
+          product.isOnSale ? product.salePrice : product.price,
           product.category,
           product.brand,
           <Link
@@ -203,6 +208,7 @@ export const ProductListScreen = ({ history }) => {
         <EnhancedTableToolbar
           numSelected={selected.length}
           clicked={() => deleteHandler(selected)}
+          searched={searchHandler}
         />
         <TableContainer>
           <Table

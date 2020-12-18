@@ -6,9 +6,9 @@ import Fade from '@material-ui/core/Fade'
 import { withRouter } from 'react-router-dom'
 import {
   Box,
-  Button,
   Container,
   Grid,
+  IconButton,
   Paper,
   Typography,
 } from '@material-ui/core'
@@ -53,8 +53,15 @@ const useStyles = makeStyles((theme) => ({
     color: 'red',
   },
   closeButton: {
-    float: 'right',
     zIndex: 100,
+    position: 'relative',
+    padding: 10,
+    margin: '0 5px',
+    float: 'right',
+    fontWeight: 600,
+    '&:hover': {
+      color: 'red',
+    },
   },
 }))
 
@@ -135,6 +142,7 @@ const HomeModal = ({ match }) => {
       }
     }
   }, [match, open, modalState, dispatch])
+
   useEffect(() => {
     dispatch(listSaleProducts())
   }, [dispatch])
@@ -166,6 +174,12 @@ const HomeModal = ({ match }) => {
             <Fade in={open}>
               <Grid container justify='center'>
                 <Paper className={classes.paper}>
+                  <IconButton
+                    className={classes.closeButton}
+                    onClick={clickHandler}
+                  >
+                    X
+                  </IconButton>
                   <Typography
                     align='center'
                     variant='h4'
@@ -173,12 +187,7 @@ const HomeModal = ({ match }) => {
                   >
                     ON SALE
                   </Typography>
-                  <Button
-                    className={classes.closeButton}
-                    onClick={clickHandler}
-                  >
-                    X
-                  </Button>
+
                   <Slider {...settings}>
                     {products.map((product) => {
                       return (

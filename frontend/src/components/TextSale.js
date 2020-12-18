@@ -1,4 +1,5 @@
 import { Grid, Typography } from '@material-ui/core'
+import NumberFormat from 'react-number-format'
 
 export const textSale = (price, salePrice) => {
   return (
@@ -9,9 +10,25 @@ export const textSale = (price, salePrice) => {
           color: 'red',
         }}
       >
-        {`₱ ${price}`}
+        <NumberFormat
+          prefix={'₱ '}
+          readOnly
+          thousandSeparator
+          decimalScale={2}
+          displayType='text'
+          value={price}
+        />
       </Typography>
-      <Typography>₱ {salePrice}</Typography>
+      <Typography>
+        <NumberFormat
+          prefix={'₱ '}
+          readOnly
+          thousandSeparator
+          decimalScale={2}
+          displayType='text'
+          value={salePrice}
+        />
+      </Typography>
     </Grid>
   )
 }

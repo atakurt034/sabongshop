@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core'
 
 import Stars from '../../../components/Rating'
+import NumberFormat from 'react-number-format'
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -42,7 +43,13 @@ export const Product = ({ product }) => {
         display: 'inline',
       }}
     >
-      {`₱ ${product.price}`}
+      <NumberFormat
+        prefix={'₱'}
+        thousandSeparator
+        decimalScale={2}
+        displayType='text'
+        value={product.price}
+      />
     </Box>
   )
 
@@ -72,8 +79,26 @@ export const Product = ({ product }) => {
           </Typography>
           <Typography variant='h6' component='h2' style={{ padding: 5 }}>
             {' '}
-            {product.isOnSale ? textSale : `₱ ${product.price}`}{' '}
-            {product.isOnSale && `₱ ${product.salePrice}`}
+            {product.isOnSale ? (
+              textSale
+            ) : (
+              <NumberFormat
+                prefix={'₱'}
+                thousandSeparator
+                decimalScale={2}
+                displayType='text'
+                value={product.price}
+              />
+            )}{' '}
+            {product.isOnSale && (
+              <NumberFormat
+                prefix={'₱'}
+                thousandSeparator
+                decimalScale={2}
+                displayType='text'
+                value={product.salePrice}
+              />
+            )}
           </Typography>
         </CardContent>
       </Card>

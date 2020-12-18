@@ -8,6 +8,7 @@ import {
   Typography,
   Tooltip,
   IconButton,
+  Paper,
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
@@ -16,6 +17,8 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import SearchIcon from '@material-ui/icons/Search'
 import { useToolbarStyles } from './plsStyle'
+
+import { Search } from './SearchProductList'
 
 const options = {
   minimumFractionDigits: 2,
@@ -133,9 +136,8 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 }
 
-const EnhancedTableToolbar = (props) => {
+const EnhancedTableToolbar = ({ numSelected, clicked, searched }) => {
   const classes = useToolbarStyles()
-  const { numSelected, clicked } = props
 
   return (
     <Toolbar
@@ -170,11 +172,9 @@ const EnhancedTableToolbar = (props) => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title='Search'>
-          <IconButton aria-label='Search'>
-            <SearchIcon />
-          </IconButton>
-        </Tooltip>
+        <Paper>
+          <Search searched={searched} />
+        </Paper>
       )}
     </Toolbar>
   )

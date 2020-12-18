@@ -23,6 +23,8 @@ import { PRODUCT_DETAILS_RESET } from '../../constants/productConstants'
 import { CheckSteps } from '../../components/NavItems/Stepper'
 import Message from '../../components/Message'
 
+import NumberFormat from 'react-number-format'
+
 export const PlaceOrderScreen = ({ history }) => {
   const classes = useStyle()
   const cart = useSelector((state) => state.cart)
@@ -30,23 +32,18 @@ export const PlaceOrderScreen = ({ history }) => {
 
   //    Calculate prices
 
-  cart.itemsPrice = cart.cartItems
-    .reduce(
-      (acc, item) =>
-        item.isOnSale
-          ? acc + item.salePrice * item.qty
-          : acc + item.price * item.qty,
-      0
-    )
-    .toFixed(2)
+  cart.itemsPrice = cart.cartItems.reduce(
+    (acc, item) =>
+      item.isOnSale
+        ? acc + item.salePrice * item.qty
+        : acc + item.price * item.qty,
+    0
+  )
 
   cart.shippingPrice = (cart.itemsPrice > 100 ? 0 : 100).toFixed(2)
   cart.taxPrice = Number((0.15 * cart.itemsPrice).toFixed(2))
-  cart.totalPrice = (
-    Number(cart.itemsPrice) +
-    Number(cart.shippingPrice) +
-    Number(cart.taxPrice)
-  ).toFixed(2)
+  cart.totalPrice =
+    Number(cart.itemsPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice)
 
   const orderCreate = useSelector((state) => state.orderCreate)
   const { order, success, error } = orderCreate
@@ -174,12 +171,26 @@ export const PlaceOrderScreen = ({ history }) => {
                           </Link>
                         </Grid>
                         <Grid item md={4}>
-                          {item.qty} x ₱{' '}
-                          {item.isOnSale ? item.salePrice : item.price} = ₱{' '}
-                          {(item.isOnSale
-                            ? item.qty * item.salePrice
-                            : item.qty * item.price
-                          ).toFixed(2)}
+                          {item.qty} x{' '}
+                          <NumberFormat
+                            prefix={'₱'}
+                            thousandSeparator
+                            decimalScale={2}
+                            displayType='text'
+                            value={item.isOnSale ? item.salePrice : item.price}
+                          />{' '}
+                          ={' '}
+                          <NumberFormat
+                            prefix={'₱'}
+                            thousandSeparator
+                            decimalScale={2}
+                            displayType='text'
+                            value={
+                              item.isOnSale
+                                ? item.qty * item.salePrice
+                                : item.qty * item.price
+                            }
+                          />
                         </Grid>
                       </Grid>
                     </Grid>
@@ -209,7 +220,13 @@ export const PlaceOrderScreen = ({ history }) => {
                   Items:{' '}
                 </Grid>
                 <Grid item xs={6}>
-                  ₱ {cart.itemsPrice}
+                  <NumberFormat
+                    prefix={'₱ '}
+                    thousandSeparator
+                    decimalScale={2}
+                    displayType='text'
+                    value={cart.itemsPrice}
+                  />
                 </Grid>
               </Grid>
 
@@ -218,7 +235,13 @@ export const PlaceOrderScreen = ({ history }) => {
                   Shipping:{' '}
                 </Grid>
                 <Grid item xs={6}>
-                  ₱ {cart.shippingPrice}
+                  <NumberFormat
+                    prefix={'₱ '}
+                    thousandSeparator
+                    decimalScale={2}
+                    displayType='text'
+                    value={cart.shippingPrice}
+                  />
                 </Grid>
               </Grid>
 
@@ -227,7 +250,13 @@ export const PlaceOrderScreen = ({ history }) => {
                   Tax:{' '}
                 </Grid>
                 <Grid item xs={6}>
-                  ₱ {cart.taxPrice}
+                  <NumberFormat
+                    prefix={'₱ '}
+                    thousandSeparator
+                    decimalScale={2}
+                    displayType='text'
+                    value={cart.taxPrice}
+                  />
                 </Grid>
               </Grid>
 
@@ -236,7 +265,13 @@ export const PlaceOrderScreen = ({ history }) => {
                   Total:{' '}
                 </Grid>
                 <Grid item xs={6}>
-                  ₱ {cart.totalPrice}
+                  <NumberFormat
+                    prefix={'₱ '}
+                    thousandSeparator
+                    decimalScale={2}
+                    displayType='text'
+                    value={cart.totalPrice}
+                  />
                 </Grid>
               </Grid>
 
