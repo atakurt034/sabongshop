@@ -115,7 +115,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Private/admin
 const getUsers = asyncHandler(async (req, res) => {
-  const keyword = req.query.keywords || ''
+  const keyword = req.query.keywords
   const users = await User.find({ $or: [...Query(keyword)] })
   res.json(users)
 })

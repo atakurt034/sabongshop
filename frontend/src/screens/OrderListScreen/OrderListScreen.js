@@ -73,6 +73,10 @@ export const OrderListScreen = ({ history }) => {
     }
   }
 
+  const searchHandler = (keyword) => {
+    dispatch(listOrders(keyword))
+  }
+
   useEffect(() => {
     if (userInfo.isAdmin) {
       dispatch(listOrders())
@@ -195,6 +199,7 @@ export const OrderListScreen = ({ history }) => {
         <EnhancedTableToolbar
           numSelected={selected.length}
           clicked={() => deleteHandler(selected)}
+          searched={searchHandler}
         />
         <TableContainer>
           <Table

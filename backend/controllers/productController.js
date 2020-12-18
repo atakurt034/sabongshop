@@ -36,6 +36,7 @@ export const getProducts = asyncHandler(async (req, res) => {
   })
     .limit(pageSize)
     .skip(pageSize * (page - 1))
+    .sort({ isOnSale: -1 })
 
   res.json({ products, page, pages: Math.ceil(count / pageSize) })
 })

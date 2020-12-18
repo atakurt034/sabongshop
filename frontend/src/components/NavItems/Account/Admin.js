@@ -144,7 +144,7 @@ export const Admin = () => {
             <ListItemText primary='Products' />
           </Link>
         </StyledMenuItem>
-        <StyledMenuItem>
+        <StyledMenuItem onClick={handleClose}>
           <Link className={classes.link} to='/admin/orderlist'>
             <ListItemIcon>
               <AssignmentIcon fontSize='small' />

@@ -1,6 +1,8 @@
 import asyncHandler from 'express-async-handler'
 import Order from '../models/orderModel.js'
 
+import { Query } from '../utils/orderKeywords.js'
+
 // @desc    Create new order
 // @route   POST /api/orders
 // @access   Private
@@ -108,7 +110,10 @@ export const getMyOrders = asyncHandler(async (req, res) => {
 // @route   GET /api/orders
 // @access   Private
 export const getAllOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({}).populate('user', 'id name')
+  const keywords = req.query.keywords
+  const orders = await Order.find({ $or: [...Query(keywords)] })
+    .populate('user', 'id name')
+    .sort({ isPaid: -1 })
   res.json(orders)
 })
 

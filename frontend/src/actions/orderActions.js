@@ -171,7 +171,7 @@ export const listMyOrders = () => async (dispatch, getState) => {
   }
 }
 
-export const listOrders = () => async (dispatch, getState) => {
+export const listOrders = (keywords = '') => async (dispatch, getState) => {
   try {
     dispatch({
       type: ORDER_LIST_REQUEST,
@@ -187,7 +187,7 @@ export const listOrders = () => async (dispatch, getState) => {
       },
     }
 
-    const { data } = await Axios.get(`/api/orders`, config)
+    const { data } = await Axios.get(`/api/orders?keywords=${keywords}`, config)
 
     dispatch({
       type: ORDER_LIST_SUCCESS,
