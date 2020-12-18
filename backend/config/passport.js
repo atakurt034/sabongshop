@@ -12,7 +12,8 @@ export default function (passport) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: '/api/auth/google/callback',
+        callbackURL:
+          'https://sabongshop.herokuapp.com/api/auth/google/callback',
         userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
       },
       async (accessToken, refreshToken, profile, done) => {
