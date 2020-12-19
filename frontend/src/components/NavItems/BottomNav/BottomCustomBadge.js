@@ -34,6 +34,9 @@ export const Account = () => {
   const [anchorEl, setAnchorEl] = useState(null)
   const [avatar, setAvatars] = useState('')
 
+  const setButtonClick = useSelector((state) => state.setButtonClick)
+  const { mode, target } = setButtonClick
+
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
@@ -60,13 +63,16 @@ export const Account = () => {
   const orderCancel = useSelector((state) => state.orderCancel)
   const { success: successCancel } = orderCancel
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget)
-  }
+  // const handleClick = (event) => {
+  //   setAnchorEl(event.currentTarget)
+  // }
 
   const dispatch = useDispatch()
 
   useEffect(() => {
+    if (mode) {
+      setAnchorEl(target)
+    }
     if (!user || !user.name || !userInfo) {
       dispatch(getAvatar('profile'))
     } else {
@@ -75,7 +81,16 @@ export const Account = () => {
     if (success || successPay || successCancel) {
       dispatch(listMyOrders())
     }
-  }, [dispatch, user, userInfo, success, successPay, successCancel])
+  }, [
+    dispatch,
+    user,
+    userInfo,
+    success,
+    successPay,
+    successCancel,
+    mode,
+    target,
+  ])
 
   const handleClose = () => {
     setAnchorEl(null)
@@ -93,7 +108,6 @@ export const Account = () => {
 
   const avatarIcon = (
     <AvatarIcon
-      onClick={handleClick}
       overlap='circle'
       anchorOrigin={{
         vertical: 'top',
@@ -101,15 +115,17 @@ export const Account = () => {
       }}
       variant={count !== 0 ? 'dot' : 'standard'}
     >
-      <Avatar alt='Remy Sharp' src={avatar} className={classes.avatar} />
+      <Avatar
+        alt={userInfo ? userInfo.name.split(' ')[0] : ''}
+        src={avatar}
+        className={classes.avatar}
+      />
     </AvatarIcon>
   )
 
   return (
     <>
-      <Link to={link} style={{ textDecoration: 'none', color: 'inherit' }}>
-        {userInfo && user ? avatarIcon : <PersonIcon />}
-      </Link>
+      {userInfo && user ? avatarIcon : <PersonIcon />}
 
       <StyledMenu
         id='customized-menu'

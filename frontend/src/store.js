@@ -35,12 +35,16 @@ import {
   userRegisterReducer,
   userAvatarReducer,
 } from './reducers/userReducers'
-import { setModeReducer } from './reducers/modeReducers'
+import {
+  setModeReducer,
+  setClickedButtonReducer,
+} from './reducers/modeReducers'
 
 const midlleware = [thunk]
 
 const reducer = combineReducers({
   setMode: setModeReducer,
+  setButtonClick: setClickedButtonReducer,
   productSale: productSaleReducer,
   productPrimaryImage: productPrimaryImageReducer,
   productDeleteImage: productDeleteImageReducer,

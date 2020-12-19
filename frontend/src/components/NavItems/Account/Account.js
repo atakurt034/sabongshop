@@ -57,7 +57,7 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem)
 
-export const Account = (e) => {
+export const Account = () => {
   const [anchorEl, setAnchorEl] = useState(null)
   const [avatar, setAvatars] = useState('')
   const theme = useTheme()
@@ -127,7 +127,11 @@ export const Account = (e) => {
       }}
       variant={count !== 0 ? 'dot' : 'standard'}
     >
-      <Avatar src={avatar} className={classes.avatar} />
+      <Avatar
+        alt={userInfo ? userInfo.name.split(' ')[0] : ''}
+        src={avatar}
+        className={classes.avatar}
+      />
     </StyledBadge>
   )
 
