@@ -24,11 +24,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import NotInterestedIcon from '@material-ui/icons/NotInterested'
 
 import { PRODUCT_UPDATE_RESET } from '../../constants/productConstants'
-import {
-  listProductDetails,
-  updateProduct,
-  listProducts,
-} from '../../actions/productActions'
+import { listProductDetails, updateProduct } from '../../actions/productActions'
 
 import { ModalMessage } from '../../components/ModalMessage'
 import { ModalLoader } from '../../components/ModalLoader'

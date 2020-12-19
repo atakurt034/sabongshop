@@ -14,8 +14,6 @@ import PropTypes from 'prop-types'
 import clsx from 'clsx'
 
 import DeleteIcon from '@material-ui/icons/Delete'
-import FilterListIcon from '@material-ui/icons/FilterList'
-import SearchIcon from '@material-ui/icons/Search'
 import { useToolbarStyles } from './plsStyle'
 
 import { Search } from './SearchProductList'
