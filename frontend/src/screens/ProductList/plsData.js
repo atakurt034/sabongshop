@@ -8,7 +8,6 @@ import {
   Typography,
   Tooltip,
   IconButton,
-  Paper,
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
@@ -170,9 +169,7 @@ const EnhancedTableToolbar = ({ numSelected, clicked, searched }) => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Paper>
-          <Search searched={searched} />
-        </Paper>
+        <Search searched={searched} />
       )}
     </Toolbar>
   )

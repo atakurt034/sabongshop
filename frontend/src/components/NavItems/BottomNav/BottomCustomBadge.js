@@ -63,10 +63,6 @@ export const Account = () => {
   const orderCancel = useSelector((state) => state.orderCancel)
   const { success: successCancel } = orderCancel
 
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget)
-  // }
-
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -99,11 +95,6 @@ export const Account = () => {
   const logoutHandler = () => {
     dispatch(logout())
     handleClose()
-  }
-
-  let link = '/login'
-  if (userInfo) {
-    link = '#'
   }
 
   const avatarIcon = (

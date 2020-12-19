@@ -19,7 +19,11 @@ export const getProducts = asyncHandler(async (req, res) => {
       ua.substr(0, 4)
     )
   ) {
-    pageSize = 4
+    if (req.url !== '/?keyword=&pageNumber=') {
+      pageSize = 4
+    } else {
+      pageSize = ''
+    }
   } else if (req.url === '/?keyword=&pageNumber=') {
     pageSize = ''
   }

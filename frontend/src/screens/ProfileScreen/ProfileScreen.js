@@ -135,6 +135,7 @@ export const ProfileScreen = ({ location, history }) => {
       )
     }
   }
+  console.log(image)
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0]
@@ -152,6 +153,7 @@ export const ProfileScreen = ({ location, history }) => {
       const { data } = await axios.post('/api/upload/avatar', formData, config)
 
       setImage(data)
+      console.log(data)
       setUploading(false)
     } catch (error) {
       console.error(error)
@@ -181,6 +183,7 @@ export const ProfileScreen = ({ location, history }) => {
                   <InputLabel htmlFor='image' variant='outlined'>
                     Image
                   </InputLabel>
+
                   <OutlinedInput
                     id='image'
                     value={image}
