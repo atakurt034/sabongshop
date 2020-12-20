@@ -45,45 +45,23 @@ export const ShippingScreen = ({ history }) => {
 
   const dispatch = useDispatch()
 
-  const [address, setAddress] = useState(
-    shippingAddress.address ? shippingAddress.address : ''
-  )
-  const [city, setCity] = useState(
-    shippingAddress.city ? shippingAddress.city : ''
-  )
-  const [postalCode, setPostalCode] = useState(
-    shippingAddress.postalCode ? shippingAddress.postalCode : ''
-  )
-  const [country, setCountry] = useState(
-    shippingAddress.country ? shippingAddress.country : ''
-  )
-  const [message, setMessage] = useState(null)
-  const [errorField, setErrorField] = useState({
-    address: false,
-    city: false,
-    postalCode: false,
-    country: false,
+  const [inputs, setInputs] = useState({
+    address: shippingAddress.address ? shippingAddress.address : '',
+    city: shippingAddress.city ? shippingAddress.city : '',
+    postalCode: shippingAddress.postalCode ? shippingAddress.postalCode : '',
+    country: shippingAddress.country ? shippingAddress.country : '',
   })
+
+  const { address, city, postalCode, country } = inputs
+
+  const inputHandler = (input) => (event) => {
+    setInputs({ ...inputs, [input]: event.target.value })
+  }
 
   const submitHandler = (e) => {
     e.preventDefault()
-    if (!address) {
-      setMessage('Fill up Address')
-      setErrorField({ address: true })
-    } else if (!city) {
-      setMessage('Fill up City')
-      setErrorField({ city: true })
-    } else if (!postalCode) {
-      setMessage('Fill up Postal Code')
-      setErrorField({ postalCode: true })
-    } else if (!country) {
-      setMessage('Fill up Country')
-      setErrorField({ country: true })
-    } else {
-      setErrorField({ ...errorField }, true)
-      dispatch(saveShippingAddress({ address, city, postalCode, country }))
-      history.push('/payment')
-    }
+    dispatch(saveShippingAddress({ address, city, postalCode, country }))
+    history.push('/payment')
   }
 
   useEffect(() => {
@@ -104,45 +82,46 @@ export const ShippingScreen = ({ history }) => {
           <Typography component='h1' variant='h4'>
             SHIPPING
           </Typography>
-          {message && <Message variant='error'>{message}</Message>}
           {error && <Message variant='error'>{error}</Message>}
           {loading && <Loader />}
 
-          <form onSubmit={submitHandler} className={classes.form} noValidate>
+          <form onSubmit={submitHandler} className={classes.form}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  error={errorField.address}
+                  aria-invalid={!address}
+                  error={!address}
                   name='address'
                   variant='outlined'
                   type='text'
-                  required
                   fullWidth
+                  required
                   id='address'
                   label='Address'
                   autoFocus
                   value={address}
-                  onChange={(e) => setAddress(e.target.value)}
+                  onChange={inputHandler('address')}
                 />
               </Grid>
 
               <Grid item xs={12}>
                 <TextField
-                  error={errorField.city}
+                  aria-invalid={!city}
+                  required
+                  error={!city}
                   type='text'
                   variant='outlined'
-                  required
                   fullWidth
                   id='city'
                   label='City'
                   name='city'
                   value={city}
-                  onChange={(e) => setCity(e.target.value)}
+                  onChange={inputHandler('city')}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  error={errorField.postalCode}
+                  error={!postalCode}
                   variant='outlined'
                   required
                   fullWidth
@@ -151,12 +130,12 @@ export const ShippingScreen = ({ history }) => {
                   type='text'
                   id='postalCode'
                   value={postalCode}
-                  onChange={(e) => setPostalCode(e.target.value)}
+                  onChange={inputHandler('postalCode')}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  error={errorField.country}
+                  error={!country}
                   variant='outlined'
                   required
                   fullWidth
@@ -165,7 +144,7 @@ export const ShippingScreen = ({ history }) => {
                   type='text'
                   id='country'
                   value={country}
-                  onChange={(e) => setCountry(e.target.value)}
+                  onChange={inputHandler('country')}
                 />
               </Grid>
             </Grid>
