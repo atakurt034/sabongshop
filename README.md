@@ -53,5 +53,5 @@ Implemented the following:
     2. Reviews readmore/less section
         - Maximum of 2 reviews each product
 
-- Added modal for on sale products with 1hour timer.
+- Added modal for on sale products with 1hour timer
         - Sale products are set automatically if products are placed on sale.
