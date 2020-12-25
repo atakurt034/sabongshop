@@ -54,8 +54,9 @@ export const ShippingScreen = ({ history }) => {
 
   const { address, city, postalCode, country } = inputs
 
-  const inputHandler = (input) => (event) => {
-    setInputs({ ...inputs, [input]: event.target.value })
+  const inputHandler = (event) => {
+    const { name, value } = event.target
+    setInputs({ ...inputs, [name]: value })
   }
 
   const submitHandler = (e) => {
@@ -100,7 +101,7 @@ export const ShippingScreen = ({ history }) => {
                   label='Address'
                   autoFocus
                   value={address}
-                  onChange={inputHandler('address')}
+                  onChange={inputHandler}
                 />
               </Grid>
 
@@ -116,7 +117,7 @@ export const ShippingScreen = ({ history }) => {
                   label='City'
                   name='city'
                   value={city}
-                  onChange={inputHandler('city')}
+                  onChange={inputHandler}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -130,7 +131,7 @@ export const ShippingScreen = ({ history }) => {
                   type='text'
                   id='postalCode'
                   value={postalCode}
-                  onChange={inputHandler('postalCode')}
+                  onChange={inputHandler}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -144,7 +145,7 @@ export const ShippingScreen = ({ history }) => {
                   type='text'
                   id='country'
                   value={country}
-                  onChange={inputHandler('country')}
+                  onChange={inputHandler}
                 />
               </Grid>
             </Grid>

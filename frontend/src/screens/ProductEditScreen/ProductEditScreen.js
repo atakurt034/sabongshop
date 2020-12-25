@@ -33,20 +33,34 @@ import { BackButton } from '../../components/NavItems/BackButton'
 import { ProductImageList } from './ProductImageList/ProductImageList'
 
 export const ProductEditScreen = ({ match, history }) => {
+  const dispatch = useDispatch()
   const productId = match.params.id
 
-  const [name, setName] = useState('')
-  const [price, setPrice] = useState(0)
-  const [image, setImage] = useState('')
-  const [brand, setBrand] = useState('')
-  const [category, setCategory] = useState('')
-  const [countInStock, setCountInStock] = useState(0)
-  const [description, setDescription] = useState('')
-  const [uploading, setUploading] = useState(false)
-  const [isOnSale, setIsOnSale] = useState(false)
-  const [salePrice, setSalePrice] = useState(0)
+  const [details, setDetails] = useState({
+    name: '',
+    price: 0,
+    image: '',
+    brand: '',
+    category: '',
+    countInStock: 0,
+    descriptiion: '',
+    isOnSale: false,
+    salePrice: 0,
+  })
 
-  const dispatch = useDispatch()
+  const {
+    name,
+    price,
+    image,
+    brand,
+    category,
+    countInStock,
+    description,
+    isOnSale,
+    salePrice,
+  } = details
+
+  const [uploading, setUploading] = useState(false)
 
   const productDetails = useSelector((state) => state.productDetails)
   const { loading, error, product } = productDetails
@@ -61,8 +75,6 @@ export const ProductEditScreen = ({ match, history }) => {
   const productDeleteImage = useSelector((state) => state.productDeleteImage)
   const { success: successDelete, loading: loadingDelete } = productDeleteImage
 
-  console.log('[pes] ' + JSON.stringify(product))
-
   useEffect(() => {
     if (successUpdate || successDelete) {
       dispatch(listProductDetails(productId))
@@ -72,15 +84,17 @@ export const ProductEditScreen = ({ match, history }) => {
       if (!product.name || product._id !== productId) {
         dispatch(listProductDetails(productId))
       } else {
-        setName(product.name)
-        setPrice(product.price)
-        setImage(product.image[product.image.length - 1])
-        setBrand(product.brand)
-        setCategory(product.category)
-        setCountInStock(product.countInStock)
-        setDescription(product.description)
-        setIsOnSale(product.isOnSale)
-        setSalePrice(product.salePrice)
+        setDetails({
+          name: product.name,
+          price: product.price,
+          image: product.image[product.image.length - 1],
+          brand: product.brand,
+          category: product.category,
+          countInStock: product.countInStock,
+          description: product.description,
+          isOnSale: product.isOnSale,
+          salePrice: product.salePrice,
+        })
       }
     } else {
       dispatch(listProductDetails(productId))
@@ -112,7 +126,7 @@ export const ProductEditScreen = ({ match, history }) => {
 
       const { data } = await axios.post('/api/upload/product', formData, config)
 
-      setImage(data)
+      setDetails({ image: data })
       setUploading(false)
     } catch (error) {
       console.error(error)
@@ -139,6 +153,15 @@ export const ProductEditScreen = ({ match, history }) => {
         salePrice,
       })
     )
+  }
+
+  const changeHandler = (event) => {
+    const { name, value, checked } = event.target
+    let currentValue = value
+    if (name === 'isOnSale') {
+      currentValue = checked
+    }
+    setDetails({ ...details, [name]: currentValue })
   }
 
   return (
@@ -169,8 +192,8 @@ export const ProductEditScreen = ({ match, history }) => {
                   required
                   type='name'
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  id='name'
+                  onChange={changeHandler}
+                  name='name'
                   startAdornment={
                     <InputAdornment position='start'>
                       <WhatshotIcon />
@@ -190,8 +213,8 @@ export const ProductEditScreen = ({ match, history }) => {
                   required
                   type='brand'
                   value={brand}
-                  onChange={(e) => setBrand(e.target.value)}
-                  id='brand'
+                  onChange={changeHandler}
+                  name='brand'
                   startAdornment={
                     <InputAdornment position='start'>
                       <EcoIcon />
@@ -211,8 +234,8 @@ export const ProductEditScreen = ({ match, history }) => {
                   required
                   type='text'
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  id='category'
+                  onChange={changeHandler}
+                  name='category'
                   startAdornment={
                     <InputAdornment position='start'>
                       <ExtensionIcon />
@@ -227,13 +250,13 @@ export const ProductEditScreen = ({ match, history }) => {
                 <TextField
                   required
                   value={description}
-                  id='description'
+                  name='description'
                   label='Description'
                   multiline
                   rowsMax={6}
                   fullWidth
                   variant='outlined'
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={changeHandler}
                 />
               </FormControl>
             </Box>
@@ -246,20 +269,21 @@ export const ProductEditScreen = ({ match, history }) => {
 
                 <NumberFormat
                   type='text'
-                  id='countInStock'
+                  name='countInStock'
                   value={countInStock}
                   labelWidth={50}
                   decimalScale={0}
                   customInput={OutlinedInput}
                   thousandSeparator
+                  onChange={changeHandler}
                   startAdornment={
                     <InputAdornment position='start'>
                       <DynamicFeedIcon />
                     </InputAdornment>
                   }
-                  onValueChange={(values) => {
-                    setCountInStock(values.value)
-                  }}
+                  // onValueChange={(values) => {
+                  //   setCountInStock(values.value)
+                  // }}
                 />
               </FormControl>
             </Box>
@@ -271,7 +295,7 @@ export const ProductEditScreen = ({ match, history }) => {
                 </InputLabel>
                 <NumberFormat
                   type='text'
-                  id='price'
+                  name='price'
                   value={price}
                   labelWidth={50}
                   customInput={OutlinedInput}
@@ -280,9 +304,10 @@ export const ProductEditScreen = ({ match, history }) => {
                   }
                   thousandSeparator
                   decimalScale={2}
-                  onValueChange={(values) => {
-                    setPrice(values.value)
-                  }}
+                  onChange={changeHandler}
+                  // onValueChange={(values) => {
+                  //   setPrice(values.value)
+                  // }}
                 />
               </FormControl>
             </Box>
@@ -295,7 +320,7 @@ export const ProductEditScreen = ({ match, history }) => {
                   labelWidth={70}
                   disabled={!isOnSale}
                   type='text'
-                  id='saleprice'
+                  name='salePrice'
                   value={salePrice}
                   customInput={OutlinedInput}
                   startAdornment={
@@ -303,9 +328,10 @@ export const ProductEditScreen = ({ match, history }) => {
                   }
                   thousandSeparator
                   decimalScale={2}
-                  onValueChange={(values) => {
-                    setSalePrice(values.value)
-                  }}
+                  onChange={changeHandler}
+                  // onValueChange={(values) => {
+                  //   setSalePrice(values.value)
+                  // }}
                 />
 
                 <FormControlLabel
@@ -313,7 +339,8 @@ export const ProductEditScreen = ({ match, history }) => {
                   control={
                     <Checkbox
                       checked={isOnSale}
-                      onChange={(e) => setIsOnSale(e.target.checked)}
+                      name='isOnSale'
+                      onChange={changeHandler}
                       icon={<NotInterestedIcon color='secondary' />}
                       checkedIcon={
                         <CheckCircleIcon
@@ -324,7 +351,6 @@ export const ProductEditScreen = ({ match, history }) => {
                           }}
                         />
                       }
-                      name='isOnSale'
                     />
                   }
                 />
