@@ -42,7 +42,6 @@ export const RegisterScreen = ({ location, history }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [message, setMessage] = useState(null)
 
   const dispatch = useDispatch()
 
@@ -59,11 +58,7 @@ export const RegisterScreen = ({ location, history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault()
-    if (password !== confirmPassword) {
-      setMessage('Passwords do not match')
-    } else {
-      dispatch(register(name, email, password))
-    }
+    dispatch(register(name, email, password, confirmPassword))
   }
 
   return (
@@ -76,7 +71,6 @@ export const RegisterScreen = ({ location, history }) => {
         <Typography component='h1' variant='h5'>
           Sign up
         </Typography>
-        {message && <Message variant='error'>{message}</Message>}
         {error && <Message variant='error'>{error}</Message>}
         {loading && <Loader />}
 

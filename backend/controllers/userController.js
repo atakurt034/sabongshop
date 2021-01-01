@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 import generateToken from '../utils/generateTokens.js'
+import { validationResult } from 'express-validator'
 
 import { Query } from '../utils/userKeywords.js'
 
@@ -82,6 +83,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body
+  const valError = validationResult(req)
 
   const userExist = await User.findOne({ email })
 
@@ -90,24 +92,30 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error('User already exist')
   }
 
-  const user = await User.create({
-    name,
-    email,
-    password,
-  })
-
-  if (user) {
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      image: user.image,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      token: generateToken(user._id),
-    })
+  if (!valError.isEmpty()) {
+    res.status(422)
+    console.log(valError.array())
+    throw new Error(valError.array()[0].msg)
   } else {
-    res.status(400)
-    throw new Error('Invalid user data')
+    const user = await User.create({
+      name,
+      email,
+      password,
+    })
+
+    if (user) {
+      res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        image: user.image,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        token: generateToken(user._id),
+      })
+    } else {
+      res.status(400)
+      throw new Error('Invalid user data')
+    }
   }
 })
 
