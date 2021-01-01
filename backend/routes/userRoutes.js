@@ -12,12 +12,20 @@ import {
 } from '../controllers/userController.js'
 import { admin, protect } from '../middleware/authMiddleware.js'
 import { body } from 'express-validator'
+import User from '../models/userModel.js'
 
 const validation = () => {
   return [
     body('email')
       .isEmail()
       .withMessage('Please Input Valid Email')
+      .custom((email) => {
+        return User.findOne({ email }).then((user) => {
+          if (user) {
+            return Promise.reject('User Already Exist')
+          }
+        })
+      })
       .normalizeEmail(),
     body('password')
       .isLength({ min: 8, max: 15 })
