@@ -8,6 +8,7 @@ import { listTopProducts } from '../../actions/productActions'
 import { Box, CardMedia, Grid, Typography, Paper } from '@material-ui/core'
 import Message from '../Message'
 import Loader from '../Loader'
+import { ModalLoader } from '../ModalLoader'
 import { Link } from 'react-router-dom'
 import { useStyles } from './hsStyle'
 import './slickStyle.css'
@@ -82,7 +83,7 @@ export const HomeSlider = () => {
   return (
     <div>
       {loading ? (
-        <Loader />
+        <ModalLoader />
       ) : error ? (
         <Message variant='error'>{error}</Message>
       ) : (

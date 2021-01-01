@@ -19,32 +19,34 @@ const validation = () => {
     body('name')
       .isLength({ min: 3 })
       .withMessage('Name should be a minimum of 3 characters')
-      .isAlpha()
+      .isAlpha('en-US', { ignore: '-s' })
       .withMessage('Name should contain letters only'),
     body('email')
       .isEmail()
       .withMessage('Please Input Valid Email')
-      .custom((email) => {
-        return User.findOne({ email }).then((user) => {
-          if (user) {
-            return Promise.reject('User Already Exist')
-          }
-        })
+      .custom(async (email) => {
+        const user = await User.findOne({ email })
+        if (user) {
+          return Promise.reject('User Already Exist')
+        }
       })
       .normalizeEmail(),
     body('password')
+      .trim()
       .isLength({ min: 8, max: 15 })
       .withMessage('your password should have min and max length between 8-15')
       .matches(/\d/)
       .withMessage('your password should have at least one number')
       .matches(/[!@#$%^&*(),.?":{}|<>]/)
       .withMessage('your password should have at least one sepcial character'),
-    body('confirmPassword').custom((value, { req }) => {
-      if (value !== req.body.password) {
-        throw new Error('confirm password does not match')
-      }
-      return true
-    }),
+    body('confirmPassword')
+      .trim()
+      .custom((value, { req }) => {
+        if (value !== req.body.password) {
+          throw new Error('confirm password does not match')
+        }
+        return true
+      }),
   ]
 }
 
