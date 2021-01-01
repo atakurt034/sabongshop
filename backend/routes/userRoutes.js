@@ -16,6 +16,11 @@ import User from '../models/userModel.js'
 
 const validation = () => {
   return [
+    body('name')
+      .isLength({ min: 3 })
+      .withMessage('Name should be a minimum of 3 characters')
+      .isAlpha()
+      .withMessage('Name should contain letters only'),
     body('email')
       .isEmail()
       .withMessage('Please Input Valid Email')
@@ -36,7 +41,6 @@ const validation = () => {
       .withMessage('your password should have at least one sepcial character'),
     body('confirmPassword').custom((value, { req }) => {
       if (value !== req.body.password) {
-        console.log(req.body.password, req.body.confirmPassword)
         throw new Error('confirm password does not match')
       }
       return true

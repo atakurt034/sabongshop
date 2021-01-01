@@ -36,6 +36,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+const nameKeywords = [
+  'Name should be a minimum of 3 characters',
+  'Name should contain letters only',
+]
+const emailKeywords = ['Please Input Valid Email', 'User Already Exist']
+const passwordKeywords = [
+  'your password should have min and max length between 8-15',
+  'your password should have at least one number',
+  'your password should have at least one sepcial character',
+]
+const confirPasswordKeywords = ['confirm password does not match']
+
 export const RegisterScreen = ({ location, history }) => {
   const classes = useStyles()
   const [name, setName] = useState('')
@@ -81,10 +93,16 @@ export const RegisterScreen = ({ location, history }) => {
         )}
         {loading && <Loader />}
 
-        <form onSubmit={submitHandler} className={classes.form} noValidate>
+        <form onSubmit={submitHandler} className={classes.form}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
+                error={
+                  error &&
+                  [...error.split(',')].some((e) =>
+                    nameKeywords.includes(e) ? true : false
+                  )
+                }
                 autoComplete='name'
                 name='name'
                 variant='outlined'
@@ -100,6 +118,12 @@ export const RegisterScreen = ({ location, history }) => {
 
             <Grid item xs={12}>
               <TextField
+                error={
+                  error &&
+                  [...error.split(',')].some((e) =>
+                    emailKeywords.includes(e) ? true : false
+                  )
+                }
                 variant='outlined'
                 required
                 fullWidth
@@ -113,6 +137,12 @@ export const RegisterScreen = ({ location, history }) => {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error={
+                  error &&
+                  [...error.split(',')].some((e) =>
+                    passwordKeywords.includes(e) ? true : false
+                  )
+                }
                 variant='outlined'
                 required
                 fullWidth
@@ -127,6 +157,12 @@ export const RegisterScreen = ({ location, history }) => {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error={
+                  error &&
+                  [...error.split(',')].some((e) =>
+                    confirPasswordKeywords.includes(e) ? true : false
+                  )
+                }
                 variant='outlined'
                 required
                 fullWidth
@@ -134,7 +170,6 @@ export const RegisterScreen = ({ location, history }) => {
                 label='Confrim Password'
                 type='password'
                 id='confirmPassword'
-                autoComplete='current-password'
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
