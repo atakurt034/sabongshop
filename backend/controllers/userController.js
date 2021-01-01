@@ -95,7 +95,7 @@ const registerUser = asyncHandler(async (req, res) => {
   if (!valError.isEmpty()) {
     res.status(422)
     console.log(valError.array())
-    throw new Error(valError.array()[0].msg)
+    throw new Error(valError.array().map((result) => result.msg))
   } else {
     const user = await User.create({
       name,

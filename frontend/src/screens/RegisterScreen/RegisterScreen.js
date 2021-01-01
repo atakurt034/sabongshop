@@ -71,7 +71,14 @@ export const RegisterScreen = ({ location, history }) => {
         <Typography component='h1' variant='h5'>
           Sign up
         </Typography>
-        {error && <Message variant='error'>{error}</Message>}
+
+        {error && (
+          <Message variant='error'>
+            {[...error.split(',')].map((i) => (
+              <p key={i}>{i}</p>
+            ))}
+          </Message>
+        )}
         {loading && <Loader />}
 
         <form onSubmit={submitHandler} className={classes.form} noValidate>
