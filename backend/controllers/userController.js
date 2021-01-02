@@ -84,7 +84,6 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body
   const valError = validationResult(req)
-  console.log(valError.array().map((r) => r.param))
 
   if (!valError.isEmpty()) {
     res.status(422)
