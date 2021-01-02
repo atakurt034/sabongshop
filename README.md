@@ -5,22 +5,53 @@ https://sabongshop.herokuapp.com/
 
 Implemented the following:
 
-- cancel order
+- Cancel order - if order is not paid yet.
 
-- stock decrease upon placing order and increase if order is canceled
+- Stock decrease upon placing order and increase if order is canceled with reference to the amount of items ordered.
 
-- added facebook and google login
+- Added Facebook (only works locally needs facebook approval if deployed) and Google login.
 
-- improved search results can now search prices, brand, categories and name
+- Improved search results can now search prices, brand, categories and name.
 
-- added admin search on products, users and orders
+- Added prevention on placing orders with products whose stock recently got depleted.
 
-- can add multiple images on a product and set primary picture
+- Badges
+   1. Cart badges - will show number of products added.
+      - cart badge is cleared upon placement of orders.
+   2. Profile name badge will show if order is not paid .
+      - order menu will show number of orders not paid.
+        
+- Added admin search on:
+   1. Products
+      - displays products on sale first
+      - id - product id
+      - brand
+      - category
+      - price - will display closes match price range
+   
+   2. Users
+      - name - will display all users with name match
+      - id - user id
+   
+   3. Orders
+      - date - year-month-day
+      - id - order number
+      - prices - will display closes match price range
 
-- added option to place product on sale
+- Products:
+    1. Can add multiple images on a product and set primary picture.
+    2. Added option to place product on sale - with sale price.
+  
+- User Profile:
+    1. Added avatar on profile (facebook login will have their profile pics).
+    2. Order history for cancelled or paid & delivered orders.
 
-- added avatar on profile and order history for cancelled and successful paid& delivered orders
+ - Paginations:
+    1. Home page
+        - Mobile displays 4 products on each page
+        - Desktop/laptop 8 products on each page
+    2. Reviews readmore/less section
+        - Maximum of 2 reviews each product
 
-- added pagination on reviews and added readmore/less
-
-- added modal for on sale products with 1hour timer
+- Added modal for on sale products with 1hour timer
+        - Sale products are set automatically if products are placed on sale.
