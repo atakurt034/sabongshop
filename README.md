@@ -15,6 +15,8 @@ Implemented the following:
 
 - Added prevention on placing orders with products whose stock recently got depleted.
 
+-Added validation and sanitation on register screen.
+
 - Badges
    1. Cart badges - will show number of products added.
       - cart badge is cleared upon placement of orders.
