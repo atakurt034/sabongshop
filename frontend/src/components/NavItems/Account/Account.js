@@ -104,6 +104,7 @@ export const Account = () => {
   }, [dispatch, user, userInfo, success, successPay, successCancel])
 
   const handleClick = (event) => {
+    event.preventDefault()
     setAnchorEl(event.currentTarget)
   }
   const handleClose = () => {
